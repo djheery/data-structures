@@ -26,7 +26,7 @@ The list is comprised of items from the wikipedia data structures list
 
 - [ ] Arrays 
     - [ ] Regular Array
-    - [ ] Stacks 
+    - [x] Stacks 
     - [ ] Queues 
     - [ ] Priority Queues 
 - [ ] Binary Trees 
