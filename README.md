@@ -25,10 +25,13 @@ The list is comprised of items from the wikipedia data structures list
 ## TODOs 
 
 - [ ] Arrays 
-    - [ ] Regular Array
     - [x] Stacks 
-    - [ ] Queues 
-    - [ ] Priority Queues 
+    - [x] Queues 
+    - [ ] Circular Queues
+- [ ] Lists 
+    - [ ] Array List/ Vector 
+    - [ ] Linked List 
+    - [ ] Doubly Linked List 
 - [ ] Binary Trees 
     - [ ] Binary Tree 
     - [ ] Binary Search Tree
@@ -48,10 +51,7 @@ The list is comprised of items from the wikipedia data structures list
     - [ ] Hash Tree 
 - [ ] Heaps 
     - [ ] Heap 
+    - [ ] Priority Queues 
     - [ ] Min-max Heap 
     - [ ] Binary Heap 
     - [ ] B-heap 
-- [ ] Lists 
-    - [ ] Array List 
-    - [ ] Linked List 
-    - [ ] Doubly Linked List 
