@@ -190,7 +190,7 @@ void show(CircularQueue* queue) {
   printf("["); 
   for(i = 0; i < queue->size - 1; i++) {
     printf("%d, ", queue->queue[currentIdx]);
-    currentIdx = currentIdx == (queue->size - 2) ? 0 : currentIdx + 1; 
+    currentIdx = (currentIdx + 1) % queue->capacity; 
   }
 
   printf("%d]\n\n", queue->queue[queue->rear]);
