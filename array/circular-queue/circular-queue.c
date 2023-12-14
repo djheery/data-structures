@@ -30,6 +30,7 @@ int getUserInput(char promptText[]);
 CircularQueue initializeQueue(int capacity); 
 
 int main() {
+  programLoop();
   return 0; 
 }
 
@@ -47,7 +48,7 @@ void printMenu() {
 
 void programLoop() {
   printf("=================================\n"); 
-  printf("* Circular Queue Data Structure *"); 
+  printf("* Circular Queue Data Structure *\n"); 
   printf("=================================\n\n"); 
   
   char initializationPrompt[] = "Please enter the size of the queue you would like to initialize: "; 
@@ -69,25 +70,25 @@ void programLoop() {
 
     switch(command) {
       case 1 : 
-        printf("TODO\n\n"); 
+        show(&queue);
         break; 
       case 2 : 
-        printf("TODO\n\n"); 
+        printf("The current size of your queue is %d\n\n", queue.size);
         break;
       case 3 : 
-        printf("TODO\n\n"); 
+        enqueue(&queue);
         break; 
       case 4 :
-        printf("TODO\n\n"); 
+        dequeue(&queue);
         break; 
       case 5 : 
-        printf("TODO\n\n"); 
+        printf("The capacity of yoru queue is %d\n\n", queue.capacity);
         break; 
       case 6 : 
-        printf("TODO\n\n"); 
+        front(&queue);
         break; 
       case 7 : 
-        printf("TODO\n\n");
+        rear(&queue);
         break;
       case 0 : 
         printf("Ending the program...\n"); 
@@ -99,7 +100,6 @@ void programLoop() {
         break;
     }
 
-    break; 
   }
 
   free(queue.queue); 
@@ -184,14 +184,16 @@ void show(CircularQueue* queue) {
     return; 
   }
 
-  int i; 
-  int bufferPointer = 1; 
-  char buffer[50] = { "[" };
 
-  for(i = queue->front; i < queue->rear; i++) {
-     char c =  queue->queue[i];
-     printf("%c", c); 
+  int currentIdx = queue->front; 
+  int i; 
+  printf("["); 
+  for(i = 0; i < queue->size - 1; i++) {
+    printf("%d, ", queue->queue[currentIdx]);
+    currentIdx = currentIdx == (queue->size - 2) ? 0 : currentIdx + 1; 
   }
+
+  printf("%d]\n\n", queue->queue[queue->rear]);
 }
 
 void enqueue(CircularQueue* queue) {
@@ -204,7 +206,7 @@ void enqueue(CircularQueue* queue) {
   
   queue->rear = queue->rear == (queue->capacity - 1) ? 0 : queue->rear + 1; 
 
-  char textPrompt[] = "Please enter the number you would like to add to the queue"; 
+  char textPrompt[] = "Please enter the number you would like to add to the queue: "; 
   int numToAdd = getUserInput(textPrompt);
 
   if(numToAdd == -1) {
@@ -230,15 +232,22 @@ void dequeue(CircularQueue* queue) {
     return; 
   }
 
+  int prevFront = queue->queue[queue->front];
+  printf("The item removed is %d\n", prevFront);
   queue->size -= 1; 
   
   if(queue->size == 0) {
     queue->front = 0; 
     queue->rear = -1;
+
+    printf("Your queue is now empty\n\n");
     return;
   }
 
   queue->front = queue->front == (queue->capacity - 1) ? 0 : queue->front + 1; 
+  printf("Your new queue size is now %d\n", queue->size);
+  printf("The actual front of your queue is at index: %d\n", queue->front); 
+  printf("The actual rear of your queue is at index: %d\n\n", queue->rear);
 }
 
 void isEmpty(CircularQueue* queue) {
