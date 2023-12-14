@@ -83,6 +83,7 @@ void programLoop() {
         break;
       default: 
         printf("Unknown command, please try again\n\n"); 
+        break; 
     }
   }
 

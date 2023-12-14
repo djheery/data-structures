@@ -18,8 +18,8 @@ void dequeue(CircularQueue* queue);
 void peek(CircularQueue* queue); 
 void showIsEmpty(CircularQueue* queue); 
 void showIsFull(CircularQueue* queue); 
-void showRealFront(CircularQueue* queue); 
-void showRealRear(CircularQueue* queue);
+void front(CircularQueue* queue); 
+void rear(CircularQueue* queue);
 void programLoop(); 
 void printMenu(); 
 void printError(); 
@@ -189,30 +189,110 @@ void show(CircularQueue* queue) {
   char buffer[50] = { "[" };
 
   for(i = queue->front; i < queue->rear; i++) {
-    
+     char c =  queue->queue[i];
+     printf("%c", c); 
   }
 }
 
 void enqueue(CircularQueue* queue) {
+  bool isFull = getIsFull(queue); 
+
+  if(isFull) {
+    printf("Cannot enqueue any more items as your queue is full\n\n"); 
+    return; 
+  }
   
+  queue->rear = queue->rear == (queue->capacity - 1) ? 0 : queue->rear + 1; 
+
+  char textPrompt[] = "Please enter the number you would like to add to the queue"; 
+  int numToAdd = getUserInput(textPrompt);
+
+  if(numToAdd == -1) {
+    printf("Returning to the menu because of too many incorrect entries\n\n");  
+    return;
+  }
+
+  queue->queue[queue->rear] = numToAdd; 
+  queue->size += 1; 
+
+  printf("%d added to the queue\n", numToAdd); 
+  printf("Your queue now consists of %d items\n", queue->size); 
+  printf("The actual front of your queue is at index: %d\n", queue->front); 
+  printf("The actual rear of your queue is at index: %d\n\n", queue->rear);
 }
 
 void dequeue(CircularQueue* queue) {
+  bool isEmpty = getIsEmpty(queue);
+
+  if(isEmpty) {
+    printf("Your queue is already empty so there is nothing to dequeue\n"); 
+    printf("Returning to the menu...\n\n"); 
+    return; 
+  }
+
+  queue->size -= 1; 
   
+  if(queue->size == 0) {
+    queue->front = 0; 
+    queue->rear = -1;
+    return;
+  }
+
+  queue->front = queue->front == (queue->capacity - 1) ? 0 : queue->front + 1; 
 }
 
 void isEmpty(CircularQueue* queue) {
-  
+  bool queueIsEmpty = getIsEmpty(queue); 
+
+  if(queueIsEmpty) {
+    printf("Your queue is empty... add some items?\n\n");
+    return; 
+  }
+
+  printf("Your queue is not empty, there are %d items in your queue\n\n", queue->size); 
 }
 
 void isFull(CircularQueue* queue) {
-  
+  bool queueIsFull = getIsFull(queue);  
+
+  if(queueIsFull) {
+    printf("Your queue is at capacity\n\n"); 
+    return; 
+  }
+
+  printf("Your queue is not full...\n\n");
+}
+
+void front(CircularQueue* queue) {
+  bool queueIsEmpty = getIsEmpty(queue); 
+
+  if(queueIsEmpty) {
+    printf("Your queue is empty, there is no front\n\n"); 
+    return; 
+  }
+
+  int front = queue->queue[queue->front];
+  printf("The front item of this queue is %d\n", front);
+  printf("The front index of the queue is %d\n\n", queue->front); 
+}
+
+void rear(CircularQueue* queue) {
+  bool queueIsEmpty = getIsEmpty(queue); 
+
+  if(queueIsEmpty) {
+    printf("Your queue is empty, there is no rear\n\n"); 
+    return; 
+  }
+
+  int rear = queue->queue[queue->rear];
+  printf("The rear item of this queue is %d\n", rear);
+  printf("The rear index of the queue is %d\n\n", queue->rear); 
 }
 
 bool getIsEmpty(CircularQueue* queue) {
-  return false;  
+  return queue->size == 0; 
 }
 
 bool getIsFull(CircularQueue* queue) {
-  return true;  
+  return queue->size == queue->capacity;  
 }
