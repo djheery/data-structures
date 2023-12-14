@@ -18,6 +18,8 @@ void dequeue(CircularQueue* queue);
 void peek(CircularQueue* queue); 
 void showIsEmpty(CircularQueue* queue); 
 void showIsFull(CircularQueue* queue); 
+void showRealFront(CircularQueue* queue); 
+void showRealRear(CircularQueue* queue);
 void programLoop(); 
 void printMenu(); 
 void printError(); 
@@ -58,6 +60,49 @@ void programLoop() {
   }
 
   CircularQueue queue = initializeQueue(queueCapacity); 
+
+  while(true) {
+    printMenu(); 
+    char commandPrompt[] = "Please enter the number of the command you would like to execute: "; 
+    int command = getUserInput(commandPrompt);
+    printf("\n"); 
+
+    switch(command) {
+      case 1 : 
+        printf("TODO\n\n"); 
+        break; 
+      case 2 : 
+        printf("TODO\n\n"); 
+        break;
+      case 3 : 
+        printf("TODO\n\n"); 
+        break; 
+      case 4 :
+        printf("TODO\n\n"); 
+        break; 
+      case 5 : 
+        printf("TODO\n\n"); 
+        break; 
+      case 6 : 
+        printf("TODO\n\n"); 
+        break; 
+      case 7 : 
+        printf("TODO\n\n");
+        break;
+      case 0 : 
+        printf("Ending the program...\n"); 
+        printf("Goodbye!\n\n"); 
+        exit(0);
+        break;
+      default : 
+        printf("Whoops unknown command! Please try again...\n\n");
+        break;
+    }
+
+    break; 
+  }
+
+  free(queue.queue); 
 
 }
 
@@ -124,4 +169,50 @@ CircularQueue initializeQueue(int capacity) {
   queue.queue = (int*) malloc(capacity * sizeof(int)); 
 
   return queue; 
+}
+
+void show(CircularQueue* queue) {
+  bool isEmpty = getIsEmpty(queue); 
+
+  if(isEmpty) {
+    printf("Your queue is empty... why do you want to do this to me?\n\n"); 
+    return; 
+  }
+
+  if(queue->size == 1) {
+    printf("[%d]\n\n", queue->queue[queue->front]); 
+    return; 
+  }
+
+  int i; 
+  int bufferPointer = 1; 
+  char buffer[50] = { "[" };
+
+  for(i = queue->front; i < queue->rear; i++) {
+    
+  }
+}
+
+void enqueue(CircularQueue* queue) {
+  
+}
+
+void dequeue(CircularQueue* queue) {
+  
+}
+
+void isEmpty(CircularQueue* queue) {
+  
+}
+
+void isFull(CircularQueue* queue) {
+  
+}
+
+bool getIsEmpty(CircularQueue* queue) {
+  return false;  
+}
+
+bool getIsFull(CircularQueue* queue) {
+  return true;  
 }
