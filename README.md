@@ -24,10 +24,10 @@ The list is comprised of items from the wikipedia data structures list
 
 ## TODOs 
 
-- [ ] Arrays 
+- [x] Arrays 
     - [x] Stacks 
     - [x] Queues 
-    - [ ] Circular Queues
+    - [x] Circular Queues
 - [ ] Lists 
     - [ ] Array List/ Vector 
     - [ ] Linked List 
