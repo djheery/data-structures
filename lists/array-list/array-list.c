@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <string.h>
 
 #define INITIAL_CAPACITY 5 
-#define RESIZE_LOAD_FACTOR 0.7
+#define LOAD_FACTOR_THRESHOLD 0.7
+#define GROWTH_FACTOR 0.5 
 
 typedef struct {
   int* array; 
@@ -39,14 +41,14 @@ bool getIsEmpty(ArrayList* arrayList);
 bool getContains(ArrayList* arrayList, int numToCheck); 
 void swap(ArrayList* arrayList, int idx1, int idx2); 
 int getIdx(ArrayList* arrayList, int idx); 
-bool listInsert(ArrayList* arrayList, int idx); 
+bool listInsert(ArrayList* arrayList, int idx, int numToInsert); 
 bool listRemove(ArrayList* arrayList, int idx); 
 
 // General Program Methods
 void programLoop(); 
 void printMenu(); 
 void printSubListOptions(); 
-void resize(ArrayList* arrayList); 
+bool resize(ArrayList* arrayList); 
 ArrayList initializeArrayList(); 
 int getUserInput(char textPrompt[]); 
 bool validateUserInput(char *pointer); 
@@ -55,6 +57,8 @@ bool validateUserInput(char *pointer);
 int main() {
   return 0; 
 }
+
+// The main program loop
 
 void programLoop() {
   printf("========================\n"); 
@@ -122,6 +126,8 @@ void programLoop() {
   free(arrayList.array); 
 }
 
+// Print the menu to the UI 
+
 void printMenu() {
   printf("Please select the operation you would like to perform\n\n"); 
   printf("[1] Show the Array List\n"); 
@@ -145,6 +151,8 @@ void printMenu() {
   printf("[0] Exit the program\n\n"); 
 }
 
+// Initialize the ArrayList on program load
+
 ArrayList initializeArrayList() {
   ArrayList arr;  
   arr.size = 0; 
@@ -159,19 +167,28 @@ ArrayList initializeArrayList() {
   return arr; 
 }
 
+// Get the user input 
+// Side effect - Validate the input also
+
 int getUserInput(char textPrompt[]) {
   return 0;  
 }
 
+// Validate the User input
+
 bool validateUserInput(char* pointer) {
   return false;  
 }
+
+// Get the load factor of the current ArrayList
 
 float getLoadFactor(ArrayList* arrayList) {
   float size = (float) arrayList->size; 
   float capacity = (float) arrayList->currentCapacity;
   return size / capacity; 
 }
+
+// Utility for index of method
 
 int getIdx(ArrayList* arrayList, int idx) {
   if(idx > (arrayList->size - 1)) {
@@ -181,23 +198,101 @@ int getIdx(ArrayList* arrayList, int idx) {
   return arrayList->array[idx];
 }
 
-bool listInsert(ArrayList* arrayList, int idx) {
-  int isOutOfBounds = idx > (arrayList->size - 1); 
+// Insert an integer at a given index
+
+bool listInsert(ArrayList* arrayList, int idx, int numToInsert) {
+  bool isOutOfBounds = (idx > (arrayList->size - 1)) || (idx < 0); 
+  bool isFull = getIsFull(arrayList); 
+
+  if(isFull) {
+    printf("The array should not be full, it should have been resized before it reaches this point\n\n"); 
+    printf("Closing program\n\n");
+    exit(EXIT_FAILURE);
+  }
 
   if(isOutOfBounds) {
     printf("The index selected is out of bounds.\n"); 
     printf("Althought ArrayLists/Vectors can grow in size, the insertion must still be contiguous\n\n"); 
     return false; 
   }
-  return false;  
+
+  if(idx == arrayList->size - 1) {
+    arrayList->array[idx] = numToInsert;
+    arrayList->size += 1; 
+    return true;  
+  }
+
+  int i; 
+  int prevNum = arrayList->array[idx];
+  for(i = idx; i < arrayList->size - 1; i++) {
+    if(i == idx) {
+      arrayList->array[idx] = numToInsert;  
+      continue; 
+    }
+
+    int tmp = arrayList->array[i + 1]; 
+    arrayList->array[idx + 1] = prevNum; 
+    prevNum = tmp;
+  }
+
+  arrayList->size += 1; 
+
+  return true;  
 }
+
+// Remove an index from the array
 
 bool listRemove(ArrayList* arrayList, int idx) {
   return true; 
 }
 
+// Get if the array contains a given integer
+
 bool getContains(ArrayList* arrayList, int numToCheck) {
+  bool isEmpty = getIsEmpty(arrayList); 
+  if(isEmpty) {
+    return false; 
+  }
+
+  int i; 
+  for(i = 0; i < arrayList->size; i++) {
+    int current = arrayList->array[i]; 
+    if(current == numToCheck) {
+      return true; 
+    }
+  }
+
   return false; 
+}
+
+// Should an Array Resize be performed
+
+bool shouldResize(ArrayList * arrayList) {
+  return getLoadFactor(arrayList) >= LOAD_FACTOR_THRESHOLD;  
+}
+
+// Resizing array method
+
+bool resize(ArrayList* arrayList) {
+  float currentCapacity = (float) arrayList->currentCapacity; 
+  float growth = currentCapacity + (currentCapacity * GROWTH_FACTOR); 
+  size_t newCapacity = arrayList->currentCapacity + ((size_t) growth); 
+
+  int* newArr = (int*) malloc(newCapacity * sizeof(int));
+
+  if(newArr == NULL) {
+    printf("Error assigning the new arr to memory, as this is unexpected the program will exit\n\n");  
+    exit(EXIT_FAILURE); 
+  }
+
+  memcpy(newArr, arrayList->array, arrayList->size * sizeof(int)); 
+
+
+  free(arrayList->array); 
+  arrayList->array = newArr; 
+  arrayList->currentCapacity = newCapacity;
+
+  return true;  
 }
 
 void show(ArrayList* arrayList) {
