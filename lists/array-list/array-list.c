@@ -39,6 +39,8 @@ bool getIsEmpty(ArrayList* arrayList);
 bool getContains(ArrayList* arrayList, int numToCheck); 
 void swap(ArrayList* arrayList, int idx1, int idx2); 
 int getIdx(ArrayList* arrayList, int idx); 
+bool listInsert(ArrayList* arrayList, int idx); 
+bool listRemove(ArrayList* arrayList, int idx); 
 
 // General Program Methods
 void programLoop(); 
@@ -62,6 +64,7 @@ void programLoop() {
   ArrayList arrayList = initializeArrayList(); 
 
   while(true) {
+    printMenu();
     char commandPrompt[] = "Please enter the number of the command you would like to perform: "; 
     int command = validateUserInput(commandPrompt);
     printf("\n");
@@ -176,6 +179,21 @@ int getIdx(ArrayList* arrayList, int idx) {
   }
 
   return arrayList->array[idx];
+}
+
+bool listInsert(ArrayList* arrayList, int idx) {
+  int isOutOfBounds = idx > (arrayList->size - 1); 
+
+  if(isOutOfBounds) {
+    printf("The index selected is out of bounds.\n"); 
+    printf("Althought ArrayLists/Vectors can grow in size, the insertion must still be contiguous\n\n"); 
+    return false; 
+  }
+  return false;  
+}
+
+bool listRemove(ArrayList* arrayList, int idx) {
+  return true; 
 }
 
 bool getContains(ArrayList* arrayList, int numToCheck) {
