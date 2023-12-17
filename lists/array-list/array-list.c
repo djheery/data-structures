@@ -55,6 +55,7 @@ bool validateUserInput(char *pointer);
 
   
 int main() {
+  programLoop(); 
   return 0; 
 }
 
@@ -295,8 +296,29 @@ bool resize(ArrayList* arrayList) {
   return true;  
 }
 
+// All items in the array list
+
 void show(ArrayList* arrayList) {
-  
+  bool isEmpty = getIsEmpty(arrayList);
+  int size = arrayList->size; 
+
+  if(isEmpty) {
+    printf("Your array is currently empty. Perhaps add some items\n\n"); 
+    return; 
+  }
+
+  if(size == 1) {
+    printf("[%d]\n\n", arrayList->array[0]); 
+    return; 
+  }
+
+  int i; 
+  printf("["); 
+  for(i = 0; i < size - 1; i++) {
+    printf("%d, ", arrayList->array[i]); 
+  }
+
+  printf("%d]\n\n", arrayList->array[size - 1]);
 }
 
 void get(ArrayList* arrayList) {
