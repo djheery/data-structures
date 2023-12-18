@@ -479,7 +479,6 @@ void insertAtIdx(ArrayList* arrayList) {
   
 }
 
-
 void removeAtIdx(ArrayList* arrayList) {
   
 }
