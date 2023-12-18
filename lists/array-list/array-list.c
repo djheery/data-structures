@@ -114,8 +114,6 @@ void programLoop() {
         break; 
       case 17 : 
         break; 
-      case 18: 
-        break; 
       case 0 : 
         free(arrayList.array); 
         printf("Exiting the program...\n"); 
@@ -139,10 +137,10 @@ void printMenu() {
   printf("[1] Show the Array List\n"); 
   printf("[2] Show the length of the Array\n"); 
   printf("[3] Push an Item to the Array\n"); 
-  printf("[4] Shift an Item to the Array\n"); 
+  printf("[7] Unshift an Item to the array\n"); 
   printf("[5] Insert an Item into a given index\n"); 
   printf("[6] Pop an Item from the array\n"); 
-  printf("[7] Unshift an Item from the array\n"); 
+  printf("[3] Shift an Item from the Array\n"); 
   printf("[8] Show the current size of the array\n"); 
   printf("[9] Show the current capacity of the array\n"); 
   printf("[10] Show the current load factor of the array\n"); 
@@ -153,7 +151,6 @@ void printMenu() {
   printf("[15] Reverse the array\n"); 
   printf("[16] See if the array contains an item\n"); 
   printf("[17] Create a see a sublist from provided options\n");
-  printf("[18] Populate the array with random elements\n"); 
   printf("[0] Exit the program\n\n"); 
 }
 
@@ -386,19 +383,14 @@ void swap(ArrayList* arrayList, int idx1, int idx2) {
   arrayList->array[idx2] = temp;
 }
 
+// Clear/ Reset the array to its initialization form
+
 ArrayList clear(ArrayList arrayList) {
   free(arrayList.array);  
   return initializeArrayList();
 }
-  
 
-void get(ArrayList* arrayList) {
-  
-}
-
-void insertAtIdx(ArrayList* arrayList) {
-  
-}
+// Reverse the Array -> This reverals persists and is not a temporary clone
 
 void reverse(ArrayList* arrayList) {
   if(getIsEmpty(arrayList)) {
@@ -426,6 +418,32 @@ void reverse(ArrayList* arrayList) {
   printf("After\n"); 
   show(arrayList); 
 }
+
+bool arrayPush(ArrayList* arrayList, int numToPush) {
+  return false;  
+}
+
+bool arrayPop(ArrayList* arrayList) {
+  return false;  
+}
+
+bool arrayUnshift(ArrayList* arrayList, int numToUnshift) {
+  return false;  
+}
+
+bool arrayShift(ArrayList* arrayList) {
+
+  return false;  
+}
+
+void get(ArrayList* arrayList) {
+  
+}
+
+void insertAtIdx(ArrayList* arrayList) {
+  
+}
+
 
 void removeAtIdx(ArrayList* arrayList) {
   
