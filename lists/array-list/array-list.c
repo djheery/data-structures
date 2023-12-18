@@ -81,24 +81,34 @@ void programLoop() {
 
     switch(command) {
       case 1 : 
+        show(&arrayList); 
         break; 
       case 2 : 
+        get(&arrayList); 
         break; 
       case 3 : 
+        push(&arrayList);
         break; 
       case 4 : 
+        unshift(&arrayList);
         break; 
       case 5 : 
+        insertAtIdx(&arrayList);
         break; 
       case 6 : 
+        pop(&arrayList);
         break; 
       case 7 : 
+        shift(&arrayList); 
         break; 
       case 8 : 
+        printf("The current size of your array is %zu items\n\n", arrayList.size);
         break; 
       case 9 : 
+        printf("The current capacity of the array is %zu items\n\n", arrayList.currentCapacity); 
         break; 
       case 10 : 
+        printf("The current load factor of the array is %2.f\n\n", getLoadFactor(&arrayList);
         break;
       case 11 : 
         break; 
@@ -137,10 +147,10 @@ void printMenu() {
   printf("[1] Show the Array List\n"); 
   printf("[2] Show the length of the Array\n"); 
   printf("[3] Push an Item to the Array\n"); 
-  printf("[7] Unshift an Item to the array\n"); 
+  printf("[4] Unshift an Item to the array\n"); 
   printf("[5] Insert an Item into a given index\n"); 
   printf("[6] Pop an Item from the array\n"); 
-  printf("[3] Shift an Item from the Array\n"); 
+  printf("[7] Shift an Item from the Array\n"); 
   printf("[8] Show the current size of the array\n"); 
   printf("[9] Show the current capacity of the array\n"); 
   printf("[10] Show the current load factor of the array\n"); 
@@ -419,6 +429,8 @@ void reverse(ArrayList* arrayList) {
   show(arrayList); 
 }
 
+// Array Push
+
 bool arrayPush(ArrayList* arrayList, int numToPush) {
   arrayList->array[arrayList->size] = numToPush; 
   arrayList->size += 1; 
@@ -435,11 +447,13 @@ bool arrayPop(ArrayList* arrayList) {
   return true;  
 }
 
+// Unshift to the array (Add an element to the start) 
+
 bool arrayUnshift(ArrayList* arrayList, int numToUnshift) {
   int i; 
   int nextNum = arrayList->array[0];
 
-  for(i = 0; i < arrayList->size; i++) {
+  for(i = 0; i < arrayList->size - 1; i++) {
     if(i == 0) {
       arrayList->array[i] = numToUnshift;
     } else {
