@@ -23,15 +23,15 @@ void uiPush(ArrayList* arrayList);
 void uiPop(ArrayList* arrayList); 
 void uiShift(ArrayList* arrayList); 
 void uiUnshift(ArrayList* arrayList); 
-void size(ArrayList* arrayList); 
-void capacity(ArrayList* arrayList);
+void uiSize(ArrayList* arrayList); 
+void uiCapacity(ArrayList* arrayList);
 void loadFactor(ArrayList* arrayList); 
 void isEmpty(ArrayList* arrayList); 
 void indexOf(ArrayList* arrayList); 
 void trimToSize(ArrayList* arrayList); 
 void reverse(ArrayList* arrayList); 
 void contains(ArrayList* arrayList); 
-void subList(ArrayList* arrayList); 
+void uiSublist(ArrayList* arrayList); 
 ArrayList clear(ArrayList arrayList); 
 
 // Array List utility Operations 
@@ -53,7 +53,7 @@ bool arrayShift(ArrayList* arrayList);
 void programLoop(); 
 void printMenu(); 
 void printSubListOptions(); 
-bool resize(ArrayList* arrayList); 
+bool reuiSize(ArrayList* arrayList); 
 ArrayList initializeArrayList(); 
 int getUserInput(char textPrompt[]); 
 bool validateUserInput(char *pointer); 
@@ -307,13 +307,13 @@ bool getContains(ArrayList* arrayList, int numToCheck) {
 
 // Should an Array Resize be performed
 
-bool shouldResize(ArrayList * arrayList) {
+bool shouldReuiSize(ArrayList * arrayList) {
   return getLoadFactor(arrayList) >= LOAD_FACTOR_THRESHOLD;  
 }
 
 // Resizing array method
 
-bool resize(ArrayList* arrayList) {
+bool reuiSize(ArrayList* arrayList) {
   float currentCapacity = (float) arrayList->currentCapacity; 
   float growth = currentCapacity + (currentCapacity * GROWTH_FACTOR); 
   size_t newCapacity = arrayList->currentCapacity + ((size_t) growth); 
@@ -450,6 +450,14 @@ bool arrayPop(ArrayList* arrayList) {
 // Unshift to the array (Add an element to the start) 
 
 bool arrayUnshift(ArrayList* arrayList, int numToUnshift) {
+  bool isEmpty = getIsEmpty(arrayList); 
+
+  if(isEmpty) {
+    arrayList->array[0] = numToUnshift; 
+    arrayList->size += 1; 
+    return true; 
+  }
+
   int i; 
   int nextNum = arrayList->array[0];
 
@@ -458,17 +466,31 @@ bool arrayUnshift(ArrayList* arrayList, int numToUnshift) {
       arrayList->array[i] = numToUnshift;
     } else {
       arrayList->array[i] = nextNum; 
+      nextNum = arrayList->array[i + 1]; 
     }
-
-    nextNum = arrayList->array[i + 1]; 
   }
+
+  arrayList->size += 1; 
 
   return true;  
 }
 
-bool arrayShift(ArrayList* arrayList) {
+// Shift the 0 idx item from the array
 
-  return false;  
+bool arrayShift(ArrayList* arrayList) {
+  bool isEmpty = getIsEmpty(arrayList); 
+
+  if(isEmpty) {
+    printf("Your array is Empty thus no items can be removed\n\n");  
+    return false; 
+  }
+
+  int i; 
+  for(i = 1; i < arrayList->size; i++) {
+    arrayList->array[i - 1] = arrayList->array[i];  
+  }
+
+  return true;  
 }
 
 void uiGet(ArrayList* arrayList) {
@@ -499,15 +521,15 @@ void uiUnshift(ArrayList* arrayList) {
   
 }
 
-void size(ArrayList* arrayList) {
+void uiSize(ArrayList* arrayList) {
   
 }
 
-void capacity(ArrayList* arrayList) {
+void uiCapacity(ArrayList* arrayList) {
   
 }
 
-void subList(ArrayList* arrayList) {
+void uiSublist(ArrayList* arrayList) {
   
 }
 
