@@ -31,6 +31,7 @@ void indexOf(ArrayList* arrayList);
 void trimToSize(ArrayList* arrayList); 
 void reverse(ArrayList* arrayList); 
 void contains(ArrayList* arrayList); 
+void uiIsEmpty(ArrayList* arrayList); 
 void uiSublist(ArrayList* arrayList); 
 ArrayList clear(ArrayList arrayList); 
 
@@ -47,12 +48,13 @@ bool arrayPush(ArrayList* arrayList, int numToPush);
 bool arrayPop(ArrayList* arrayList); 
 bool arrayUnshift(ArrayList* arrayList, int numToUnshift); 
 bool arrayShift(ArrayList* arrayList); 
+bool resize(ArrayList* arrayList); 
+bool shouldResize(ArrayList* arrayList);
 
 // General Program Methods
 void programLoop(); 
 void printMenu(); 
 void printSubListOptions(); 
-bool reuiSize(ArrayList* arrayList); 
 ArrayList initializeArrayList(); 
 int getUserInput(char textPrompt[]); 
 bool validateUserInput(char *pointer); 
@@ -73,6 +75,11 @@ void programLoop() {
   ArrayList arrayList = initializeArrayList(); 
 
   while(true) {
+
+    if(shouldResize(&arrayList)) {
+      resize(&arrayList); 
+    }
+
     printMenu();
     char commandPrompt[] = "Please enter the number of the command you would like to perform: "; 
     int command = validateUserInput(commandPrompt);
@@ -110,6 +117,7 @@ void programLoop() {
         printf("The current load factor of the array is %2.f\n\n", getLoadFactor(&arrayList));
         break;
       case 11 : 
+        uiIsEmpty(&arrayList);
         break; 
       case 12 : 
         break; 
@@ -144,7 +152,7 @@ void programLoop() {
 void printMenu() {
   printf("Please select the operation you would like to perform\n\n"); 
   printf("[1] Show the Array List\n"); 
-  printf("[2] Show the length of the Array\n"); 
+  printf("[2] Get an Item from a given index of the array\n"); 
   printf("[3] Push an Item to the Array\n"); 
   printf("[4] Unshift an Item to the array\n"); 
   printf("[5] Insert an Item into a given index\n"); 
@@ -154,12 +162,9 @@ void printMenu() {
   printf("[9] Show the current capacity of the array\n"); 
   printf("[10] Show the current load factor of the array\n"); 
   printf("[11] Show if the array is empty\n"); 
-  printf("[12] Show if the array is Full\n"); 
-  printf("[13] Show the index of an item\n"); 
-  printf("[14] Trim array to size\n"); 
-  printf("[15] Reverse the array\n"); 
-  printf("[16] See if the array contains an item\n"); 
-  printf("[17] Create a see a sublist from provided options\n");
+  printf("[12] Show the index of an item\n"); 
+  printf("[13] Reverse the array\n"); 
+  printf("[14] See if the array contains an item\n"); 
   printf("[0] Exit the program\n\n"); 
 }
 
@@ -348,13 +353,13 @@ bool getContains(ArrayList* arrayList, int numToCheck) {
 
 // Should an Array Resize be performed
 
-bool shouldReuiSize(ArrayList * arrayList) {
+bool shouldResize(ArrayList * arrayList) {
   return getLoadFactor(arrayList) >= LOAD_FACTOR_THRESHOLD;  
 }
 
 // Resizing array method
 
-bool reuiSize(ArrayList* arrayList) {
+bool resize(ArrayList* arrayList) {
   float currentCapacity = (float) arrayList->currentCapacity; 
   float growth = currentCapacity + (currentCapacity * GROWTH_FACTOR); 
   size_t newCapacity = arrayList->currentCapacity + ((size_t) growth); 
@@ -372,6 +377,8 @@ bool reuiSize(ArrayList* arrayList) {
   free(arrayList->array); 
   arrayList->array = newArr; 
   arrayList->currentCapacity = newCapacity;
+
+  printf("Your array has been resized, the new capacity is: %zu", arrayList->currentCapacity);
 
   return true;  
 }
@@ -619,6 +626,14 @@ void uiCapacity(ArrayList* arrayList) {
 
 void uiSublist(ArrayList* arrayList) {
   
+}
+
+void uiIsEmpty(ArrayList* arrayList) {
+  if(getIsEmpty(arrayList)) {
+    printf("Your array is empty\n\n"); 
+  } else {
+    printf("Your array is not empty\n\n"); 
+  }
 }
 
 bool getIsEmpty(ArrayList* arrayList) {
