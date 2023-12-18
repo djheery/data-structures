@@ -107,7 +107,7 @@ void programLoop() {
         printf("The current capacity of the array is %zu items\n\n", arrayList.currentCapacity); 
         break; 
       case 10 : 
-        printf("The current load factor of the array is %2.f\n\n", getLoadFactor(&arrayList);
+        printf("The current load factor of the array is %2.f\n\n", getLoadFactor(&arrayList));
         break;
       case 11 : 
         break; 
@@ -183,13 +183,55 @@ ArrayList initializeArrayList() {
 // Side effect - Validate the input also
 
 int getUserInput(char textPrompt[]) {
-  return 0;  
+  bool isValid = false; 
+  int remainingInputs = 3; 
+  int userInput; 
+
+  while(!isValid) {
+    char buffer[8]; 
+    printf("> %s: ", textPrompt); 
+    fgets(buffer, sizeof(buffer), stdin);
+    printf("\n");
+
+    buffer[strcspn(buffer, "\n")] = 0; 
+
+    char *p = buffer; 
+    isValid = true; 
+
+    if(isValid) {
+      userInput = atoi(buffer); 
+      break;
+    }
+
+    remainingInputs -= 1; 
+
+    if(remainingInputs > 0) {
+      printf("Whoops, it seems like you entered an incorrect input\n");       
+      printf("We expect the input to only consist of one valid integer\n\n");
+      continue;
+    }
+
+    if(remainingInputs == 0) {
+      printf("Too many incorrect entries... Returning to the menu\n\n"); 
+      return -1; 
+    }
+    
+  }
+
+  return userInput;  
 }
 
 // Validate the User input
 
 bool validateUserInput(char* pointer) {
-  return false;  
+  while(*pointer) {
+    if(!isdigit((unsigned char)* pointer)) {
+      return false;
+    }
+    pointer++; 
+  }
+
+  return true;  
 }
 
 // Get the load factor of the current ArrayList
@@ -380,6 +422,8 @@ int getAtIdx(ArrayList* arrayList, int idx) {
   return numAtIdx; 
 }
 
+// get the current capacity of the ArrayList 
+
 int getCapacity(ArrayList* arrayList) {
   return arrayList->currentCapacity;
 }
@@ -493,11 +537,34 @@ bool arrayShift(ArrayList* arrayList) {
 }
 
 void uiGet(ArrayList* arrayList) {
-  
+  bool isEmpty = getIsEmpty(arrayList); 
+
+  char textPrompt[] = "What index of the array would you like to get?: ";
+  int idx = getUserInput(textPrompt);
+
+  if(idx == -1) {
+    return;  
+  }
+
+  int num = getAtIdx(arrayList, idx);
+
+  if(num == -1) return;
+
+  printf("Index selected: %d\n", idx); 
+  printf("The number at index %d, is: %d\n\n", idx, num); 
 }
 
 void uiInsertAtIndex(ArrayList* arrayList) {
-  
+  char textPrompt[] = "What index would you like to insert at?: ";  
+  int idx = getUserInput(textPrompt);
+
+  char textPrompt2[] = "What number would you like to insert?: "; 
+  int numToInsert = getUserInput(textPrompt2);
+
+  bool hasInserted = listInsert(arrayList, idx, numToInsert);  
+
+  if(!hasInserted) printf("The number you entered has failed to be inserted\n\n"); 
+  if(hasInserted) printf("%d has been successfully inserted at index %d\n\n", numToInsert, idx);
 }
 
 void uiRemoveAtIdx(ArrayList* arrayList) {
