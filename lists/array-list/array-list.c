@@ -43,6 +43,10 @@ void swap(ArrayList* arrayList, int idx1, int idx2);
 int getAtIdx(ArrayList* arrayList, int idx); 
 bool listInsert(ArrayList* arrayList, int idx, int numToInsert); 
 bool listRemove(ArrayList* arrayList, int idx); 
+bool arrayPush(ArrayList* arrayList, int numToPush); 
+bool arrayPop(ArrayList* arrayList); 
+bool arrayUnshift(ArrayList* arrayList, int numToUnshift); 
+bool arrayShift(ArrayList* arrayList); 
 
 
 // General Program Methods
@@ -394,6 +398,33 @@ void get(ArrayList* arrayList) {
 
 void insertAtIdx(ArrayList* arrayList) {
   
+}
+
+void reverse(ArrayList* arrayList) {
+  if(getIsEmpty(arrayList)) {
+    printf("Your array is currently empty\n\n"); 
+    return;
+  }
+
+  int end = arrayList->size - 1; 
+  int start = 0; 
+
+  if(start == end) {
+    printf("Your array is only one item in length\n\n"); 
+    return; 
+  }
+
+  printf("Before:\n"); 
+  show(arrayList);
+
+  while(start < end) {
+    swap(arrayList, start, end);
+    start++; 
+    end--;
+  }
+
+  printf("After\n"); 
+  show(arrayList); 
 }
 
 void removeAtIdx(ArrayList* arrayList) {
