@@ -476,3 +476,11 @@ void capacity(ArrayList* arrayList) {
 void subList(ArrayList* arrayList) {
   
 }
+
+bool getIsEmpty(ArrayList* arrayList) {
+  return arrayList->size == 0;  
+}
+
+bool getIsFull(ArrayList* arrayList) {
+  return arrayList->size == arrayList->currentCapacity;  
+}
