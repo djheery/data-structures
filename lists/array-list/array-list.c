@@ -26,13 +26,13 @@ void unshift(ArrayList* arrayList);
 void size(ArrayList* arrayList); 
 void capacity(ArrayList* arrayList);
 void loadFactor(ArrayList* arrayList); 
-void clear(ArrayList* arrayList); 
 void isEmpty(ArrayList* arrayList); 
 void indexOf(ArrayList* arrayList); 
 void trimToSize(ArrayList* arrayList); 
 void reverse(ArrayList* arrayList); 
 void contains(ArrayList* arrayList); 
 void subList(ArrayList* arrayList); 
+ArrayList clear(ArrayList arrayList); 
 
 // Array List utility Operations 
 float getLoadFactor(ArrayList* arrayList); 
@@ -43,6 +43,7 @@ void swap(ArrayList* arrayList, int idx1, int idx2);
 int getAtIdx(ArrayList* arrayList, int idx); 
 bool listInsert(ArrayList* arrayList, int idx, int numToInsert); 
 bool listRemove(ArrayList* arrayList, int idx); 
+
 
 // General Program Methods
 void programLoop(); 
@@ -369,6 +370,10 @@ int getAtIdx(ArrayList* arrayList, int idx) {
   return numAtIdx; 
 }
 
+int getCapacity(ArrayList* arrayList) {
+  return arrayList->currentCapacity;
+}
+
 // Swap method
 
 void swap(ArrayList* arrayList, int idx1, int idx2) {
@@ -377,6 +382,10 @@ void swap(ArrayList* arrayList, int idx1, int idx2) {
   arrayList->array[idx2] = temp;
 }
 
+ArrayList clear(ArrayList arrayList) {
+  free(arrayList.array);  
+  return initializeArrayList();
+}
   
 
 void get(ArrayList* arrayList) {
