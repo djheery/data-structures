@@ -40,7 +40,7 @@ bool getIsFull(ArrayList* arrayList);
 bool getIsEmpty(ArrayList* arrayList); 
 bool getContains(ArrayList* arrayList, int numToCheck); 
 void swap(ArrayList* arrayList, int idx1, int idx2); 
-int getIdx(ArrayList* arrayList, int idx); 
+int getAtIdx(ArrayList* arrayList, int idx); 
 bool listInsert(ArrayList* arrayList, int idx, int numToInsert); 
 bool listRemove(ArrayList* arrayList, int idx); 
 
@@ -320,6 +320,37 @@ void show(ArrayList* arrayList) {
 
   printf("%d]\n\n", arrayList->array[size - 1]);
 }
+
+// Get the number at a given idx
+
+int getAtIdx(ArrayList* arrayList, int idx) {
+  bool isEmpty = getIsEmpty(arrayList);  
+  bool isOutOfBounds = idx > (arrayList->size - 1); 
+
+  if(isEmpty) {
+    printf("Your array is empty, thus there is nothing to get\n\n");  
+    return -1; 
+  }
+
+  if(isOutOfBounds) {
+    printf("The index selected is out of bounds of the current array\n\n"); 
+    return -1; 
+  }
+
+  int numAtIdx = arrayList->array[idx];
+
+  return numAtIdx; 
+}
+
+// Swap method
+
+void swap(ArrayList* arrayList, int idx1, int idx2) {
+  int temp = arrayList->array[idx1]; 
+  arrayList->array[idx1] = arrayList->array[idx2]; 
+  arrayList->array[idx2] = temp;
+}
+
+  
 
 void get(ArrayList* arrayList) {
   
