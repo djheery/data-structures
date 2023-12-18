@@ -244,6 +244,33 @@ bool listInsert(ArrayList* arrayList, int idx, int numToInsert) {
 // Remove an index from the array
 
 bool listRemove(ArrayList* arrayList, int idx) {
+  bool isOutOfBounds = (idx > (arrayList->size - 1)) || (idx < 0); 
+  bool isEmpty = getIsEmpty(arrayList); 
+  
+  if(isOutOfBounds) {
+    printf("The index selected is out of bounds.\n"); 
+    printf("Althought ArrayLists/Vectors can grow in size, the insertion must still be contiguous\n\n"); 
+    return false; 
+  }
+
+  if(isEmpty) {
+    printf("The array is currently empty, thus you cannot remove any items from it\n\n");  
+    return false; 
+  }
+
+  if((arrayList->size - 1) == idx) {
+    arrayList->size -= 1;  
+    return true; 
+  }
+
+  int i; 
+  for(i = idx; i < (arrayList->size - 1); i++) {
+    int num = arrayList->array[i + 1]; 
+    arrayList->array[i] = num; 
+  }
+
+  arrayList->size -= 1; 
+
   return true; 
 }
 
