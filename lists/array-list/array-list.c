@@ -48,7 +48,6 @@ bool arrayPop(ArrayList* arrayList);
 bool arrayUnshift(ArrayList* arrayList, int numToUnshift); 
 bool arrayShift(ArrayList* arrayList); 
 
-
 // General Program Methods
 void programLoop(); 
 void printMenu(); 
