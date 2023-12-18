@@ -561,6 +561,11 @@ void uiInsertAtIndex(ArrayList* arrayList) {
   char textPrompt2[] = "What number would you like to insert?: "; 
   int numToInsert = getUserInput(textPrompt2);
 
+  if(idx == -1 || numToInsert == -1) {
+    printf("Unfortunately you entered some shit incorrectly\n\n"); 
+    return; 
+  }
+
   bool hasInserted = listInsert(arrayList, idx, numToInsert);  
 
   if(!hasInserted) printf("The number you entered has failed to be inserted\n\n"); 
@@ -568,7 +573,7 @@ void uiInsertAtIndex(ArrayList* arrayList) {
 }
 
 void uiRemoveAtIdx(ArrayList* arrayList) {
-  
+   
 }
 
 void uiPush(ArrayList* arrayList) {
