@@ -420,15 +420,36 @@ void reverse(ArrayList* arrayList) {
 }
 
 bool arrayPush(ArrayList* arrayList, int numToPush) {
-  return false;  
+  arrayList->array[arrayList->size] = numToPush; 
+  arrayList->size += 1; 
+  return true;  
 }
 
+// Pop from the array 
+// This works by simply decrementing the size and allowing the rear of the array to be written too 
+// Other methods could be used such as assigning the array at the rear index to a value that indicates null if you wish to remove the item completley
+// I did not feel it was necessary in this circumstance
+
 bool arrayPop(ArrayList* arrayList) {
-  return false;  
+  arrayList->size -= 1; 
+  return true;  
 }
 
 bool arrayUnshift(ArrayList* arrayList, int numToUnshift) {
-  return false;  
+  int i; 
+  int nextNum = arrayList->array[0];
+
+  for(i = 0; i < arrayList->size; i++) {
+    if(i == 0) {
+      arrayList->array[i] = numToUnshift;
+    } else {
+      arrayList->array[i] = nextNum; 
+    }
+
+    nextNum = arrayList->array[i + 1]; 
+  }
+
+  return true;  
 }
 
 bool arrayShift(ArrayList* arrayList) {
