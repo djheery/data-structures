@@ -14,15 +14,15 @@ typedef struct {
   size_t currentCapacity; 
 } ArrayList; 
 
-// ArrayList user operations
-void show(ArrayList* arrayList); 
-void get(ArrayList* arrayList); 
-void insertAtIdx(ArrayList* arrayList); 
-void removeAtIdx(ArrayList* arrayList); 
-void push(ArrayList* arrayList); 
-void pop(ArrayList* arrayList); 
-void shift(ArrayList* arrayList); 
-void unshift(ArrayList* arrayList); 
+// ArrayList user operations UI
+void uiShow(ArrayList* arrayList); 
+void uiGet(ArrayList* arrayList); 
+void uiInsertAtIndex(ArrayList* arrayList); 
+void uiRemoveAtIdx(ArrayList* arrayList); 
+void uiPush(ArrayList* arrayList); 
+void uiPop(ArrayList* arrayList); 
+void uiShift(ArrayList* arrayList); 
+void uiUnshift(ArrayList* arrayList); 
 void size(ArrayList* arrayList); 
 void capacity(ArrayList* arrayList);
 void loadFactor(ArrayList* arrayList); 
@@ -81,25 +81,25 @@ void programLoop() {
 
     switch(command) {
       case 1 : 
-        show(&arrayList); 
+        uiShow(&arrayList); 
         break; 
       case 2 : 
-        get(&arrayList); 
+        uiGet(&arrayList); 
         break; 
       case 3 : 
-        push(&arrayList);
+        uiPush(&arrayList);
         break; 
       case 4 : 
-        unshift(&arrayList);
+        uiUnshift(&arrayList);
         break; 
       case 5 : 
-        insertAtIdx(&arrayList);
+        uiInsertAtIndex(&arrayList);
         break; 
       case 6 : 
-        pop(&arrayList);
+        uiPop(&arrayList);
         break; 
       case 7 : 
-        shift(&arrayList); 
+        uiShift(&arrayList); 
         break; 
       case 8 : 
         printf("The current size of your array is %zu items\n\n", arrayList.size);
@@ -337,7 +337,7 @@ bool resize(ArrayList* arrayList) {
 
 // All items in the array list
 
-void show(ArrayList* arrayList) {
+void uiShow(ArrayList* arrayList) {
   bool isEmpty = getIsEmpty(arrayList);
   int size = arrayList->size; 
 
@@ -417,7 +417,7 @@ void reverse(ArrayList* arrayList) {
   }
 
   printf("Before:\n"); 
-  show(arrayList);
+  uiShow(arrayList);
 
   while(start < end) {
     swap(arrayList, start, end);
@@ -426,7 +426,7 @@ void reverse(ArrayList* arrayList) {
   }
 
   printf("After\n"); 
-  show(arrayList); 
+  uiShow(arrayList); 
 }
 
 // Array Push
@@ -471,31 +471,31 @@ bool arrayShift(ArrayList* arrayList) {
   return false;  
 }
 
-void get(ArrayList* arrayList) {
+void uiGet(ArrayList* arrayList) {
   
 }
 
-void insertAtIdx(ArrayList* arrayList) {
+void uiInsertAtIndex(ArrayList* arrayList) {
   
 }
 
-void removeAtIdx(ArrayList* arrayList) {
+void uiRemoveAtIdx(ArrayList* arrayList) {
   
 }
 
-void push(ArrayList* arrayList) {
+void uiPush(ArrayList* arrayList) {
   
 }
 
-void pop(ArrayList* arrayList) {
+void uiPop(ArrayList* arrayList) {
   
 }
 
-void shift(ArrayList* arrayList) {
+void uiShift(ArrayList* arrayList) {
   
 }
 
-void unshift(ArrayList* arrayList) {
+void uiUnshift(ArrayList* arrayList) {
   
 }
 
