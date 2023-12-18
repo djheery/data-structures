@@ -536,6 +536,8 @@ bool arrayShift(ArrayList* arrayList) {
   return true;  
 }
 
+// Get an item at a given index
+
 void uiGet(ArrayList* arrayList) {
   bool isEmpty = getIsEmpty(arrayList); 
 
@@ -553,6 +555,8 @@ void uiGet(ArrayList* arrayList) {
   printf("Index selected: %d\n", idx); 
   printf("The number at index %d, is: %d\n\n", idx, num); 
 }
+
+// Insert a given number at an index
 
 void uiInsertAtIndex(ArrayList* arrayList) {
   char textPrompt[] = "What index would you like to insert at?: ";  
@@ -572,8 +576,21 @@ void uiInsertAtIndex(ArrayList* arrayList) {
   if(hasInserted) printf("%d has been successfully inserted at index %d\n\n", numToInsert, idx);
 }
 
+// Remove an item at a given index
+
 void uiRemoveAtIdx(ArrayList* arrayList) {
-   
+  char textPrompt[] = "What index would you like to remove?: ";  
+  int idx = getUserInput(textPrompt);
+
+  if(idx == -1) {
+    printf("soz i dnt kno wat iz happenin\n\n"); 
+    return; 
+  }
+
+  bool hasInserted = listRemove(arrayList, idx);
+  
+  if(!hasInserted) printf("The index you entered has failed to be removed\n\n");
+  if(hasInserted) printf("Index %d has been removed and the list has been resized\n\n", idx);
 }
 
 void uiPush(ArrayList* arrayList) {
