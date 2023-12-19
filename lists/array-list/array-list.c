@@ -27,15 +27,16 @@ void uiSize(ArrayList* arrayList);
 void uiCapacity(ArrayList* arrayList);
 void loadFactor(ArrayList* arrayList); 
 void isEmpty(ArrayList* arrayList); 
-void indexOf(ArrayList* arrayList); 
 void trimToSize(ArrayList* arrayList); 
 void reverse(ArrayList* arrayList); 
 void contains(ArrayList* arrayList); 
 void uiIsEmpty(ArrayList* arrayList); 
 void uiSublist(ArrayList* arrayList); 
+void uiIndexOf(ArrayList* arrayList); 
 ArrayList clear(ArrayList arrayList); 
 
 // Array List utility Operations 
+int indexOf(ArrayList* arrayList, int numToSearchFor); 
 float getLoadFactor(ArrayList* arrayList); 
 bool getIsFull(ArrayList* arrayList); 
 bool getIsEmpty(ArrayList* arrayList); 
@@ -120,8 +121,10 @@ void programLoop() {
         uiIsEmpty(&arrayList);
         break; 
       case 12 : 
+        uiIndexOf(&arrayList);
         break; 
       case 13 : 
+        reverse(&arrayList);
         break; 
       case 14 : 
         break; 
@@ -543,6 +546,24 @@ bool arrayShift(ArrayList* arrayList) {
   return true;  
 }
 
+int indexOf(ArrayList* arrayList, int numToSearchFor) {
+  if(getIsEmpty(arrayList)) {
+    printf("Your array is empty, maybe add some items"); 
+    return -1; 
+  }
+
+  int idx = -1;
+  int i; 
+  for(i = 0; i < arrayList->size; i++) {
+    if(arrayList->array[i] == numToSearchFor) {
+      idx = arrayList->array[i];
+      break;
+    }
+  }
+
+  return idx; 
+}
+
 // Get an item at a given index
 
 void uiGet(ArrayList* arrayList) {
@@ -600,6 +621,31 @@ void uiRemoveAtIdx(ArrayList* arrayList) {
   if(hasInserted) printf("Index %d has been removed and the list has been resized\n\n", idx);
 }
 
+// The ui version of the index of used for collecting data
+
+void uiIndexOf(ArrayList* arrayList) {
+  if(getIsEmpty(arrayList)) {
+    printf("Your array is empty - Thus an item cannot be indexed\n\n");  
+    return; 
+  }
+
+  char textPrompt[] = "Please enter the integer you are searching for: "; 
+  int num = getUserInput(textPrompt); 
+
+  if(num == -1) {
+    return; 
+  }
+
+  int idx = indexOf(arrayList, num);
+  
+  if(idx == -1) {
+    printf("Item: %d, was not found\n\n", num); 
+    return; 
+  }
+
+  printf("Item: %d, is at index: %d\n\n", num, idx); 
+}
+
 void uiPush(ArrayList* arrayList) {
   
 }
@@ -613,14 +659,6 @@ void uiShift(ArrayList* arrayList) {
 }
 
 void uiUnshift(ArrayList* arrayList) {
-  
-}
-
-void uiSize(ArrayList* arrayList) {
-  
-}
-
-void uiCapacity(ArrayList* arrayList) {
   
 }
 
