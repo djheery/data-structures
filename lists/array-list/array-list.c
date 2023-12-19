@@ -504,6 +504,8 @@ bool arrayUnshift(ArrayList* arrayList, int numToUnshift) {
     return true; 
   }
 
+  // Really Fucking Lazy Maybe redo this you bitch
+
   listInsert(arrayList, 0, numToUnshift);
   return true;  
 }
