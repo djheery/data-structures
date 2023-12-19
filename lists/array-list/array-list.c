@@ -277,17 +277,19 @@ bool listInsert(ArrayList* arrayList, int idx, int numToInsert) {
 
   int i; 
   int prevNum = arrayList->array[idx];
-  for(i = idx; i < arrayList->size - 1; i++) {
+
+  for(i = idx; i < arrayList->size; i++) {
     if(i == idx) {
       arrayList->array[idx] = numToInsert;  
       continue; 
     }
-
-    int tmp = arrayList->array[i + 1]; 
-    arrayList->array[idx + 1] = prevNum; 
+    
+    int tmp = arrayList->array[i]; 
+    arrayList->array[i] = prevNum; 
     prevNum = tmp;
   }
 
+  arrayList->array[i] = prevNum; 
   arrayList->size += 1; 
 
   return true;  
@@ -502,20 +504,7 @@ bool arrayUnshift(ArrayList* arrayList, int numToUnshift) {
     return true; 
   }
 
-  int i; 
-  int nextNum = arrayList->array[0];
-
-  for(i = 0; i < arrayList->size - 1; i++) {
-    if(i == 0) {
-      arrayList->array[i] = numToUnshift;
-    } else {
-      arrayList->array[i] = nextNum; 
-      nextNum = arrayList->array[i + 1]; 
-    }
-  }
-
-  arrayList->size += 1; 
-
+  listInsert(arrayList, 0, numToUnshift);
   return true;  
 }
 
@@ -533,6 +522,8 @@ bool arrayShift(ArrayList* arrayList) {
   for(i = 1; i < arrayList->size; i++) {
     arrayList->array[i - 1] = arrayList->array[i];  
   }
+
+  arrayList->size -= 1; 
 
   return true;  
 }
