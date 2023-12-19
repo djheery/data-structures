@@ -83,7 +83,7 @@ void programLoop() {
 
     printMenu();
     char commandPrompt[] = "Please enter the number of the command you would like to perform: "; 
-    int command = validateUserInput(commandPrompt);
+    int command = getUserInput(commandPrompt);
     printf("\n");
 
     switch(command) {
@@ -115,7 +115,7 @@ void programLoop() {
         printf("The current capacity of the array is %zu items\n\n", arrayList.currentCapacity); 
         break; 
       case 10 : 
-        printf("The current load factor of the array is %2.f\n\n", getLoadFactor(&arrayList));
+        printf("The current load factor of the array is %.2f\n\n", getLoadFactor(&arrayList));
         break;
       case 11 : 
         uiIsEmpty(&arrayList);
@@ -125,14 +125,6 @@ void programLoop() {
         break; 
       case 13 : 
         reverse(&arrayList);
-        break; 
-      case 14 : 
-        break; 
-      case 15 : 
-        break; 
-      case 16 : 
-        break; 
-      case 17 : 
         break; 
       case 0 : 
         free(arrayList.array); 
@@ -167,7 +159,6 @@ void printMenu() {
   printf("[11] Show if the array is empty\n"); 
   printf("[12] Show the index of an item\n"); 
   printf("[13] Reverse the array\n"); 
-  printf("[14] See if the array contains an item\n"); 
   printf("[0] Exit the program\n\n"); 
 }
 
@@ -381,7 +372,7 @@ bool resize(ArrayList* arrayList) {
   arrayList->array = newArr; 
   arrayList->currentCapacity = newCapacity;
 
-  printf("Your array has been resized, the new capacity is: %zu", arrayList->currentCapacity);
+  printf("Your array has been resized, the new capacity is: %zu\n\n", arrayList->currentCapacity);
 
   return true;  
 }
@@ -556,7 +547,7 @@ int indexOf(ArrayList* arrayList, int numToSearchFor) {
   int i; 
   for(i = 0; i < arrayList->size; i++) {
     if(arrayList->array[i] == numToSearchFor) {
-      idx = arrayList->array[i];
+      idx = i;
       break;
     }
   }
@@ -647,23 +638,42 @@ void uiIndexOf(ArrayList* arrayList) {
 }
 
 void uiPush(ArrayList* arrayList) {
-  
+   char textPrompt[] = "Please enter the integer you would like to push: "; 
+   int num = getUserInput(textPrompt); 
+
+   bool hasPushed = arrayPush(arrayList, num);
+   if(!hasPushed) {
+     printf("The item has not been pushed for some reason\n\n"); 
+     return;
+   } 
+
+   printf("%d has been pushed to the array\n\n", num); 
 }
 
 void uiPop(ArrayList* arrayList) {
-  
+  arrayPop(arrayList); 
 }
 
 void uiShift(ArrayList* arrayList) {
-  
+  if(getIsEmpty(arrayList)) {
+    printf("Your array is empty\n\n"); 
+    return; 
+  }
+
+  arrayShift(arrayList); 
 }
 
 void uiUnshift(ArrayList* arrayList) {
-  
-}
 
-void uiSublist(ArrayList* arrayList) {
-  
+  char textPrompt[] = "Please enter the number you would like to add to the start of the list: "; 
+  int num = getUserInput(textPrompt); 
+  printf("\n"); 
+
+  if(num == -1) {
+    return;  
+  }
+
+  arrayUnshift(arrayList, num);
 }
 
 void uiIsEmpty(ArrayList* arrayList) {
