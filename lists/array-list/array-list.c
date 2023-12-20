@@ -254,6 +254,19 @@ int getIdx(ArrayList* arrayList, int idx) {
 // Insert an integer at a given index
 
 bool listInsert(ArrayList* arrayList, int idx, int numToInsert) {
+  bool isEmpty = getIsEmpty(arrayList); 
+  
+  if(isEmpty && idx == 0) {
+    arrayList->array[0] = numToInsert; 
+    arrayList->size += 1; 
+    return true; 
+  }
+
+  if(isEmpty && idx != 0) {
+    printf("Your index is out of bounds as the arrayList is currently empty\n\n"); 
+    return false;
+  }
+
   bool isOutOfBounds = (idx > (arrayList->size - 1)) || (idx < 0); 
   bool isFull = getIsFull(arrayList); 
 
@@ -573,11 +586,22 @@ void uiGet(ArrayList* arrayList) {
 void uiInsertAtIndex(ArrayList* arrayList) {
   char textPrompt[] = "What index would you like to insert at?: ";  
   int idx = getUserInput(textPrompt);
+  bool isEmpty = getIsEmpty(arrayList); 
+
+  if(idx == -1) {
+    printf("Unfortunately you entered some shit incorrectly\n\n"); 
+    return; 
+  }
+
+  if(isEmpty && idx != 0) {
+    printf("Insertion index out of bounds, your array is empty thus you can only insert at index 0\n\n"); 
+    return; 
+  }
 
   char textPrompt2[] = "What number would you like to insert?: "; 
   int numToInsert = getUserInput(textPrompt2);
 
-  if(idx == -1 || numToInsert == -1) {
+  if(numToInsert == -1) {
     printf("Unfortunately you entered some shit incorrectly\n\n"); 
     return; 
   }
