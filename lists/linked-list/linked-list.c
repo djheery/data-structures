@@ -35,12 +35,14 @@ typedef struct {
  int data;
 } Node; 
 
+// Linked List Struct
 typedef struct {
   Node* head;
   Node* tail; 
   int size;
 } LinkedList;
 
+// Iterator Struct
 typedef struct {
   Node* current;
 } Iterator; 
@@ -94,7 +96,21 @@ int main() {
 // Print the program menu
 
 void print_menu() {
-    
+  printf("Please select the operation you would like to perform\n\n"); 
+  printf("[1] Show the Linked List\n"); 
+  printf("[2] Show the size of the Linked List\n"); 
+  printf("[3] Show the head of the list\n");
+  printf("[4] Show the tail of the list\n"); 
+  printf("[4] Insert an item to the beginning of the Linked List\n"); 
+  printf("[5] Insert an item to the end of the Linked List\n"); 
+  printf("[6] Insert an item at a given position of the Linked List\n"); 
+  printf("[7] Remove an item from the beginning of the linked list\n"); 
+  printf("[8] Remove an item from the end of the linked list\n"); 
+  printf("[9] Remove an item from a given postion of the linked list\n"); 
+  printf("[10] Search for an item in the linked list\n"); 
+  printf("[11] Reverse the linked list\n"); 
+  printf("[12] Iterate through the linked list\n"); 
+  printf("[0] Exit the program\n\n"); 
 }
 
 // The main Program loop
@@ -110,6 +126,59 @@ void program_loop() {
   list.head = head; 
   list.tail = NULL; 
   list.size = 1; 
+
+  while(true) {
+    char text_prompt[] = "Please enter the number of the command you would like to perform: "; 
+    int command = 11; 
+
+    switch(command) {
+      case 1 : 
+        printf("TODO!\n\n");
+        break; 
+      case 2 : 
+        printf("TODO!\n\n");
+        break; 
+      case 3 : 
+        printf("TODO!\n\n");
+        break; 
+      case 4 : 
+        printf("TODO!\n\n");
+        break; 
+      case 5 : 
+        printf("TODO!\n\n");
+        break; 
+      case 6 : 
+        printf("TODO!\n\n");
+        break; 
+      case 7 : 
+        printf("TODO!\n\n");
+        break; 
+      case 8 : 
+        printf("TODO!\n\n");
+        break; 
+      case 9 :
+        printf("TODO!\n\n");
+        break; 
+      case 10 : 
+        printf("TODO!\n\n");
+        break; 
+      case 11 : 
+        printf("TODO!\n\n");
+        break; 
+      case 12 : 
+        printf("TODO!\n\n");
+        break;
+      case 0 : 
+        printf("Thankyou for using the program\nFreeing the list nodes from memory\n"); 
+        free_linked_list(&list);
+        printf("Sucess!\nGoodbye...\n\n"); 
+        exit(0); 
+      default : 
+        printf("Whoops unknown command - Please try again\n\n"); 
+    }
+  }
+
+  free_linked_list(&list); 
 }
 
 // =================================
