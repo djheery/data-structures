@@ -51,16 +51,16 @@ Node* head(LinkedList* list);
 Node* tail(LinkedList* list); 
 Node* insert_node(LinkedList* list, int data, int position); 
 Node* remove_node(LinkedList* list, int data_to_remove); 
-Node* reverse(LinkedList* list); 
-bool search(LinkedList* list, int data_to_search); 
-void free_linked_list(LinkedList* list); 
-bool check_valid_insertion(LinkedList* list, int position); 
+bool  reverse(LinkedList* list); 
+bool  search(LinkedList* list, int data_to_search); 
+void  free_linked_list(LinkedList* list); 
+bool  check_valid_insertion(LinkedList* list, int position); 
 
 // Iterator methods
 Iterator to_iter(LinkedList* list); 
-bool has_next(Iterator* iter); 
-Node* next(Iterator* iter); 
-Node* current(Iterator* iter); 
+bool     has_next(Iterator* iter); 
+Node*    next(Iterator* iter); 
+Node*    current(Iterator* iter); 
 
 // CLI/UI Methods 
 void to_string(LinkedList* list);
@@ -80,7 +80,7 @@ void cli_free_list(LinkedList* list);
 // Program Specific Methods
 void print_menu();
 void program_loop(); 
-int get_user_input();
+int  get_user_input();
 bool validate_user_input(); 
 
 // ==========================
@@ -119,7 +119,22 @@ void program_loop() {
 // A method to tear down the linked list and free all nodes
 
 void free_linked_list(LinkedList* list) {
-  
+  if(list->size == 0) return; 
+
+  Iterator iter = to_iter(list);  
+  Node* current_node;
+
+  while((current_node = current(&iter)) != NULL) {
+    Node* next_node = current_node->next;   
+    free(current_node); 
+    iter.current = next_node; 
+
+    next(&iter);
+  }
+
+  list->head = NULL; 
+  list->tail = NULL;
+  list->size = 0; 
 }
 
 // Initiate Linked List head to Null
@@ -208,12 +223,14 @@ bool search(LinkedList* list, int data_to_search) {
   return false;
 }
 
-// Show the list as a string
-
-void to_string(LinkedList* list) {
-  if(list->head == NULL || list->size == 0) return; 
+bool reverse(LinkedList* list) {
+  if(list->size == 0 || list->size == 1) {
+    return false; 
+  }
 
   Iterator iter = to_iter(list);
+
+  return true; 
 }
 
 // ================================================
@@ -254,3 +271,19 @@ Node* current(Iterator* iter) {
 // ===========================================
 // || Below is the Start of the CLI Methods ||
 // ===========================================
+
+// Show the list as a string
+
+void to_string(LinkedList* list) {
+  if(list->head == NULL || list->size == 0) return; 
+
+  Iterator iter = to_iter(list);
+  Node* current_node;
+
+  while((current_node = current(&iter)) != NULL) {
+    printf("%d => ", current_node->data);  
+    next(&iter);
+  }
+
+  printf("END_OF_LIST\n\n"); 
+}
