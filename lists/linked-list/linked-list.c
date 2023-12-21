@@ -52,7 +52,7 @@ Node* initialize_linked_list_node();
 Node* head(LinkedList* list); 
 Node* tail(LinkedList* list); 
 Node* insert_node(LinkedList* list, int data, int position); 
-Node* remove_node(LinkedList* list, int data_to_remove); 
+void remove_node(LinkedList* list, int data_to_remove); 
 bool  reverse(LinkedList* list); 
 bool  search(LinkedList* list, int data_to_search); 
 void  free_linked_list(LinkedList* list); 
@@ -291,7 +291,9 @@ Node* insert_node(LinkedList* list, int data, int position) {
   return new_node;
 }
 
-Node* remove_node(LinkedList* list, int data_to_remove) {
+// Remove a Node from memory
+
+void remove_node(LinkedList* list, int data_to_remove) {
   if(list->size == 0) {
     return NULL; 
   }
