@@ -185,6 +185,18 @@ void program_loop() {
 // || Linked List Utility Methods ||
 // =================================
 
+// Get the head of the list
+
+Node* head(LinkedList* list) {
+  return list->head; 
+}
+
+// Get the tail of the list
+
+Node* tail(LinkedList* list) {
+  return list->tail;
+}
+
 // A method to tear down the linked list and free all nodes
 
 void free_linked_list(LinkedList* list) {
@@ -252,6 +264,14 @@ Node* insert_node(LinkedList* list, int data, int position) {
     list->size += 1; 
     return new_node; 
   }
+  
+  if(position == list->size + 1) {
+    Node* prev_node = list->tail;  
+    prev_node->next = new_node; 
+    list->tail = new_node; 
+    list->size += 1;
+    return new_node; 
+  }
 
   int count = 1; 
   Iterator iter = to_iter(list);
@@ -269,6 +289,18 @@ Node* insert_node(LinkedList* list, int data, int position) {
   list->size += 1; 
 
   return new_node;
+}
+
+Node* remove_node(LinkedList* list, int data_to_remove) {
+  if(list->size == 0) {
+    return NULL; 
+  }
+
+  Iterator iter = to_iter(list);
+  Node* current_node; 
+  Node* prev_node = NULL; 
+
+  return NULL;
 }
 
 // Search the List for an occurence of a node with specified data
