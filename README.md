@@ -29,7 +29,7 @@ The list is comprised of items from the wikipedia data structures list
     - [x] Queues 
     - [x] Circular Queues
 - [ ] Lists 
-    - [ ] Array List/ Vector 
+    - [x] Array List/ Vector 
     - [ ] Linked List 
     - [ ] Doubly Linked List 
 - [ ] Binary Trees 
