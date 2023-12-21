@@ -4,6 +4,9 @@
 #include <ctype.h>
 #include <string.h>
 
+// There are a fair few errors in this data structure regarding insert at idx and unshift - I will come back and edit this 
+// I believe I have confused myself by separating the ui methods and the utility methods which has elongated the code file unecessarily
+
 #define INITIAL_CAPACITY 5 
 #define LOAD_FACTOR_THRESHOLD 0.7
 #define GROWTH_FACTOR 0.5 

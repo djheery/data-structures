@@ -12,23 +12,60 @@ typedef struct {
 void reverse(); 
 void head(); 
 void tail(); 
-void insertNode(); 
-void removeNode(); 
+void insert_node(); 
+void remove_node(); 
 void next(); 
+void to_string(Node* node);
+Node* initialize_linked_list(); 
 
 // Program Specific Methods
-void printMenu();
-void programLoop(); 
+void print_menu();
+void program_loop(); 
 
 int main() {
-  Node* head = NULL;  
   return 0;
 }
 
-void programLoop() {
+// Print the program menu
+
+void print_menu() {
+    
+}
+
+// The main Program loop
+
+void program_loop() {
+  printf("================================\n");  
+  printf("|| Linked List Data Structure ||\n"); 
+  printf("================================\n\n");  
+  printf("The head of the list will be initialized to null for you to manipulate\n\n");
+
+  Node* head = initialize_linked_list();
+}
+
+// A method to tear down the linked list and free all nodes
+
+void free_linked_list() {
   
 }
 
-void printMenu() {
-  
+// Initiate Linked List head to Null
+
+Node* initiate_linked_list() {
+  Node* head = (Node*) malloc(sizeof(Node));  
+  return head; 
 }
+
+// Insert a node
+
+void insert_node() {
+   
+}
+
+// Show the list as a string
+
+void to_string(Node* node) {
+  if(node == NULL) return; 
+}
+
+
