@@ -284,12 +284,14 @@ Node* insert_node(LinkedList* list, int data, int position) {
   int count = 1; 
   Iterator iter = to_iter(list);
 
-  while(count < position) {
+  while(count < (position - 1)) {
      if(has_next(&iter)) {
        next(&iter); 
        count++; 
      }
   }
+
+  printf("%d\n\n", count);
 
   Node* prev_node = iter.current; 
   new_node->next = prev_node->next; 
@@ -430,5 +432,7 @@ void populate_linked_list(LinkedList* list) {
   insert_node(list, 10, 1); 
   insert_node(list, 5, 1);
   insert_node(list, 7, 2); 
-  insert_node(list, 17, 4); 
+  insert_node(list, 17, 5); 
+  insert_node(list, 22, 7); 
+  // insert_node(list, 30, (list->size + 1));
 }
