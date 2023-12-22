@@ -400,9 +400,10 @@ bool search(LinkedList* list, int data_to_search) {
   }
 
   Iterator iter = to_iter(list); 
-  Node* current_node; 
 
-  while((current_node = current(&iter)) != NULL) {
+  while(has_current(&iter)) {
+    Node* current_node = current(&iter); 
+    if(DEBUG) printf("%d NODE, %d DATA\n", current_node->data, data_to_search); 
     if(current_node->data == data_to_search) {
       return true; 
     }
@@ -486,6 +487,7 @@ void to_string(LinkedList* list) {
 // ====================
 
 void populate_linked_list(LinkedList* list) {
+  printf("Populating linked list from a base\n\n"); 
   insert_node(list, 25, 1); 
   insert_node(list, 20, 1); 
   insert_node(list, 15, 1); 
@@ -497,24 +499,60 @@ void populate_linked_list(LinkedList* list) {
   insert_node(list, 30, (list->size + 1));
   insert_node(list, 29, (list->size)); 
   insert_node(list, 13, 4); 
+  to_string(list); 
 }
 
-void perform_tests(LinkedList* list) {
-
-  printf("Populating linked list from a base\n\n"); 
-  populate_linked_list(list);
-  to_string(list);
+// TEST ARBITRARY NODE REMOVAL
+void test_node_removal(LinkedList* list) {
   printf("Removing some arbitrary nodes (10, 22)...\n\n"); 
   remove_node(list, 10); 
   remove_node(list, 22); 
   to_string(list); 
+}
+
+// TEST HEAD REMOVAL
+void test_head_removal(LinkedList* list) {
   printf("Removing head..\n\n");
   remove_node(list, 5); 
   printf("NEW_HEAD: %d; STATUS: %s\n", list->head->data, list->head->data == 7 ? "PASSED" : "FAILED"); 
   to_string(list); 
+}
+
+// TEST TAIL REMOVAL
+void test_tail_removal(LinkedList* list) {
   printf("Removing tail..\n\n");
   remove_node(list, 30); 
   printf("NEW_TAIL: %d; STATUS: %s\n\n", list->tail->data, list->tail->data == 29 ? "PASSED" : "FAILED" ); 
   to_string(list);
+}
+
+void test_search(LinkedList* list) {
+  // TEST SEARCH
   printf("Testing Search\n"); 
+  bool has_10 = search(list, 25); 
+  printf("Search for 10 should be TRUE; Status: %s\n\n", has_10 ? "PASSED" : "FAILED"); 
+  bool has_30 = search(list, 30); 
+  printf("Search for 30 should be FALSE; Status: %s\n\n", !has_30 ? "PASSED" : "FAILED"); 
+  bool has_45 = search(list, 45); 
+  printf("Search for 45 should be FALSE; Status: %s\n\n", !has_45 ? "PASSED" : "FAILED"); 
+  printf("ADDED 45 to retest\n");
+  insert_node(list, 45, 3); 
+  bool has_45_2 = search(list, 45); 
+  printf("Search for 45 should be TRUE; Status: %s\n\n", has_45_2 ? "PASSED" : "FAILED"); 
+  to_string(list); 
+}
+
+// Perform the Tests
+void perform_tests(LinkedList* list) {
+  
+  populate_linked_list(list);
+
+  test_node_removal(list);
+
+  test_head_removal(list);
+
+  test_tail_removal(list);
+
+  test_search(list);
+
 }
