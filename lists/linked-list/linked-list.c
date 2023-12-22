@@ -134,6 +134,20 @@ void program_loop() {
   printf("Populating linked list from a base\n\n"); 
   populate_linked_list(&list);
   to_string(&list);
+  printf("Removing some nodes (5, 10, 22)...\n\n"); 
+  remove_node(&list, 10); 
+  remove_node(&list, 22); 
+  to_string(&list); 
+  printf("Removing head..\n\n");
+  remove_node(&list, 5); 
+  printf("New head - expecting 7\n\n");
+  printf("NEW_HEAD: %d\n", list.head->data); 
+  to_string(&list); 
+  printf("Removing tail..\n\n");
+  remove_node(&list, 30); 
+  printf("New tail - expecting: 25\n"); 
+  printf("NEW_TAIL: %d\n\n", list.tail->data); 
+  to_string(&list);
 
   // while(true) {
   //   char text_prompt[] = "Please enter the number of the command you would like to perform: "; 
@@ -217,9 +231,19 @@ void free_linked_list(LinkedList* list) {
 
   while(has_next(&iter)) {
     Node* next_node = next(&iter); 
+
+    printf("Freeing node: %d\n", current_node->data);
     free(current_node); 
+    printf("Freed Sucessfully\n"); 
+
+    printf("Next Node => %p\n", next_node); 
+    printf("Next Node Data => %d\n\n", next_node->data); 
     current_node = next_node; 
   }
+
+  // printf("Freeing the tail\n"); 
+  // printf("Tail: %d\n", current_node->data); 
+  // free(current_node); 
 
   list->head = NULL; 
   list->tail = NULL;
@@ -235,6 +259,9 @@ Node* initiate_linked_list_node() {
     printf("Error when allocating the memory for the node"); 
     exit(EXIT_FAILURE); 
   }
+
+  node->next = NULL; 
+  node->data = -1; 
 
   return node; 
 }
@@ -288,8 +315,6 @@ Node* insert_node(LinkedList* list, int data, int position) {
      }
   }
 
-  printf("%d\n\n", count);
-
   Node* prev_node = iter.current; 
   new_node->next = prev_node->next; 
   prev_node->next = new_node; 
@@ -297,6 +322,7 @@ Node* insert_node(LinkedList* list, int data, int position) {
 
   if(list->size == position) {
     list->tail = new_node; 
+    new_node->next = NULL; 
   }
 
   return new_node;
@@ -314,7 +340,7 @@ bool remove_node(LinkedList* list, int data_to_remove) {
 
     if(n == NULL) {
       printf("Why is the head NULL if there is one element in the list?\n\n");
-      exit(EXIT_FAILURE); 
+      return false; 
     }
 
     if(n->data == data_to_remove) {
@@ -344,14 +370,38 @@ bool remove_node(LinkedList* list, int data_to_remove) {
 
     bool is_head = current_node == list->head;  
     bool is_tail = current_node == list->tail;
+    bool error_head_removal = is_head && list->size == 1; 
+    bool error_tail_removal = is_tail && prev_node == NULL; 
 
-    if(is_head) list->head = current_node->next; 
-    if(is_tail && prev_node != NULL) list->tail = prev_node; 
-    if(!is_head && !is_tail) prev_node->next = current_node->next;
+    if(error_head_removal) {
+      printf("Trying to remove the head but within the while loop, this base case should have been checked at the start\n"); 
+      printf("This should never be called\n\n"); 
+      return false; 
+    }
+
+    if(error_tail_removal) {
+      printf("Trying to remove the tail when the size of the list is 1, this is a base case and should be checked at the start\n");  
+      printf("This will also force an error for the prev_node. The prev node will always be NULL as we are looking at the head\n"); 
+      return false; 
+    }
+
+    if(is_head) {
+      list->head = current_node->next; 
+    }
+
+    if(is_tail) {
+      prev_node->next = NULL; 
+      list->tail = prev_node;
+    } 
+
+    if(!is_head && !is_tail) {
+      prev_node->next = current_node->next;
+    }
 
     free(current_node);
     list->size -= 1;
     node_has_been_removed = true;  
+    break; 
   }
  
   return node_has_been_removed; 
@@ -435,14 +485,15 @@ void to_string(LinkedList* list) {
   if(list->head == NULL || list->size == 0) return; 
 
   Iterator iter = to_iter(list);
-  Node* current_node = iter.current;
 
   while(has_next(&iter)) {
+    Node* current_node = current(&iter);
     printf("%d => ", current_node->data);  
-    current_node = next(&iter); 
+    next(&iter); 
   }
 
-  printf("END_OF_LIST\n\n"); 
+  Node* last = current(&iter); 
+  printf("%d => END_OF_LIST\n\n", last->data); 
 }
 
 // ====================
@@ -459,5 +510,6 @@ void populate_linked_list(LinkedList* list) {
   insert_node(list, 17, 5); 
   insert_node(list, 22, 7); 
   insert_node(list, 30, (list->size + 1));
+  insert_node(list, 29, (list->size)); 
   insert_node(list, 13, 4); 
 }
