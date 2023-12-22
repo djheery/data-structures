@@ -459,4 +459,5 @@ void populate_linked_list(LinkedList* list) {
   insert_node(list, 17, 5); 
   insert_node(list, 22, 7); 
   insert_node(list, 30, (list->size + 1));
+  insert_node(list, 13, 4); 
 }
