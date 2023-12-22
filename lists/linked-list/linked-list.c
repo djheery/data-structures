@@ -52,7 +52,7 @@ Node* initialize_linked_list_node();
 Node* head(LinkedList* list); 
 Node* tail(LinkedList* list); 
 Node* insert_node(LinkedList* list, int data, int position); 
-void remove_node(LinkedList* list, int data_to_remove); 
+bool remove_node(LinkedList* list, int data_to_remove); 
 bool  reverse(LinkedList* list); 
 bool  search(LinkedList* list, int data_to_search); 
 void  free_linked_list(LinkedList* list); 
@@ -293,19 +293,38 @@ Node* insert_node(LinkedList* list, int data, int position) {
 
 // Remove a Node from memory
 
-void remove_node(LinkedList* list, int data_to_remove) {
+bool remove_node(LinkedList* list, int data_to_remove) {
   if(list->size == 0) {
-    return NULL; 
+    return false; 
   }
 
   Iterator iter = to_iter(list);
   Node* current_node; 
   Node* prev_node = NULL; 
 
-  return NULL;
+  while((current_node = current(&iter)) != NULL) {
+    if(current_node->data == data_to_remove) {
+
+      if(prev_node == NULL) {
+        list->head = current_node->next;  
+      } else {
+        prev_node->next = current_node->next; 
+      }
+
+      printf("Current node containing data: %d, has been removed\n", current_node->data);
+      free(current_node);
+      list->size -= 1; 
+      return true; 
+    }
+
+    prev_node = current_node; 
+  }
+ 
+  return false; 
 }
 
 // Search the List for an occurence of a node with specified data
+
 bool search(LinkedList* list, int data_to_search) {
   if(list->size == 0) {
     return false; 
@@ -326,12 +345,13 @@ bool search(LinkedList* list, int data_to_search) {
   return false;
 }
 
+// Reverse the list
+
 bool reverse(LinkedList* list) {
   if(list->size == 0 || list->size == 1) {
     return false; 
   }
 
-  Iterator iter = to_iter(list);
 
   return true; 
 }
