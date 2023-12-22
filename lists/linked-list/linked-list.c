@@ -3,7 +3,14 @@
 #include <stdbool.h>
 #include <ctype.h>
 
-#define DEBUG true 
+#define RUN_TESTS true
+#define DEBUG 
+
+#ifdef DEBUG 
+#define DEBUG_PRINT(fmt, ...) fprintf(stderr, fmt, __VA_ARGS__);
+#else 
+#define DEBUG_PRINT(fmt, ...);
+#endif
 
 /**
  * *----------------------------*
@@ -59,6 +66,7 @@ bool  reverse(LinkedList* list);
 bool  search(LinkedList* list, int data_to_search); 
 void  free_linked_list(LinkedList* list); 
 bool  check_valid_insertion(LinkedList* list, int position); 
+LinkedList initialize_linked_list();
 
 // Iterator methods
 Iterator to_iter(LinkedList* list); 
@@ -129,17 +137,14 @@ void program_loop() {
   printf("================================\n\n");  
   printf("The head of the list will be initialized to null for you to manipulate\n\n");
 
-  Node* head = initiate_linked_list_node();
-  LinkedList list; 
-  list.head = head; 
-  list.tail = NULL; 
-  list.size = 0; 
+  LinkedList list = initialize_linked_list();
 
-  if(DEBUG) {
-    perform_tests(&list); 
-    printf("Freeing the list...\n\n"); 
-    free_linked_list(&list); 
-    printf("Freed succesfully\n\n");
+   if(RUN_TESTS) {
+    LinkedList test_list = initialize_linked_list(); 
+    perform_tests(&test_list); 
+    printf("Freeing the test list...\n\n"); 
+    free_linked_list(&test_list); 
+    printf("Freed test list succesfully\n\n");
     return; 
   }
 
@@ -201,6 +206,15 @@ void program_loop() {
 // || Linked List Utility Methods ||
 // =================================
 
+// Initialize the Linked List 
+
+LinkedList initialize_linked_list() {
+  LinkedList list; 
+  list.head = NULL; 
+  list.tail = NULL; 
+  list.size = 0; 
+}
+
 // Get the head of the list
 
 Node* head(LinkedList* list) {
@@ -226,9 +240,9 @@ void free_linked_list(LinkedList* list) {
     // About to remove the current node so pre-increment the next; 
     next(&iter); 
 
-    if(DEBUG) printf("Freeing node: %d\n", current_node->data);
+    DEBUG_PRINT("Freeing node: %d\n", current_node->data);
     free(current_node); 
-    if(DEBUG) printf("Freed node Sucessfully\n"); 
+    DEBUG_PRINT("Freed node Sucessfully\n", NULL); 
   }
 
   // if(DEBUG) printf("Freeing the tail\n"); 
@@ -256,8 +270,8 @@ Node* initiate_linked_list_node() {
 bool check_valid_insertion(LinkedList* list, int position) {
   int size = list->size; 
   
-  // if(size == 0 && position != 1) return false;  
-  // if(size != 0 && (position + 1) > size) return false; 
+  if(size == 0 && position != 1) return false;  
+  if(size != 0 && position > (size + 1)) return false; 
 
   return true;  
 }
@@ -275,7 +289,6 @@ Node* insert_node(LinkedList* list, int data, int position) {
 
   Node* new_node = initiate_linked_list_node();
   new_node->data = data; 
-  new_node->next = NULL; 
 
   if(position == 1) {
     Node* next_node = list->head; 
@@ -403,7 +416,8 @@ bool search(LinkedList* list, int data_to_search) {
 
   while(has_current(&iter)) {
     Node* current_node = current(&iter); 
-    if(DEBUG) printf("%d NODE, %d DATA\n", current_node->data, data_to_search); 
+    DEBUG_PRINT("%d NODE, %d DATA\n", current_node->data, data_to_search); 
+
     if(current_node->data == data_to_search) {
       return true; 
     }
