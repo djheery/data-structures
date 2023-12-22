@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <ctype.h>
 
+#define DEBUG true 
+
 /**
  * *----------------------------*
  * * Linked List Data Structure *
@@ -87,6 +89,7 @@ bool validate_user_input();
 
 // Tester Methods 
 void populate_linked_list(LinkedList* list); 
+void perform_tests(LinkedList* list); 
 
 // ==========================
 // || Main Program Methods ||
@@ -131,23 +134,13 @@ void program_loop() {
   list.tail = NULL; 
   list.size = 0; 
 
-  printf("Populating linked list from a base\n\n"); 
-  populate_linked_list(&list);
-  to_string(&list);
-  printf("Removing some nodes (5, 10, 22)...\n\n"); 
-  remove_node(&list, 10); 
-  remove_node(&list, 22); 
-  to_string(&list); 
-  printf("Removing head..\n\n");
-  remove_node(&list, 5); 
-  printf("New head - expecting 7\n\n");
-  printf("NEW_HEAD: %d\n", list.head->data); 
-  to_string(&list); 
-  printf("Removing tail..\n\n");
-  remove_node(&list, 30); 
-  printf("New tail - expecting: 25\n"); 
-  printf("NEW_TAIL: %d\n\n", list.tail->data); 
-  to_string(&list);
+  if(DEBUG) {
+    perform_tests(&list); 
+    printf("Freeing the list...\n\n"); 
+    free_linked_list(&list); 
+    printf("Freed succesfully\n\n");
+    return; 
+  }
 
   // while(true) {
   //   char text_prompt[] = "Please enter the number of the command you would like to perform: "; 
@@ -200,9 +193,7 @@ void program_loop() {
   //   }
   // }
 
-  printf("Freeing the list...\n\n"); 
-  free_linked_list(&list); 
-  printf("Freed succesfully\n\n");
+    free_linked_list(&list); 
 }
 
 // =================================
@@ -232,18 +223,19 @@ void free_linked_list(LinkedList* list) {
   while(has_next(&iter)) {
     Node* next_node = next(&iter); 
 
-    printf("Freeing node: %d\n", current_node->data);
+    if(DEBUG) printf("Freeing node: %d\n", current_node->data);
     free(current_node); 
-    printf("Freed Sucessfully\n"); 
+    if(DEBUG) printf("Freed Sucessfully\n"); 
 
-    printf("Next Node => %p\n", next_node); 
-    printf("Next Node Data => %d\n\n", next_node->data); 
+    if(DEBUG) printf("Next Node => %p\n", next_node); 
+    if(DEBUG) printf("Next Node Data => %d\n\n", next_node->data); 
+
     current_node = next_node; 
   }
 
-  // printf("Freeing the tail\n"); 
-  // printf("Tail: %d\n", current_node->data); 
-  // free(current_node); 
+  if(DEBUG) printf("Freeing the tail\n"); 
+  if(DEBUG) printf("Tail: %d\n\n", current_node->data); 
+  free(current_node); 
 
   list->head = NULL; 
   list->tail = NULL;
@@ -261,7 +253,6 @@ Node* initiate_linked_list_node() {
   }
 
   node->next = NULL; 
-  node->data = -1; 
 
   return node; 
 }
@@ -358,7 +349,7 @@ bool remove_node(LinkedList* list, int data_to_remove) {
   bool node_has_been_removed = false; 
   Node* prev_node; 
 
-  while(has_next(&iter)) {
+  while(has_next(&iter) || prev_node != NULL) {
     Node* current_node = current(&iter); 
     bool is_target = current_node->data == data_to_remove;
 
@@ -512,4 +503,23 @@ void populate_linked_list(LinkedList* list) {
   insert_node(list, 30, (list->size + 1));
   insert_node(list, 29, (list->size)); 
   insert_node(list, 13, 4); 
+}
+
+void perform_tests(LinkedList* list) {
+
+  printf("Populating linked list from a base\n\n"); 
+  populate_linked_list(list);
+  to_string(list);
+  printf("Removing some arbitrary nodes (10, 22)...\n\n"); 
+  remove_node(list, 10); 
+  remove_node(list, 22); 
+  to_string(list); 
+  printf("Removing head..\n\n");
+  remove_node(list, 5); 
+  printf("NEW_HEAD: %d; STATUS: %s\n", list->head->data, list->head->data == 7 ? "PASSED" : "FAILED"); 
+  to_string(list); 
+  printf("Removing tail..\n\n");
+  remove_node(list, 30); 
+  printf("NEW_TAIL: %d; STATUS: %s\n\n", list->tail->data, list->tail->data == 29 ? "PASSED" : "FAILED" ); 
+  to_string(list);
 }
