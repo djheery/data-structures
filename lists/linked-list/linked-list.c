@@ -270,14 +270,11 @@ Node* insert_node(LinkedList* list, int data, int position) {
     new_node->next = next_node; 
     list->head = new_node; 
     list->size += 1; 
-    return new_node; 
-  }
-  
-  if(position == list->size + 1) {
-    Node* prev_node = list->tail;  
-    prev_node->next = new_node; 
-    list->tail = new_node; 
-    list->size += 1;
+
+    if(list->size == 1) {
+      list->tail = new_node; 
+    }
+
     return new_node; 
   }
 
@@ -298,6 +295,10 @@ Node* insert_node(LinkedList* list, int data, int position) {
   prev_node->next = new_node; 
   list->size += 1; 
 
+  if(list->size == position) {
+    list->tail = new_node; 
+  }
+
   return new_node;
 }
 
@@ -308,29 +309,52 @@ bool remove_node(LinkedList* list, int data_to_remove) {
     return false; 
   }
 
-  Iterator iter = to_iter(list);
-  Node* current_node; 
-  Node* prev_node = NULL; 
+  if(list->size == 1) {
+    Node* n = list->head;  
 
-  while((current_node = current(&iter)) != NULL) {
-    if(current_node->data == data_to_remove) {
+    if(n == NULL) {
+      printf("Why is the head NULL if there is one element in the list?\n\n");
+      exit(EXIT_FAILURE); 
+    }
 
-      if(prev_node == NULL) {
-        list->head = current_node->next;  
-      } else {
-        prev_node->next = current_node->next; 
-      }
-
-      printf("Current node containing data: %d, has been removed\n", current_node->data);
-      free(current_node);
-      list->size -= 1; 
+    if(n->data == data_to_remove) {
+      list->head = NULL; 
+      list->tail = NULL; 
+      free(n); 
+      list->size -= 1;
       return true; 
     }
 
-    prev_node = current_node; 
+    return false; 
+  }
+
+  Iterator iter = to_iter(list);
+  bool node_has_been_removed = false; 
+  Node* prev_node; 
+
+  while(has_next(&iter)) {
+    Node* current_node = current(&iter); 
+    bool is_target = current_node->data == data_to_remove;
+
+    if(!is_target) {
+      prev_node = current_node; 
+      next(&iter); 
+      continue; 
+    }
+
+    bool is_head = current_node == list->head;  
+    bool is_tail = current_node == list->tail;
+
+    if(is_head) list->head = current_node->next; 
+    if(is_tail && prev_node != NULL) list->tail = prev_node; 
+    if(!is_head && !is_tail) prev_node->next = current_node->next;
+
+    free(current_node);
+    list->size -= 1;
+    node_has_been_removed = true;  
   }
  
-  return false; 
+  return node_has_been_removed; 
 }
 
 // Search the List for an occurence of a node with specified data
@@ -434,5 +458,5 @@ void populate_linked_list(LinkedList* list) {
   insert_node(list, 7, 2); 
   insert_node(list, 17, 5); 
   insert_node(list, 22, 7); 
-  // insert_node(list, 30, (list->size + 1));
+  insert_node(list, 30, (list->size + 1));
 }
