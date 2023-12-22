@@ -48,7 +48,7 @@ typedef struct {
 } Iterator; 
 
 // Linked List Utility Methods
-Node* initialize_linked_list_node(); 
+Node* initiate_linked_list_node(); 
 Node* head(LinkedList* list); 
 Node* tail(LinkedList* list); 
 Node* insert_node(LinkedList* list, int data, int position); 
@@ -85,11 +85,15 @@ void program_loop();
 int  get_user_input();
 bool validate_user_input(); 
 
+// Tester Methods 
+void populate_linked_list(LinkedList* list); 
+
 // ==========================
 // || Main Program Methods ||
 // ==========================
 
 int main() {
+  program_loop();
   return 0;
 }
 
@@ -121,64 +125,70 @@ void program_loop() {
   printf("================================\n\n");  
   printf("The head of the list will be initialized to null for you to manipulate\n\n");
 
-  Node* head = initialize_linked_list_node();
+  Node* head = initiate_linked_list_node();
   LinkedList list; 
   list.head = head; 
   list.tail = NULL; 
-  list.size = 1; 
+  list.size = 0; 
 
-  while(true) {
-    char text_prompt[] = "Please enter the number of the command you would like to perform: "; 
-    int command = 11; 
+  printf("Populating linked list from a base\n\n"); 
+  populate_linked_list(&list);
+  to_string(&list);
 
-    switch(command) {
-      case 1 : 
-        printf("TODO!\n\n");
-        break; 
-      case 2 : 
-        printf("TODO!\n\n");
-        break; 
-      case 3 : 
-        printf("TODO!\n\n");
-        break; 
-      case 4 : 
-        printf("TODO!\n\n");
-        break; 
-      case 5 : 
-        printf("TODO!\n\n");
-        break; 
-      case 6 : 
-        printf("TODO!\n\n");
-        break; 
-      case 7 : 
-        printf("TODO!\n\n");
-        break; 
-      case 8 : 
-        printf("TODO!\n\n");
-        break; 
-      case 9 :
-        printf("TODO!\n\n");
-        break; 
-      case 10 : 
-        printf("TODO!\n\n");
-        break; 
-      case 11 : 
-        printf("TODO!\n\n");
-        break; 
-      case 12 : 
-        printf("TODO!\n\n");
-        break;
-      case 0 : 
-        printf("Thankyou for using the program\nFreeing the list nodes from memory\n"); 
-        free_linked_list(&list);
-        printf("Sucess!\nGoodbye...\n\n"); 
-        exit(0); 
-      default : 
-        printf("Whoops unknown command - Please try again\n\n"); 
-    }
-  }
+  // while(true) {
+  //   char text_prompt[] = "Please enter the number of the command you would like to perform: "; 
+  //   int command = 11; 
+  //
+  //   switch(command) {
+  //     case 1 : 
+  //       to_string(&list);  
+  //       break; 
+  //     case 2 : 
+  //       printf("TODO!\n\n");
+  //       break; 
+  //     case 3 : 
+  //       printf("TODO!\n\n");
+  //       break; 
+  //     case 4 : 
+  //       printf("TODO!\n\n");
+  //       break; 
+  //     case 5 : 
+  //       printf("TODO!\n\n");
+  //       break; 
+  //     case 6 : 
+  //       printf("TODO!\n\n");
+  //       break; 
+  //     case 7 : 
+  //       printf("TODO!\n\n");
+  //       break; 
+  //     case 8 : 
+  //       printf("TODO!\n\n");
+  //       break; 
+  //     case 9 :
+  //       printf("TODO!\n\n");
+  //       break; 
+  //     case 10 : 
+  //       printf("TODO!\n\n");
+  //       break; 
+  //     case 11 : 
+  //       printf("TODO!\n\n");
+  //       break; 
+  //     case 12 : 
+  //       printf("TODO!\n\n");
+  //       break;
+  //     case 0 : 
+  //       printf("Thankyou for using the program\nFreeing the list nodes from memory\n"); 
+  //       free_linked_list(&list);
+  //       printf("Sucess!\nGoodbye...\n\n"); 
+  //       exit(0); 
+  //     default : 
+  //       printf("Whoops unknown command - Please try again\n\n"); 
+  //   }
+  // }
 
+  printf("Freeing the list...\n\n"); 
   free_linked_list(&list); 
+  printf("Freed succesfully\n\n");
 }
 
 // =================================
@@ -203,14 +213,12 @@ void free_linked_list(LinkedList* list) {
   if(list->size == 0) return; 
 
   Iterator iter = to_iter(list);  
-  Node* current_node;
+  Node* current_node = iter.current;
 
-  while((current_node = current(&iter)) != NULL) {
-    Node* next_node = current_node->next;   
+  while(has_next(&iter)) {
+    Node* next_node = next(&iter); 
     free(current_node); 
-    iter.current = next_node; 
-
-    next(&iter);
+    current_node = next_node; 
   }
 
   list->head = NULL; 
@@ -236,8 +244,8 @@ Node* initiate_linked_list_node() {
 bool check_valid_insertion(LinkedList* list, int position) {
   int size = list->size; 
   
-  if(size == 0 && position != 1) return false;  
-  if(position > size) return false; 
+  // if(size == 0 && position != 1) return false;  
+  // if(size != 0 && (position + 1) > size) return false; 
 
   return true;  
 }
@@ -401,12 +409,26 @@ void to_string(LinkedList* list) {
   if(list->head == NULL || list->size == 0) return; 
 
   Iterator iter = to_iter(list);
-  Node* current_node;
+  Node* current_node = iter.current;
 
-  while((current_node = current(&iter)) != NULL) {
+  while(has_next(&iter)) {
     printf("%d => ", current_node->data);  
-    next(&iter);
+    current_node = next(&iter); 
   }
 
   printf("END_OF_LIST\n\n"); 
+}
+
+// ====================
+// || Tester Methods ||
+// ====================
+
+void populate_linked_list(LinkedList* list) {
+  insert_node(list, 25, 1); 
+  insert_node(list, 20, 1); 
+  insert_node(list, 15, 1); 
+  insert_node(list, 10, 1); 
+  insert_node(list, 5, 1);
+  insert_node(list, 7, 2); 
+  insert_node(list, 17, 4); 
 }
