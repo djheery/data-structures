@@ -63,6 +63,7 @@ bool  check_valid_insertion(LinkedList* list, int position);
 // Iterator methods
 Iterator to_iter(LinkedList* list); 
 bool     has_next(Iterator* iter); 
+bool     has_current(Iterator* iter); 
 Node*    next(Iterator* iter); 
 Node*    current(Iterator* iter); 
 
@@ -218,27 +219,20 @@ void free_linked_list(LinkedList* list) {
   if(list->size == 0) return; 
 
   Iterator iter = to_iter(list);  
-  Node* current_node = iter.current;
 
-  while(has_next(&iter)) {
-    Node* next_node = next(&iter); 
+  while(has_current(&iter)) {
+    Node* current_node = current(&iter); 
+
+    // About to remove the current node so pre-increment the next; 
+    next(&iter); 
 
     if(DEBUG) printf("Freeing node: %d\n", current_node->data);
     free(current_node); 
-    if(DEBUG) printf("Freed Sucessfully\n"); 
-
-    if(DEBUG) printf("Next Node => %p\n", next_node); 
-    if(DEBUG) printf("Next Node Data => %d\n\n", next_node->data); 
-
-    current_node = next_node; 
+    if(DEBUG) printf("Freed node Sucessfully\n"); 
   }
 
-  if(DEBUG) printf("Freeing the tail\n"); 
-  if(DEBUG) printf("Tail: %d\n\n", current_node->data); 
-  free(current_node); 
-
-  list->head = NULL; 
-  list->tail = NULL;
+  // if(DEBUG) printf("Freeing the tail\n"); 
+  // if(DEBUG) printfLL;
   list->size = 0; 
 }
 
@@ -443,6 +437,10 @@ Iterator to_iter(LinkedList* list) {
   return iter; 
 }
 
+bool has_current(Iterator* iter) {
+  return iter->current != NULL;  
+}
+
 // Check if there is a next node for the current node of the iterator
 
 bool has_next(Iterator* iter) {
@@ -452,12 +450,8 @@ bool has_next(Iterator* iter) {
 // Return the next node of the iterator; 
 
 Node* next(Iterator* iter) {
-  if(has_next(iter)) {
-    iter->current = iter->current->next; 
-    return iter->current; 
-  };
-
-  return NULL;    
+  iter->current = iter->current->next; 
+  return iter->current; 
 }
 
 // Get the current node of the iterator
@@ -522,4 +516,5 @@ void perform_tests(LinkedList* list) {
   remove_node(list, 30); 
   printf("NEW_TAIL: %d; STATUS: %s\n\n", list->tail->data, list->tail->data == 29 ? "PASSED" : "FAILED" ); 
   to_string(list);
+  printf("Testing Search\n"); 
 }
