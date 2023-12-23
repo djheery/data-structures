@@ -93,8 +93,8 @@ void cli_free_list(LinkedList* list);
 // Program Specific Methods
 void print_menu();
 void program_loop(); 
-int  get_user_input();
-bool validate_user_input(); 
+int  get_user_input(char text_prompt[]);
+bool validate_user_input(char* p); 
 
 // Tester Methods 
 void populate_linked_list(LinkedList* list); 
@@ -495,6 +495,43 @@ void to_string(LinkedList* list) {
   Node* last = current(&iter); 
   printf("%d => END_OF_LIST\n\n", last->data); 
 }
+
+// =======================================
+// || Below are the User Input Methods  ||
+// =======================================
+
+bool validate_user_input(char *p) {
+
+  while(*p) {
+    if(isdigit((unsigned char)* p)) {
+      return false;  
+    }
+    p++;
+  }
+  
+  return true; 
+}
+
+int get_user_input(char text_prompt[]) {
+  bool is_valid = false; 
+  const int max_retries = 3; 
+  const int current_retries = 0; 
+
+  while(!is_valid | (current_retries != max_retries)) {
+    char buffer[10]; 
+    printf("> %s: ", text_prompt);
+    fgets(buffer, sizeof(buffer), stdin);
+    printf("\n"); 
+    
+  }
+  
+
+  
+  return 1; 
+}
+
+
+
 
 // ====================
 // || Tester Methods ||
