@@ -1,6 +1,6 @@
 # What this Repositry Is 
 
-This repositry is purely my attempt to get to grips with data structures and how they work under the hood. 
+This repositry is purely my attempt to get to grips with data structures and how they work in granular detail
 
 To start with this project will consist of purely my attempts to create data structures in the C programming language. 
 
