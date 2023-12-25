@@ -213,6 +213,7 @@ LinkedList initialize_linked_list() {
   list.head = NULL; 
   list.tail = NULL; 
   list.size = 0; 
+  return list; 
 }
 
 // Get the head of the list
