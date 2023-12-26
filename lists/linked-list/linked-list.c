@@ -117,15 +117,15 @@ void print_menu() {
   printf("[2] Show the size of the Linked List\n"); 
   printf("[3] Show the head of the list\n");
   printf("[4] Show the tail of the list\n"); 
-  printf("[4] Insert an item to the beginning of the Linked List\n"); 
-  printf("[5] Insert an item to the end of the Linked List\n"); 
-  printf("[6] Insert an item at a given position of the Linked List\n"); 
-  printf("[7] Remove an item from the beginning of the linked list\n"); 
-  printf("[8] Remove an item from the end of the linked list\n"); 
-  printf("[9] Remove an item from a given postion of the linked list\n"); 
-  printf("[10] Search for an item in the linked list\n"); 
-  printf("[11] Reverse the linked list\n"); 
-  printf("[12] Iterate through the linked list\n"); 
+  printf("[5] Insert an item to the beginning of the Linked List\n"); 
+  printf("[6] Insert an item to the end of the Linked List\n"); 
+  printf("[7] Insert an item at a given position of the Linked List\n"); 
+  printf("[8] Remove an item from the beginning of the linked list\n"); 
+  printf("[9] Remove an item from the end of the linked list\n"); 
+  printf("[10] Remove an item from a given postion of the linked list\n"); 
+  printf("[11] Search for an item in the linked list\n"); 
+  printf("[12] Reverse the linked list\n"); 
+  printf("[13] Iterate through the linked list\n"); 
   printf("[0] Exit the program\n\n"); 
 }
 
@@ -516,19 +516,39 @@ bool validate_user_input(char *p) {
 int get_user_input(char text_prompt[]) {
   bool is_valid = false; 
   const int max_retries = 3; 
-  const int current_retries = 0; 
+  int current_retries = 0; 
+  int user_input = -1;
 
-  while(!is_valid | (current_retries != max_retries)) {
+  while(!is_valid | (current_retries < max_retries)) {
     char buffer[10]; 
     printf("> %s: ", text_prompt);
     fgets(buffer, sizeof(buffer), stdin);
     printf("\n"); 
+    char* p = buffer;   
+    bool is_valid = validate_user_input(p);
+
+    if(is_valid) {
+      user_input = atoi(buffer);
+      break;
+    }
+
+    current_retries += 1; 
     
+    if(current_retries >= max_retries) {
+      printf("Unfortumately you have made too many failed attempts\n"); 
+      printf("Returning to the menu\n\n");
+      return -1; 
+    }
+
+    if(current_retries > 0) {
+      printf("Whoops, something went wrong. Please try again...\n\n"); 
+      continue;
+    }
   }
   
 
   
-  return 1; 
+  return user_input; 
 }
 
 
