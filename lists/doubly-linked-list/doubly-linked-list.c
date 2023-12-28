@@ -164,6 +164,13 @@ bool validate_user_input(char* p) {
 // || Utility Methods ||
 // =====================
 
+
+/**
+ * Initialize the list 
+ *
+ * @returns: An instance of a DoublyLinked List
+ */
+
 DoublyLinkedList initialize_list() {
   DoublyLinkedList list; 
   list.head = NULL; 
@@ -171,6 +178,13 @@ DoublyLinkedList initialize_list() {
   list.size = 0; 
   return list; 
 }
+
+/**
+ * Initialize a Linked List Node
+ *
+ * @param: data - The data to be stored inside the given node
+ * @returns: A node with NULL pointers to the next and prev (to be populated on insertion)  
+ */
 
 Node* initalize_node(int data) {
   Node* n = (Node*) malloc(sizeof(Node)); 
@@ -185,6 +199,80 @@ Node* initalize_node(int data) {
   n->next = NULL; 
 
   return n; 
+}
+
+// ======================
+// || Iterator Methods ||
+// ======================
+
+/**
+ * Create an iterator for the list 
+ *
+ * @param: list - An instance of a Doubly Linked List 
+ * @returns: A new instance of an iterator for the given list
+ */
+
+Iterator to_iter(DoublyLinkedList* list) {
+  if(list->head == NULL || list->size == 0) {
+    printf("Iterator cannot be made as the list size is 0\n\n"); 
+  }
+
+  Iterator iter; 
+  iter.current = list->head; 
+  return iter; 
+}
+
+/**
+ * Return the current target of the iterator 
+ *
+ * @param: iter - An iterator for a given list
+ * @returns: The Current target of the iterator within the List
+ */
+
+Node* current(Iterator* iter) {
+  return iter->current; 
+}
+
+/**
+ * Get the next item in the list using the iterator 
+ *
+ * @param: iter - An iterator for a given list
+ * @returns: The next item in the list given the iterator 
+ */
+
+Node* next(Iterator* iter) {
+  iter->current = iter->current->next; 
+  return iter->current; 
+}
+
+/**
+ * Check if there is a next item in the list 
+ *
+ * @param: iter - An iterator for a given list
+ * @returns: True or false depending if the next item is null
+ */
+
+bool has_next(Iterator* iter) {
+  return iter->current->next != NULL; 
+}
+
+
+/**
+ * Check if there is a current item in the iterator 
+ *
+ * @param: iter - An iterator for a given list
+ * @returns: True or false depending if the current item is null
+ */
+
+bool has_current(Iterator* iter) {
+  return iter->current != NULL; 
+}
+
+/**
+ */
+
+void incr_next(Iterator* iter) {
+  iter->current = iter->current->next; 
 }
 
 // =====================
