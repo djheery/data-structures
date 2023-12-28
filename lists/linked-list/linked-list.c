@@ -84,12 +84,11 @@ void cli_insert_at_tail(LinkedList* list);
 void cli_remove_node(LinkedList* list); 
 void cli_insert_node_at_position(LinkedList* list); 
 void cli_search_for_node(LinkedList* list);
-
-// TO IMPLEMENT
 void cli_reverse(LinkedList* list); 
 void cli_remove_at_head(LinkedList* list); 
-void cli_remove_node_at_position(LinkedList* list); 
 void cli_remove_at_tail(LinkedList* list); 
+
+// TO IMPLEMENT
 void cli_iterate(LinkedList* list); 
 
 // Program Specific Methods
@@ -458,6 +457,44 @@ bool reverse(LinkedList* list) {
   return true; 
 }
 
+// Remove the head of the list
+
+int remove_head(LinkedList* list) {
+  int prev_head_data = list->head->data; 
+  Node* prev_head = list->head; 
+
+  list->head = prev_head->next; 
+
+  free(prev_head); 
+
+  return prev_head_data;  
+}
+
+// Remove the tail of the list
+
+int remove_tail(LinkedList* list) {
+  Iterator iter = to_iter(list); 
+  Node* prev_node;
+  int tail_data = list->tail->data;
+
+  while(has_current(&iter)) {
+    Node* current_node = current(&iter); 
+
+    if(current_node != list->tail) {
+      prev_node = current_node;  
+      next(&iter); 
+      continue; 
+    }
+
+    list->tail = prev_node; 
+    list->tail->next = NULL; 
+    free(current_node); 
+    break; 
+  }
+
+  return tail_data; 
+}
+
 // ================================================
 // || Below is the Start of the Iterator Methods ||
 // ================================================
@@ -558,7 +595,15 @@ void cli_tail(LinkedList* list) {
 // CLI Method for reversing the linked list 
 
 void cli_reverse(LinkedList* list) {
-  printf("STILL TO IMPLEMENT\n\n"); 
+  printf("Reversing the list...\n\n"); 
+
+  printf("Before:\n"); 
+  to_string(list); 
+  
+  reverse(list); 
+
+  printf("After:\n"); 
+  to_string(list); 
 }
 
 // CLI Method for inserting at the head 
@@ -626,6 +671,24 @@ void cli_remove_node(LinkedList* list) {
 
 // CLI Search
 
+void cli_search_for_node(LinkedList* list) {
+  int node_to_search = get_user_input("Please enter the node data you wish to search for: ");  
+  
+  if(node_to_search == -1) {
+    printf("Something went wrong\n"); 
+    printf("Returning to the menu...\n\n"); 
+    return; 
+  }
+
+  bool is_found = search(list, node_to_search); 
+
+  if(is_found) {
+    printf("Node, %d, has been found in the list\n\n", node_to_search); 
+    return; 
+  }
+}
+
+// CLI Reverse
 
 // =======================================
 // || Below are the User Input Methods  ||
@@ -741,17 +804,21 @@ void test_search(LinkedList* list) {
   insert_node(list, 45, 3); 
   bool has_45_2 = search(list, 45); 
   printf("Search for 45 should be TRUE; Status: %s\n\n", has_45_2 ? "PASSED" : "FAILED"); 
-  to_string(list); 
 }
 
 void test_reverse(LinkedList* list) {
-  reverse(list);  
   printf("REVERSING THE LIST\n\n"); 
+  printf("Before: \n");
+  to_string(list); 
+
+  reverse(list);  
+  printf("After: \n"); 
   to_string(list); 
 
   printf("New Head => %d\n", list->head->data);
   printf("New Tail => %d\n\n", list->tail->data);
 }
+
 
 // Perform the Tests
 void perform_tests(LinkedList* list) {
