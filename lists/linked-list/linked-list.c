@@ -79,17 +79,18 @@ Node*    current(Iterator* iter);
 void to_string(LinkedList* list);
 void cli_head(LinkedList* list); 
 void cli_tail(LinkedList* list); 
-void cli_reverse(LinkedList* list); 
 void cli_insert_at_head(LinkedList* list); 
 void cli_insert_at_tail(LinkedList* list); 
 void cli_remove_node(LinkedList* list); 
-void cli_remove_at_head(LinkedList* list); 
-void cli_remove_at_tail(LinkedList* list); 
 void cli_insert_node_at_position(LinkedList* list); 
-void cli_remove_node_at_position(LinkedList* list); 
-void cli_iterate(LinkedList* list); 
 void cli_search_for_node(LinkedList* list);
-void cli_free_list(LinkedList* list); 
+
+// TO IMPLEMENT
+void cli_reverse(LinkedList* list); 
+void cli_remove_at_head(LinkedList* list); 
+void cli_remove_node_at_position(LinkedList* list); 
+void cli_remove_at_tail(LinkedList* list); 
+void cli_iterate(LinkedList* list); 
 
 // Program Specific Methods
 void print_menu();
@@ -438,6 +439,21 @@ bool reverse(LinkedList* list) {
     return false; 
   }
 
+  Node* current_node = list->head; 
+  Node* next_node; 
+  Node* prev_node = NULL; 
+
+  while(current_node != NULL) {
+    next_node = current_node->next;  
+    current_node->next = prev_node; 
+    prev_node = current_node; 
+    current_node = next_node; 
+  }
+  
+  // Swap The head and tail
+  Node* tmp_tail = list->tail;
+  list->tail = list->head; 
+  list->head = tmp_tail; 
 
   return true; 
 }
@@ -592,8 +608,23 @@ void cli_insert_at_position(LinkedList* list) {
 // CLI Remove Node
 
 void cli_remove_node(LinkedList* list) {
-  
+  int user_input = get_user_input("Please enter the integer you would like to insert: "); 
+
+  if(user_input == -1) {
+    return; 
+  }
+
+  bool removed = remove_node(list, user_input); 
+
+  if(!removed) {
+    printf("Unfortunately the node, %d,  has not been found within the list\n\n", user_input);
+    return;
+  }
+
+  printf("Node %d, sucessfully removed\n\n", user_input);
 }
+
+// CLI Search
 
 
 // =======================================
@@ -713,6 +744,12 @@ void test_search(LinkedList* list) {
   to_string(list); 
 }
 
+void test_reverse(LinkedList* list) {
+  reverse(list);  
+  printf("REVERSING THE LIST\n\n"); 
+  to_string(list); 
+}
+
 // Perform the Tests
 void perform_tests(LinkedList* list) {
   
@@ -725,5 +762,7 @@ void perform_tests(LinkedList* list) {
   test_tail_removal(list);
 
   test_search(list);
+
+  test_reverse(list);
 
 }
