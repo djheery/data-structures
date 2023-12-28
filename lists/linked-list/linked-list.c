@@ -748,6 +748,9 @@ void test_reverse(LinkedList* list) {
   reverse(list);  
   printf("REVERSING THE LIST\n\n"); 
   to_string(list); 
+
+  printf("New Head => %d\n", list->head->data);
+  printf("New Tail => %d\n\n", list->tail->data);
 }
 
 // Perform the Tests
