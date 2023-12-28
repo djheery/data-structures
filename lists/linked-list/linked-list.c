@@ -1,18 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <ctype.h>
-#include <string.h>
-
-#define RUN_TESTS false
-#define DEBUG 
-
-#ifdef DEBUG 
-#define DEBUG_PRINT(fmt, ...) fprintf(stderr, fmt, __VA_ARGS__);
-#else 
-#define DEBUG_PRINT(fmt, ...);
-#endif
-
 /**
  * *----------------------------*
  * * Linked List Data Structure *
@@ -38,6 +23,23 @@
  * **The insert method will be called on operations such as insert_at_begginning/end as these methods will just pass 0 || list->size to the insert method
  *
  */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <ctype.h>
+#include <string.h>
+
+#define RUN_TESTS false
+#define DEBUG 
+
+#ifdef DEBUG 
+#define DEBUG_PRINT(fmt, ...) fprintf(stderr, fmt, __VA_ARGS__);
+#else 
+#define DEBUG_PRINT(fmt, ...);
+#endif
+
+
 
 // Node Struct
 typedef struct {
