@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <ctype.h>
 
-#define RUN_TESTS true
+#define RUN_TESTS false
 #define DEBUG 
 
 #ifdef DEBUG 
@@ -84,7 +84,7 @@ void cli_tail(LinkedList* list);
 void cli_insert_at_head(LinkedList* list); 
 void cli_insert_at_tail(LinkedList* list); 
 void cli_remove_node(LinkedList* list); 
-void cli_insert_node_at_position(LinkedList* list); 
+void cli_insert_at_position(LinkedList* list); 
 void cli_search_for_node(LinkedList* list);
 void cli_reverse(LinkedList* list); 
 void cli_remove_at_head(LinkedList* list); 
@@ -128,7 +128,6 @@ void print_menu() {
   printf("[10] Remove an item from a given postion of the linked list\n"); 
   printf("[11] Search for an item in the linked list\n"); 
   printf("[12] Reverse the linked list\n"); 
-  printf("[13] Iterate through the linked list\n"); 
   printf("[0] Exit the program\n\n"); 
 }
 
@@ -151,56 +150,56 @@ void program_loop() {
     return; 
   }
 
-  // while(true) {
-  //   char text_prompt[] = "Please enter the number of the command you would like to perform: "; 
-  //   int command = 11; 
-  //
-  //   switch(command) {
-  //     case 1 : 
-  //       to_string(&list);  
-  //       break; 
-  //     case 2 : 
-  //       printf("TODO!\n\n");
-  //       break; 
-  //     case 3 : 
-  //       printf("TODO!\n\n");
-  //       break; 
-  //     case 4 : 
-  //       printf("TODO!\n\n");
-  //       break; 
-  //     case 5 : 
-  //       printf("TODO!\n\n");
-  //       break; 
-  //     case 6 : 
-  //       printf("TODO!\n\n");
-  //       break; 
-  //     case 7 : 
-  //       printf("TODO!\n\n");
-  //       break; 
-  //     case 8 : 
-  //       printf("TODO!\n\n");
-  //       break; 
-  //     case 9 :
-  //       printf("TODO!\n\n");
-  //       break; 
-  //     case 10 : 
-  //       printf("TODO!\n\n");
-  //       break; 
-  //     case 11 : 
-  //       printf("TODO!\n\n");
-  //       break; 
-  //     case 12 : 
-  //       printf("TODO!\n\n");
-  //       break;
-  //     case 0 : 
-  //       printf("Thankyou for using the program\nFreeing the list nodes from memory\n"); 
-  //       free_linked_list(&list);
-  //       printf("Sucess!\nGoodbye...\n\n"); 
-  //       exit(0); 
-  //     default : 
-  //       printf("Whoops unknown command - Please try again\n\n"); 
-  //   }
-  // }
+  while(true && !RUN_TESTS) {
+    char text_prompt[] = "Please enter the number of the command you would like to perform: "; 
+    int command = get_user_input(text_prompt); 
+
+    switch(command) {
+      case 1 : 
+        to_string(&list);  
+        break; 
+      case 2 : 
+        printf("The current size of the linked list is: %d\n\n", list.size); 
+        break; 
+      case 3 : 
+        cli_head(&list);
+        break; 
+      case 4 : 
+        cli_tail(&list);
+        break; 
+      case 5 : 
+        cli_insert_at_head(&list);
+        break; 
+      case 6 : 
+        cli_insert_at_tail(&list); 
+        break; 
+      case 7 : 
+        cli_insert_at_position(&list);
+        break; 
+      case 8 : 
+        cli_remove_at_head(&list);
+        break; 
+      case 9 :
+        cli_remove_at_tail(&list);
+        break; 
+      case 10 : 
+        cli_remove_node(&list);
+        break; 
+      case 11 : 
+        cli_search_for_node(&list);
+        break; 
+      case 12 : 
+        cli_reverse(&list);
+        break;
+      case 0 : 
+        printf("Thankyou for using the program\nFreeing the list nodes from memory\n"); 
+        free_linked_list(&list);
+        printf("Sucess!\nGoodbye...\n\n"); 
+        exit(0); 
+      default : 
+        printf("Whoops unknown command - Please try again\n\n"); 
+    }
+  }
 
     free_linked_list(&list); 
 }
@@ -249,8 +248,6 @@ void free_linked_list(LinkedList* list) {
     DEBUG_PRINT("Freed node Sucessfully\n", NULL); 
   }
 
-  // if(DEBUG) printf("Freeing the tail\n"); 
-  // if(DEBUG) printfLL;
   list->size = 0; 
 }
 
@@ -681,6 +678,7 @@ void cli_insert_at_tail(LinkedList* list) {
   printf("Node inserted at head: %d\n\n", list->tail->data); 
 }
 
+// CLI Method for Inserting a node at a given position
 void cli_insert_at_position(LinkedList* list) {
   int position_to_insert = get_user_input("Please enter the position you would like to insert at: ");  
 
@@ -700,7 +698,6 @@ void cli_insert_at_position(LinkedList* list) {
 }
 
 // CLI Remove Node
-
 void cli_remove_node(LinkedList* list) {
   int user_input = get_user_input("Please enter the integer you would like to insert: "); 
 
