@@ -439,12 +439,16 @@ bool reverse_with_iter(LinkedList* list) {
   Node* next_node = NULL; 
   Node* prev_node = NULL; 
 
-  while(has_next(&iter) || current_node != NULL) {
+  while(has_current(&iter)) {
     next_node = next(&iter); 
     current_node->next = prev_node; 
     prev_node = current_node; 
     current_node = next_node; 
   }
+
+  Node* tmp_tail = list->tail; 
+  list->tail = list->head; 
+  list->head = tmp_tail; 
 
   return true; 
 }
@@ -829,7 +833,8 @@ void test_reverse(LinkedList* list) {
   printf("Before: \n");
   to_string(list); 
 
-  reverse_with_iter(list);  
+  // reverse_with_iter(list);  
+  reverse(list); 
   printf("After: \n"); 
   to_string(list); 
 
