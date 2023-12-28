@@ -431,6 +431,24 @@ bool search(LinkedList* list, int data_to_search) {
   return false;
 }
 
+// NOT USED JUST TO SEE HOW TO REVERSE WITH ITERATOR
+
+bool reverse_with_iter(LinkedList* list) {
+  Iterator iter = to_iter(list);  
+  Node* current_node = current(&iter); 
+  Node* next_node = NULL; 
+  Node* prev_node = NULL; 
+
+  while(has_next(&iter) || current_node != NULL) {
+    next_node = next(&iter); 
+    current_node->next = prev_node; 
+    prev_node = current_node; 
+    current_node = next_node; 
+  }
+
+  return true; 
+}
+
 // Reverse the list
 
 bool reverse(LinkedList* list) {
@@ -811,7 +829,7 @@ void test_reverse(LinkedList* list) {
   printf("Before: \n");
   to_string(list); 
 
-  reverse(list);  
+  reverse_with_iter(list);  
   printf("After: \n"); 
   to_string(list); 
 
