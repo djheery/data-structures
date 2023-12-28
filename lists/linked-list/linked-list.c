@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <string.h>
 
 #define RUN_TESTS false
 #define DEBUG 
@@ -151,6 +152,7 @@ void program_loop() {
   }
 
   while(true && !RUN_TESTS) {
+    print_menu();
     char text_prompt[] = "Please enter the number of the command you would like to perform: "; 
     int command = get_user_input(text_prompt); 
 
@@ -615,7 +617,7 @@ void cli_head(LinkedList* list) {
   printf("List Head Information:\n"); 
   printf("> Pointer: %p\n", l_head); 
   printf("> Data: %d\n", l_head->data); 
-  printf("> Has Next: %s\n\n", l_head->next == NULL ? "TRUE" : "FALSE"); 
+  printf("> Has Next: %s\n\n", !(l_head->next == NULL) ? "TRUE" : "FALSE"); 
 }
 
 // CLI method for printing the list tail information
@@ -675,7 +677,7 @@ void cli_insert_at_tail(LinkedList* list) {
   }
 
   insert_node(list, user_input, (list->size + 1)); 
-  printf("Node inserted at head: %d\n\n", list->tail->data); 
+  printf("Node inserted at tail: %d\n\n", list->tail->data); 
 }
 
 // CLI Method for Inserting a node at a given position
@@ -699,7 +701,7 @@ void cli_insert_at_position(LinkedList* list) {
 
 // CLI Remove Node
 void cli_remove_node(LinkedList* list) {
-  int user_input = get_user_input("Please enter the integer you would like to insert: "); 
+  int user_input = get_user_input("Please enter the integer you would like to remove: "); 
 
   if(user_input == -1) {
     return; 
@@ -787,7 +789,7 @@ void cli_search_for_node(LinkedList* list) {
 bool validate_user_input(char *p) {
 
   while(*p) {
-    if(isdigit((unsigned char)* p)) {
+    if(!isdigit((unsigned char)* p)) {
       return false;  
     }
     p++;
@@ -807,6 +809,9 @@ int get_user_input(char text_prompt[]) {
     printf("> %s: ", text_prompt);
     fgets(buffer, sizeof(buffer), stdin);
     printf("\n"); 
+
+    buffer[strcspn(buffer, "\n")] = 0; 
+
     char* p = buffer;   
     bool is_valid = validate_user_input(p);
 
