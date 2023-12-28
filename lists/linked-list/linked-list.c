@@ -82,6 +82,7 @@ void cli_tail(LinkedList* list);
 void cli_reverse(LinkedList* list); 
 void cli_insert_at_head(LinkedList* list); 
 void cli_insert_at_tail(LinkedList* list); 
+void cli_remove_node(LinkedList* list); 
 void cli_remove_at_head(LinkedList* list); 
 void cli_remove_at_tail(LinkedList* list); 
 void cli_insert_node_at_position(LinkedList* list); 
@@ -496,6 +497,104 @@ void to_string(LinkedList* list) {
   Node* last = current(&iter); 
   printf("%d => END_OF_LIST\n\n", last->data); 
 }
+
+// Cli Method for getting the head of the list 
+
+void cli_head(LinkedList* list) {
+  if(list->size == 0) {
+     printf("Your list is currently empty, thus there is nothing too print\n\n");    
+     return;
+   }
+
+  if(list->head == NULL) {
+    printf("Your list head currently NULL, this means there must be an error in your program as your list size is not 1\n\n"); 
+    return; 
+  }
+
+  Node* l_head = head(list);  
+
+  printf("List Head Information:\n"); 
+  printf("> Pointer: %p\n", l_head); 
+  printf("> Data: %d\n", l_head->data); 
+  printf("> Has Next: %s\n\n", l_head->next == NULL ? "TRUE" : "FALSE"); 
+}
+
+// CLI method for printing the list tail information
+
+void cli_tail(LinkedList* list) {
+  if(list->size == 0) {
+     printf("Your list is currently empty, thus there is nothing too print\n\n");    
+     return;
+  }
+
+  if(list->tail == NULL) {
+    printf("Your list tail is currently NULL, this means you done messed up somewhere\n\n");
+    return; 
+  }
+
+  Node* l_tail = tail(list); 
+
+  printf("List Tail Information:\n");
+  printf("> Pointer: %p\n", l_tail); 
+  printf("> Data: %d\n\n", l_tail->data); 
+}
+
+// CLI Method for reversing the linked list 
+
+void cli_reverse(LinkedList* list) {
+  printf("STILL TO IMPLEMENT\n\n"); 
+}
+
+// CLI Method for inserting at the head 
+
+void cli_insert_at_head(LinkedList* list) {
+  int user_input = get_user_input("Please enter the integer you would like to insert: "); 
+
+  if(user_input == -1) {
+    return; 
+  }
+
+  insert_node(list, user_input, 1); 
+  printf("Node inserted at head: %d\n\n", list->head->data); 
+}
+
+// CLI Method for inserting at the head 
+
+void cli_insert_at_tail(LinkedList* list) {
+  int user_input = get_user_input("Please enter the integer you would like to insert: "); 
+
+  if(user_input == -1) {
+    return; 
+  }
+
+  insert_node(list, user_input, (list->size + 1)); 
+  printf("Node inserted at head: %d\n\n", list->tail->data); 
+}
+
+void cli_insert_at_position(LinkedList* list) {
+  int position_to_insert = get_user_input("Please enter the position you would like to insert at: ");  
+
+  if(position_to_insert == -1) return; 
+
+  if(position_to_insert > (list->size + 1)) {
+    printf("You're position is out of bounds or invalid\n\n");  
+    return; 
+  }
+
+  int num_to_insert = get_user_input("Please enter the integer you would like to insert: ");
+
+  if(num_to_insert == -1) return; 
+
+  Node* node = insert_node(list, num_to_insert, position_to_insert); 
+  printf("Node inserted: %d\n\n", node->data); 
+}
+
+// CLI Remove Node
+
+void cli_remove_node(LinkedList* list) {
+  
+}
+
 
 // =======================================
 // || Below are the User Input Methods  ||
