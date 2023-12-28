@@ -519,6 +519,15 @@ int remove_tail(LinkedList* list) {
 
     // If the head and tail point to the same item then just initialize both to NULL and reset the list
     if(current_node == list->tail && current_node == list->head) {
+
+      // This should never bbe called
+      if(list->size != 1) {
+        printf("There is a major logical error -> if both the head and tail point to the same item the list length can only be one, However it was not\n"); 
+        printf("Freeing the list and exiting the program\n\n"); 
+        free_linked_list(list);         
+        exit(EXIT_FAILURE); 
+      }
+
       list->tail = NULL; 
       list->head = NULL; 
       list->size = 0; 
