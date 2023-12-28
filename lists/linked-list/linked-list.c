@@ -126,7 +126,7 @@ void print_menu() {
   printf("[7] Insert an item at a given position of the Linked List\n"); 
   printf("[8] Remove an item from the beginning of the linked list\n"); 
   printf("[9] Remove an item from the end of the linked list\n"); 
-  printf("[10] Remove an item from a given postion of the linked list\n"); 
+  printf("[10] Remove a node based on its data\n"); 
   printf("[11] Search for an item in the linked list\n"); 
   printf("[12] Reverse the linked list\n"); 
   printf("[0] Exit the program\n\n"); 
