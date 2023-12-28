@@ -66,6 +66,8 @@ bool  reverse(LinkedList* list);
 bool  search(LinkedList* list, int data_to_search); 
 void  free_linked_list(LinkedList* list); 
 bool  check_valid_insertion(LinkedList* list, int position); 
+int remove_tail(LinkedList* list); 
+int remove_head(LinkedList* list); 
 LinkedList initialize_linked_list();
 
 // Iterator methods
@@ -489,6 +491,13 @@ int remove_head(LinkedList* list) {
 
   free(prev_head); 
 
+  list->size -= 1;
+
+  if(list->head == NULL) {
+    list->tail = NULL;
+    list->size = 0; 
+  }
+
   return prev_head_data;  
 }
 
@@ -508,8 +517,17 @@ int remove_tail(LinkedList* list) {
       continue; 
     }
 
-    list->tail = prev_node; 
-    list->tail->next = NULL; 
+    // If the head and tail point to the same item then just initialize both to NULL and reset the list
+    if(current_node == list->tail && current_node == list->head) {
+      list->tail = NULL; 
+      list->head = NULL; 
+      list->size = 0; 
+    } else {
+      list->tail = prev_node; 
+      list->tail->next = NULL; 
+      list->size -= 1; 
+    }
+
     free(current_node); 
     break; 
   }
@@ -691,6 +709,50 @@ void cli_remove_node(LinkedList* list) {
   printf("Node %d, sucessfully removed\n\n", user_input);
 }
 
+// Remove at tail
+
+void cli_remove_at_head(LinkedList* list) {
+  int size = list->size; 
+
+  if(size == 0) {
+    printf("The list is empty, thus cannot remove an element\n\n"); 
+    return; 
+  }
+
+  if(list->head == NULL) {
+    printf("Something went wrong, the lists size is greater than zero but there is no head, please check the code base\n\n"); 
+    return; 
+  }
+
+  int prev_head = remove_head(list);
+
+  printf("The previous head was: %d\n", prev_head); 
+  printf("The new head is: %d\n\n", list->head->data); 
+
+}
+
+// Remove at head
+
+void cli_remove_at_tail(LinkedList* list) {
+  int size = list->size; 
+
+  if(size == 0) {
+    printf("The list is empty, thus cannot remove an element\n\n"); 
+    return; 
+  }
+
+  if(list->tail == NULL) {
+    printf("Something went wrong, the lists size is greater than zero but there is no tail, please check the code base\n\n"); 
+    return; 
+  }
+
+  int prev_head = remove_head(list);
+
+  printf("The previous head was: %d\n", prev_head); 
+  printf("The new head is: %d\n\n", list->head->data); 
+
+}
+
 // CLI Search
 
 void cli_search_for_node(LinkedList* list) {
@@ -708,9 +770,9 @@ void cli_search_for_node(LinkedList* list) {
     printf("Node, %d, has been found in the list\n\n", node_to_search); 
     return; 
   }
-}
 
-// CLI Reverse
+  printf("Node has not been found\n\n"); 
+}
 
 // =======================================
 // || Below are the User Input Methods  ||
