@@ -60,8 +60,8 @@ Node* head(DoublyLinkedList* list);
 Node* tail(DoublyLinkedList* list); 
 bool validate_insertion(DoublyLinkedList* list, int position); 
 bool insert_node(DoublyLinkedList* list, int node_data, int position); 
-bool insert_head(DoublyLinkedList* list, int node_data); 
-bool insert_tail(DoublyLinkedList* list, int node_data); 
+bool insert_head(DoublyLinkedList* list, int node_data, Node* new_node); 
+bool insert_tail(DoublyLinkedList* list, int node_data, Node* new_node); 
 int remove_node(DoublyLinkedList* list, int node_data); 
 int remove_head(DoublyLinkedList* list); 
 int remove_tail(DoublyLinkedList* list); 
@@ -264,17 +264,21 @@ Node* tail(DoublyLinkedList* list) {
 
 bool insert_node(DoublyLinkedList* list, int node_data, int position) {
 
-
-  if(position == LIST_HEAD_INDEX) {
-    bool has_inserted = insert_head(list, node_data);  
-    return has_inserted; 
-  }
-
   Node* new_node = initialize_node(node_data);
 
   if(new_node == NULL) {
     printf("Something went wrong initializing the new node, the program will exit\n\n"); 
     exit(EXIT_FAILURE);
+  }
+
+  if(position == LIST_HEAD_INDEX) {
+    bool has_inserted = insert_head(list, node_data, new_node);  
+    return has_inserted; 
+  }
+
+  if(position == (list->size + 1)) {
+    bool has_inserted = insert_tail(list, node_data, new_node); 
+    return has_inserted; 
   }
 
   Iterator iter = to_iter(list);
@@ -306,6 +310,7 @@ bool insert_node(DoublyLinkedList* list, int node_data, int position) {
   }
 
   return true;  
+
 }
 
 /**
@@ -318,14 +323,8 @@ bool insert_node(DoublyLinkedList* list, int node_data, int position) {
  */
 
 
-bool insert_head(DoublyLinkedList* list, int node_data) {
-  Node* new_node = initialize_node(node_data);
+bool insert_head(DoublyLinkedList* list, int node_data, Node* new_node) {
 
-  if(new_node == NULL) {
-    printf("Something went wrong initializing the new node, the program will exit\n\n"); 
-    exit(EXIT_FAILURE);
-  }
-  
   if(list->size == 0 || list->head == NULL) {
     list->head = new_node; 
     list->tail = new_node; 
@@ -338,6 +337,7 @@ bool insert_head(DoublyLinkedList* list, int node_data) {
   list->size += 1; 
 
   return true;  
+
 }
 
 /**
@@ -350,13 +350,7 @@ bool insert_head(DoublyLinkedList* list, int node_data) {
  */
 
 
-bool insert_tail(DoublyLinkedList* list, int node_data) {
-  Node* new_node = initialize_node(node_data); 
-
-  if(new_node == NULL) {
-    printf("Something went wrong initializing the new node, the program will exit\n\n"); 
-    exit(EXIT_FAILURE);
-  }
+bool insert_tail(DoublyLinkedList* list, int node_data, Node* new_node) {
 
   new_node->prev = list->tail;
   list->tail->next = new_node; 
@@ -364,6 +358,7 @@ bool insert_tail(DoublyLinkedList* list, int node_data) {
   list->size += 1;
 
   return true;  
+
 }
 
 
