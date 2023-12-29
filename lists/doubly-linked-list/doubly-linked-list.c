@@ -26,6 +26,7 @@
 
 #define RUN_TESTS true 
 #define DEBUG 
+#define LIST_HEAD_INDEX 1 
 
 #ifdef DEBUG 
 #define DEBUG_PRINT(fmt, ...) fprintf(stderr, fmt, __VA_ARGS__); 
@@ -57,7 +58,9 @@ Node* intialize_node();
 void free_list(DoublyLinkedList* list); 
 Node* head(DoublyLinkedList* list); 
 Node* tail(DoublyLinkedList* list); 
-Node* insert_node(DoublyLinkedList* list, int node_data); 
+bool validate_insertion(DoublyLinkedList* list, int position); 
+bool insert_node(DoublyLinkedList* list, int node_data, int position); 
+bool insert_head(DoublyLinkedList* list, int node_data); 
 int remove_node(DoublyLinkedList* list, int node_data); 
 int remove_head(DoublyLinkedList* list); 
 int remove_tail(DoublyLinkedList* list); 
@@ -186,7 +189,7 @@ DoublyLinkedList initialize_list() {
  * @returns: A node with NULL pointers to the next and prev (to be populated on insertion)  
  */
 
-Node* initalize_node(int data) {
+Node* initialize_node(int data) {
   Node* n = (Node*) malloc(sizeof(Node)); 
 
   if(n == NULL) {
@@ -200,6 +203,113 @@ Node* initalize_node(int data) {
 
   return n; 
 }
+
+/**
+ * Get the head of the list
+ *
+ * @returns: The head of the list if it exists, NULL if not
+ */
+
+Node* head(DoublyLinkedList* list) {
+  if(list->head == NULL || list->size == 0) {
+    return NULL; 
+  }
+
+  return list->head; 
+}
+
+
+/**
+ * Get the tail of the list
+ *
+ * @returns: The tail of the list if it exists, NULL if not
+ */
+
+Node* tail(DoublyLinkedList* list) {
+  if(list->tail == NULL || list->size == 0) {
+    return NULL; 
+  }
+
+  return list->tail; 
+}
+
+/**
+ * Insert a node in the list at a given position. 
+ * This method is reusable for inserting at the head of the list and the tail of the list
+ *
+ * @param: list - The list to insert into 
+ * @param: node_data - The data to be associated with the inserted node 
+ * @param: position - The position to insert into
+ *
+ * @returns: True or false depending on whether there has been a successful insertion or not
+ */
+
+bool insert_node(DoublyLinkedList* list, int node_data, int position) {
+
+
+  if(position == LIST_HEAD_INDEX) {
+    bool has_inserted = insert_head(list, node_data);  
+    return has_inserted; 
+  }
+
+  Node* new_node = initialize_node(node_data);
+
+  if(new_node == NULL) {
+    printf("Something went wrong initializing the new node, the program will exit\n\n"); 
+    exit(EXIT_FAILURE);
+  }
+
+  Iterator iter = to_iter(list);
+  int count = 0; 
+
+  while((count < position - 1) && has_next(&iter)) { 
+    incr_next(&iter);
+    count++;
+  }
+
+  if(count != position - 1) {
+    DEBUG_PRINT("!!ERROR!!", NULL);
+    DEBUG_PRINT("There are not enough elements to insert another element. \n", NULL); 
+    DEBUG_PRINT("This should not be called as this condition should be checked prior to reaching this point\n\n", NULL); 
+    return false; 
+  }
+
+  return true;  
+}
+
+
+/**
+ * Insert a node in the head position. 
+ *
+ * @param: list - The list to insert into 
+ * @param: node_data - The data to be associated with the inserted node 
+ *
+ * @returns: True or false depending on whether there has been a successful insertion or not
+ */
+
+
+bool insert_head(DoublyLinkedList* list, int node_data) {
+  Node* new_node = initialize_node(node_data);
+
+  if(new_node == NULL) {
+    printf("Something went wrong initializing the new node, the program will exit\n\n"); 
+    exit(EXIT_FAILURE);
+  }
+  
+  if(list->size == 0 || list->head == NULL) {
+    list->head = new_node; 
+    list->tail = new_node; 
+    list->size += 1; 
+    return true;  
+  }
+
+  new_node->next = list->head; 
+  list->head = new_node; 
+  list->size += 1; 
+
+  return true;  
+}
+
 
 // ======================
 // || Iterator Methods ||
