@@ -61,10 +61,12 @@ Node* tail(DoublyLinkedList* list);
 bool validate_insertion(DoublyLinkedList* list, int position); 
 bool insert_node(DoublyLinkedList* list, int node_data, int position); 
 bool insert_head(DoublyLinkedList* list, int node_data); 
+bool insert_tail(DoublyLinkedList* list, int node_data); 
 int remove_node(DoublyLinkedList* list, int node_data); 
 int remove_head(DoublyLinkedList* list); 
 int remove_tail(DoublyLinkedList* list); 
 bool search(DoublyLinkedList* list, int data_to_search); 
+void reverse(DoublyLinkedList* list); 
 void traverse_reverse(DoublyLinkedList* list); 
 void to_string(DoublyLinkedList* list); 
 
@@ -96,6 +98,22 @@ void print_menu();
 void program_loop(); 
 int get_user_input(char text_prompt[]); 
 bool validate_user_input(char* p); 
+
+// Tester methods 
+
+void run_tests(); 
+void populate_list(DoublyLinkedList* test_list); 
+void test_head_insertion(DoublyLinkedList* test_list, int node_data); 
+void test_tail_insertion(DoublyLinkedList* test_list, int node_data); 
+void test_position_insertion(DoublyLinkedList* test_list, int node_data, int position); 
+void test_node_removal(DoublyLinkedList* test_list, int node_data); 
+void test_position_removal(DoublyLinkedList* test_list, int node_data, int position); 
+void test_head_removal(DoublyLinkedList* test_list); 
+void test_tail_removal(DoublyLinkedList* test_list); 
+void test_reverse(DoublyLinkedList* test_list); 
+void test_traverse_reverse(DoublyLinkedList* test_list); 
+void test_search(DoublyLinkedList* test_list, int node_to_search); 
+
 
 // ==========================
 // || Main Program Methods ||
@@ -261,8 +279,10 @@ bool insert_node(DoublyLinkedList* list, int node_data, int position) {
 
   Iterator iter = to_iter(list);
   int count = 0; 
+  Node* current_node;
 
   while((count < position - 1) && has_next(&iter)) { 
+    current_node = current(&iter);
     incr_next(&iter);
     count++;
   }
@@ -272,6 +292,17 @@ bool insert_node(DoublyLinkedList* list, int node_data, int position) {
     DEBUG_PRINT("There are not enough elements to insert another element. \n", NULL); 
     DEBUG_PRINT("This should not be called as this condition should be checked prior to reaching this point\n\n", NULL); 
     return false; 
+  }
+
+  Node* new_next = current_node->next; 
+  current_node->next = new_node; 
+  new_node->prev = current_node; 
+  new_next->prev = new_node; 
+  list->size += 1; 
+
+  if(position == list->size) {
+    list->tail = new_node; 
+    new_node->next = NULL; 
   }
 
   return true;  
@@ -395,3 +426,6 @@ void incr_next(Iterator* iter) {
 // || Testing Methods ||
 // =====================
 
+void run_tests() {
+  DoublyLinkedList test_list = initialize_list();  
+}
