@@ -99,6 +99,7 @@ void program_loop();
 int get_user_input(char text_prompt[]); 
 bool validate_user_input(char* p); 
 
+
 // Tester methods 
 
 void run_tests(); 
@@ -220,6 +221,29 @@ Node* initialize_node(int data) {
   n->next = NULL; 
 
   return n; 
+}
+
+/**
+ * Free the list 
+ *
+ * @param: list - The list to free all the nodes within
+ */
+
+void free_list(DoublyLinkedList* list) {
+  Iterator iter = to_iter(list); 
+
+  while(has_current(&iter)) {
+    Node* current_node = current(&iter); 
+    incr_next(&iter);
+    DEBUG_PRINT("Freeing Node: %d\n", current_node->data);
+    free(current_node); 
+  }
+
+  DEBUG_PRINT("LIST_FREED_SUCCESSFULLY\n", NULL); 
+
+  list->size = 0; 
+  list->head = NULL; 
+  list->tail = NULL; 
 }
 
 /**
@@ -398,8 +422,6 @@ int remove_node(DoublyLinkedList* list, int node_data) {
 }
 
 /**
- *  TODO: ADD GUARD CHECKS
- *
  * Remove the head of the list
  *
  * @param: list - the list to remove the head of
@@ -583,5 +605,14 @@ void incr_next(Iterator* iter) {
 // =====================
 
 void run_tests() {
+
+  // Setup
   DoublyLinkedList test_list = initialize_list();  
+  populate_list(&test_list); 
+
+
+}
+
+void populate_list(DoublyLinkedList* test_list) {
+  
 }
