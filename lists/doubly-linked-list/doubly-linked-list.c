@@ -361,6 +361,138 @@ bool insert_tail(DoublyLinkedList* list, int node_data, Node* new_node) {
 
 }
 
+/**
+ *  TODO: ADD GUARD CHECKS
+ *
+ * Remove the first instance of a node given specific node data 
+ *
+ * @param: list - The list to remove the node within
+ * @param: node_data - The data to remove if it exists within the list
+ *
+ * @returns: The node data removed or -1 if the node was not found
+ */
+
+int remove_node(DoublyLinkedList* list, int node_data) {
+  int removed_node_data = -1; 
+  Iterator iter = to_iter(list); 
+  Node* current_node;
+
+  while(has_current(&iter)) {
+    current_node = current(&iter);  
+
+    if(current_node->data == node_data) {
+      removed_node_data = current_node->data; 
+      Node* prev_node = current_node->prev; 
+      Node* next_node = current_node->next; 
+      prev_node->next = next_node; 
+      next_node->prev = prev_node; 
+
+      free(current_node); 
+      break; 
+    }
+
+    incr_next(&iter); 
+  }
+ 
+  return removed_node_data; 
+}
+
+/**
+ *  TODO: ADD GUARD CHECKS
+ *
+ * Remove the head of the list
+ *
+ * @param: list - the list to remove the head of
+ * @returns: the data of the removed node
+ */
+
+int remove_head(DoublyLinkedList* list) {
+
+  if(list->size == 0 || list->head == NULL) {
+    return -1; 
+  }
+
+  Node* current_head = list->head; 
+  Node* new_head = list->head->next; 
+  int removed_node_data = current_head->data; 
+
+  new_head->prev = NULL; 
+  list->head = new_head; 
+  list->size -= 1; 
+
+  if(list->size == 0) {
+    list->head = NULL; 
+    list->tail = NULL; 
+  }
+
+  free(current_head); 
+
+  return removed_node_data;  
+}
+
+/**
+ * Remove the tail of the list 
+ *
+ * @param: list - The list to remove the tail of 
+ * @returns: The data of the removed node
+ */
+
+int remove_tail(DoublyLinkedList* list) {
+
+  if(list->size == 0 || list->tail == NULL) {
+    return -1; 
+  }
+
+  Node* current_tail = list->tail;  
+  Node* new_tail = current_tail->prev; 
+  int removed_node_data = current_tail->data; 
+
+  new_tail->next = NULL; 
+  list->tail = new_tail; 
+  list->size -= 1; 
+
+  if(list->size == 0) {
+    list->head = NULL; 
+    list->tail = NULL; 
+  }
+
+  free(current_tail);
+
+  return removed_node_data; 
+}
+
+/**
+ * Search for the first instance of a node in the list given the node data 
+ *
+ * @param: list - The list to search within 
+ * @param: data_to_search - The data to search for within the list 
+ *
+ * @returns: True or False depending on whether the node data is found within the list
+ */
+
+bool search(DoublyLinkedList* list, int data_to_search) {
+
+  if(list->size == 0 || list->head == NULL) {
+    return false; 
+  }
+
+  bool node_exists = false;  
+
+  Iterator iter = to_iter(list); 
+
+  while(has_current(&iter)) {
+    Node* current_node = current(&iter); 
+
+    if(current_node->data == data_to_search) {
+      node_exists = true; 
+      break; 
+    }
+
+    incr_next(&iter);
+  }
+
+  return node_exists; 
+}
 
 
 // ======================
