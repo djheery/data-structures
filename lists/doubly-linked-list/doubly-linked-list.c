@@ -308,7 +308,6 @@ bool insert_node(DoublyLinkedList* list, int node_data, int position) {
   return true;  
 }
 
-
 /**
  * Insert a node in the head position. 
  *
@@ -340,6 +339,33 @@ bool insert_head(DoublyLinkedList* list, int node_data) {
 
   return true;  
 }
+
+/**
+ * Insert a node in the tail position. 
+ *
+ * @param: list - The list to insert into 
+ * @param: node_data - The data to be associated with the inserted node 
+ *
+ * @returns: True or false depending on whether there has been a successful insertion or not
+ */
+
+
+bool insert_tail(DoublyLinkedList* list, int node_data) {
+  Node* new_node = initialize_node(node_data); 
+
+  if(new_node == NULL) {
+    printf("Something went wrong initializing the new node, the program will exit\n\n"); 
+    exit(EXIT_FAILURE);
+  }
+
+  new_node->prev = list->tail;
+  list->tail->next = new_node; 
+  list->tail = new_node; 
+  list->size += 1;
+
+  return true;  
+}
+
 
 
 // ======================
@@ -410,6 +436,9 @@ bool has_current(Iterator* iter) {
 }
 
 /**
+ * Increment the current iterator item without returning the next item
+ *
+ * @param: iter - A reference to an iterator for a given list
  */
 
 void incr_next(Iterator* iter) {
