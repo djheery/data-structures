@@ -9,7 +9,7 @@ Then I will learn more about C by implementing the known data structures within 
 
 I imagine this will be extremely difficult at times but hopefully this will aid my knowledge of how memory allocation works and help me understand how far programming has come. 
 
-Happy new year
+
 ## Included Data Structure Types 
 
 Each folder will contain a core data structure and then the sub folders will contain their associated sub-data types. For example, Arrays will contain Stacks, Queues, etc.
