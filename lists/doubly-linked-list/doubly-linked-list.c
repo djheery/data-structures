@@ -170,6 +170,13 @@ int get_user_input(char text_prompt[]) {
   return user_input; 
 }
 
+/**
+ * A very basic method for validating the users input (just check it's an integer 
+ *
+ * @param: *p - A pointer to the buffer created for reading the user user_input
+ * @returns: True of False depending if the input is valid given the small criteria
+ */
+
 bool validate_user_input(char* p) {
   while(*p) {
     if(!isdigit((unsigned char)* p)) {
