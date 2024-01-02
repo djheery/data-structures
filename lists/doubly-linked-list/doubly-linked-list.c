@@ -121,10 +121,15 @@ void test_search(DoublyLinkedList* test_list, int node_to_search);
 // ==========================
 
 int main() {
+  program_loop(); 
   return 0; 
 }
 
 void program_loop() {
+  printf("===================================\n"); 
+  printf("|| Doubly Linked List Playground ||\n"); 
+  printf("===================================\n\n"); 
+
   if(RUN_TESTS) {
     run_tests(); 
   }
