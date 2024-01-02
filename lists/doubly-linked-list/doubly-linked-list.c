@@ -125,7 +125,9 @@ int main() {
 }
 
 void program_loop() {
-  
+  if(RUN_TESTS) {
+    run_tests(); 
+  }
 }
 
 void print_menu() {
@@ -577,6 +579,28 @@ void reverse(DoublyLinkedList* list) {
   to_string(list); 
 }
 
+/**
+ * Traverses the list in reverse
+ *
+ * @param: list - The list 
+ */
+
+void traverse_reverse(DoublyLinkedList* list) {
+  if(list->size == 0) {
+    printf("The list is currently empty, thus a reverse cannot be performed\n\n"); 
+    return; 
+  }
+
+  Node* current_node = list->tail; 
+
+  while(current_node->prev != NULL) {
+    printf("%d =>", current_node->data);  
+    current_node = current_node->prev; 
+  }
+
+  printf("START_OF_LIST\n\n");
+}
+
 
 // ======================
 // || Iterator Methods ||
@@ -674,6 +698,8 @@ void run_tests() {
   // Check List is setup 
   to_string(&test_list); 
 
+  // Free The list
+  free_list(&test_list); 
 }
 
 void populate_list(DoublyLinkedList* test_list) {
