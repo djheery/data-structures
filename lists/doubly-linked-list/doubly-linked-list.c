@@ -347,25 +347,33 @@ bool insert_node(DoublyLinkedList* list, int node_data, int position) {
   }
 
   Iterator iter = to_iter(list);
-  int count = 0; 
-  Node* current_node;
+  int count = 1; 
+  Node* current_node = current(&iter);
 
-  while((count < position - 1) && has_next(&iter)) { 
-    current_node = current(&iter);
+  while((count < (position - 1))) { 
     incr_next(&iter);
+    current_node = current(&iter);
+    if(current_node == NULL) {
+      DEBUG_PRINT("!!DBG!! Current Node is NULL within the loop before expected\n\n", NULL); 
+      free(new_node); 
+      return false; 
+    }
     count++;
   }
 
+  // DEBUG_PRINT("!!DBG!! COUNT: %d, POS: %d, NODE_DATA: %d, LIST_SIZE: %d, CURRENT_NODE: %d\n", count, position, node_data, list->size, current_node->data); 
+
   if(count != position - 1) {
-    DEBUG_PRINT("!!ERROR!!", NULL);
-    DEBUG_PRINT("There are not enough elements to insert another element. \n", NULL); 
-    DEBUG_PRINT("This should not be called as this condition should be checked prior to reaching this point\n\n", NULL); 
+    DEBUG_PRINT("!!DBG ERROR!!", NULL);
+    DEBUG_PRINT("!!DBG!! There are not enough elements to insert another element. \n", NULL); 
+    DEBUG_PRINT("!!DBG!! This should not be called as this condition should be checked prior to reaching this point\n\n", NULL); 
     return false; 
   }
-
+ 
   Node* new_next = current_node->next; 
   current_node->next = new_node; 
   new_node->prev = current_node; 
+  new_node->next = new_next; 
   new_next->prev = new_node; 
   list->size += 1; 
 
@@ -598,7 +606,7 @@ void reverse(DoublyLinkedList* list) {
 
   Node* prev_head = list->head; 
   list->head = list->tail; 
-  list->tail = list->head; 
+  list->tail = prev_head; 
 
   to_string(list); 
 }
@@ -700,7 +708,11 @@ bool has_current(Iterator* iter) {
  */
 
 void incr_next(Iterator* iter) {
-  iter->current = iter->current->next; 
+  if(iter->current != NULL) {
+    iter->current = iter->current->next; 
+  } else {
+    printf("What is going on mate?\n\n"); 
+  }
 }
 
 // =====================
@@ -735,15 +747,16 @@ void traverse_reverse_test(DoublyLinkedList* test_list) {
 
 void reverse_test(DoublyLinkedList* test_list, char expected_output[]) {
   printf("Full List Reversal Test:\n\n");  
-  printf("Expected Output:\n%s\nActual:\n", expected_output);
+  printf("Expected Output:\n%s\n\nActual:\n", expected_output);
   reverse(test_list);  
 }
 
 void test_index_insertion(DoublyLinkedList* test_list) {
   insert_node(test_list, 25, test_list->size + 1);   
   insert_node(test_list, 7, 2); 
-  insert_node(test_list, 17, 4); 
+  insert_node(test_list, 17, 5); 
 
+  DEBUG_PRINT("\n", NULL);
   to_string(test_list); 
 }
 
@@ -759,9 +772,13 @@ void run_tests() {
 
   traverse_reverse_test(&test_list); 
 
-  reverse_test(&test_list, "20 <=> 15 <=> 10 <=> 5 <=> END_OF_LIST"); 
+  printf("LIST_HEAD: %d\n\n", test_list.head->data);
+
+  printf("LIST_TAIL: %d\n\n", test_list.tail->data);
 
   test_index_insertion(&test_list); 
+
+  reverse_test(&test_list, "20 <=> 15 <=> 10 <=> 5 <=> END_OF_LIST"); 
 
   free_list(&test_list); 
 }
