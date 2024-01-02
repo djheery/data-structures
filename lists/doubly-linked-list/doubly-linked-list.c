@@ -77,7 +77,7 @@ Node* current(Iterator* iter);
 Node* next(Iterator* iter); 
 bool has_next(Iterator* iter); 
 bool has_current(Iterator* iter); 
-void incr_next(Iterator* iter); 
+void iter_next(Iterator* iter); 
 
 // CLI/UI Methods 
 
@@ -222,7 +222,7 @@ void to_string(DoublyLinkedList* list) {
 
   while(has_current(&iter)) {
     printf("%d <=> ", current(&iter)->data);  
-    incr_next(&iter);
+    iter_next(&iter);
   }
 
   printf(" END_OF_LIST\n\n");
@@ -275,7 +275,7 @@ void free_list(DoublyLinkedList* list) {
 
   while(has_current(&iter)) {
     Node* current_node = current(&iter); 
-    incr_next(&iter);
+    iter_next(&iter);
     DEBUG_PRINT("Freeing Node: %d\n", current_node->data);
     free(current_node); 
   }
@@ -351,7 +351,7 @@ bool insert_node(DoublyLinkedList* list, int node_data, int position) {
   Node* current_node = current(&iter);
 
   while((count < (position - 1))) { 
-    incr_next(&iter);
+    iter_next(&iter);
     current_node = current(&iter);
     if(current_node == NULL) {
       DEBUG_PRINT("!!DBG!! Current Node is NULL within the loop before expected\n\n", NULL); 
@@ -478,7 +478,7 @@ int remove_node(DoublyLinkedList* list, int node_data) {
       break; 
     }
 
-    incr_next(&iter); 
+    iter_next(&iter); 
   }
  
   return removed_node_data; 
@@ -573,7 +573,7 @@ bool search(DoublyLinkedList* list, int data_to_search) {
       break; 
     }
 
-    incr_next(&iter);
+    iter_next(&iter);
   }
 
   return node_exists; 
@@ -639,6 +639,7 @@ void traverse_reverse(DoublyLinkedList* list) {
 // ======================
 
 /**
+ *  TODO: ADD A PATTERN TO CHECK IF YOU WANT TO ITERATE FORWARDS OR BACKWARDS
  * Create an iterator for the list 
  *
  * @param: list - An instance of a Doubly Linked List 
@@ -678,6 +679,11 @@ Node* next(Iterator* iter) {
   return iter->current; 
 }
 
+Node* prev(Iterator* iter) {
+  iter->current = iter->current->prev; 
+  return iter->current; 
+}
+
 /**
  * Check if there is a next item in the list 
  *
@@ -687,6 +693,11 @@ Node* next(Iterator* iter) {
 
 bool has_next(Iterator* iter) {
   return iter->current->next != NULL; 
+}
+
+
+bool has_prev(Iterator* iter) {
+  return iter->current->prev != NULL; 
 }
 
 
@@ -707,11 +718,19 @@ bool has_current(Iterator* iter) {
  * @param: iter - A reference to an iterator for a given list
  */
 
-void incr_next(Iterator* iter) {
+void iter_next(Iterator* iter) {
   if(iter->current != NULL) {
     iter->current = iter->current->next; 
   } else {
     printf("What is going on mate?\n\n"); 
+  }
+}
+
+void iter_prev(Iterator* iter) {
+  if(iter->current != NULL) {
+    iter->current = iter->current->prev; 
+  } else {
+    printf("?etam no gniog si thaW\n\n"); 
   }
 }
 
