@@ -29,20 +29,17 @@ The list is comprised of items from the wikipedia data structures list
     - [x] Stacks 
     - [x] Queues 
     - [x] Circular Queues
-- [ ] Lists 
+- [x] Lists 
     - [x] Array List/ Vector 
     - [x] Linked List 
-    - [ ] Doubly Linked List 
+    - [x] Doubly Linked List 
 - [ ] Binary Trees 
     - [ ] Binary Tree 
     - [ ] Binary Search Tree
     - [ ] Red Black Tree 
-    - [ ] Treap
-    - [ ] AVL Tree 
 - [ ] Graphs 
     - [ ] Adjacency List 
     - [ ] Adjacency Matrix 
-    - [ ] Decision Tree 
     - [ ] Directed Acyclic Graph 
     - [ ] Directed Graph 
     - [ ] Graph 
