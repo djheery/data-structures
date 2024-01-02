@@ -221,7 +221,7 @@ void to_string(DoublyLinkedList* list) {
   Iterator iter = to_iter(list); 
 
   while(has_current(&iter)) {
-    printf("%d => ", current(&iter)->data);  
+    printf("%d <=> ", current(&iter)->data);  
     incr_next(&iter);
   }
 
@@ -280,7 +280,7 @@ void free_list(DoublyLinkedList* list) {
     free(current_node); 
   }
 
-  DEBUG_PRINT("LIST_FREED_SUCCESSFULLY\n", NULL); 
+  DEBUG_PRINT("\nLIST_FREED_SUCCESSFULLY\n\n", NULL); 
 
   list->size = 0; 
   list->head = NULL; 
@@ -397,7 +397,21 @@ bool insert_head(DoublyLinkedList* list, int node_data, Node* new_node) {
     return true;  
   }
 
-  new_node->next = list->head; 
+  if(list->size == 1) {
+    Node* prev_head = list->head; 
+    new_node->next = prev_head; 
+    prev_head->prev = new_node; 
+    prev_head->next = NULL; 
+    list->head = new_node;     
+    list->tail = prev_head; 
+    list->size += 1;
+
+    return true; 
+  }
+
+  Node* prev_head = list->head; 
+  new_node->next = prev_head; 
+  prev_head->prev = new_node; 
   list->head = new_node; 
   list->size += 1; 
 
@@ -577,9 +591,14 @@ void reverse(DoublyLinkedList* list) {
   while(current_node != NULL) {
     next_node = current_node->next;  
     current_node->next = prev_node;
+    current_node->prev = next_node; 
     prev_node = current_node; 
     current_node = next_node; 
   }
+
+  Node* prev_head = list->head; 
+  list->head = list->tail; 
+  list->tail = list->head; 
 
   to_string(list); 
 }
@@ -598,12 +617,12 @@ void traverse_reverse(DoublyLinkedList* list) {
 
   Node* current_node = list->tail; 
 
-  while(current_node->prev != NULL) {
-    printf("%d =>", current_node->data);  
+  while(current_node != NULL) {
+    printf("%d <=> ", current_node->data);  
     current_node = current_node->prev; 
   }
 
-  printf("START_OF_LIST\n\n");
+  printf(" START_OF_LIST\n\n");
 }
 
 
@@ -694,16 +713,30 @@ void incr_next(Iterator* iter) {
 // || Testing Methods ||
 // =====================
 
+void traverse_reverse_test(DoublyLinkedList* test_list) {
+  printf("Traverse Reverse Test: \n"); 
+  traverse_reverse(test_list);
+
+  printf("Testing the list is still the same after reversed traversal\n"); 
+  to_string(test_list); 
+}
+
+void reverse_test(DoublyLinkedList* test_list, char expected_output[]) {
+  printf("Full List Reversal Test:\n\n");  
+  printf("Expected Output:\n%s\nActual:\n", expected_output);
+  reverse(test_list);  
+}
+
 void run_tests() {
 
-  // Setup
   DoublyLinkedList test_list = initialize_list();  
+
   populate_list(&test_list); 
 
-  // Check List is setup 
-  to_string(&test_list); 
+  traverse_reverse_test(&test_list); 
 
-  // Free The list
+  reverse_test(&test_list, "20 <=> 15 <=> 10 <=> 5 <=> END_OF_LIST"); 
+
   free_list(&test_list); 
 }
 
@@ -712,4 +745,7 @@ void populate_list(DoublyLinkedList* test_list) {
   insert_node(test_list, 15, LIST_HEAD_INDEX);  
   insert_node(test_list, 10, LIST_HEAD_INDEX);  
   insert_node(test_list, 5, LIST_HEAD_INDEX);  
+  
+  printf("Test List is populated:\n"); 
+  to_string(test_list); 
 }
