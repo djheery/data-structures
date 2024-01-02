@@ -193,6 +193,33 @@ bool validate_user_input(char* p) {
 // || Utility Methods ||
 // =====================
 
+/**
+ * Convert the list to string 
+ *
+ * @param: The list to print
+ */
+
+void to_string(DoublyLinkedList* list) {
+  if(list->size == 0) {
+    printf("Your list is currently empty\n"); 
+    return; 
+  }
+
+  if(list->head == NULL || list->tail == NULL) {
+    printf("ERROR: The list size is empty and the tail or head is null please check the logic\n"); 
+    printf("The program will exit...\n");
+    exit(EXIT_FAILURE); 
+  }
+
+  Iterator iter = to_iter(list); 
+
+  while(has_current(&iter)) {
+    printf("%d => ", current(&iter)->data);  
+    incr_next(&iter);
+  }
+
+  printf(" END_OF_LIST\n\n");
+}
 
 /**
  * Initialize the list 
@@ -523,6 +550,33 @@ bool search(DoublyLinkedList* list, int data_to_search) {
   return node_exists; 
 }
 
+/**
+ * Reverse the list 
+ * This affects the actual list
+ *
+ * @param: list - The list to reverse
+ */
+
+void reverse(DoublyLinkedList* list) {
+  if(list->size == 0) {
+    printf("The list is currently empty, thus a reverse cannot be performed\n\n"); 
+    return; 
+  }
+
+  Node* current_node = list->head; 
+  Node* next_node = NULL; 
+  Node* prev_node = NULL; 
+
+  while(current_node != NULL) {
+    next_node = current_node->next;  
+    current_node->next = prev_node;
+    prev_node = current_node; 
+    current_node = next_node; 
+  }
+
+  to_string(list); 
+}
+
 
 // ======================
 // || Iterator Methods ||
@@ -617,9 +671,14 @@ void run_tests() {
   DoublyLinkedList test_list = initialize_list();  
   populate_list(&test_list); 
 
+  // Check List is setup 
+  to_string(&test_list); 
 
 }
 
 void populate_list(DoublyLinkedList* test_list) {
-  
+  insert_node(test_list, 20, LIST_HEAD_INDEX);  
+  insert_node(test_list, 15, LIST_HEAD_INDEX);  
+  insert_node(test_list, 10, LIST_HEAD_INDEX);  
+  insert_node(test_list, 5, LIST_HEAD_INDEX);  
 }
