@@ -713,6 +713,12 @@ void incr_next(Iterator* iter) {
 // || Testing Methods ||
 // =====================
 
+/**
+ * Test the traverse reverse of the list 
+ *
+ * This does not reverse it in memory 
+ */
+
 void traverse_reverse_test(DoublyLinkedList* test_list) {
   printf("Traverse Reverse Test: \n"); 
   traverse_reverse(test_list);
@@ -721,11 +727,29 @@ void traverse_reverse_test(DoublyLinkedList* test_list) {
   to_string(test_list); 
 }
 
+/**
+ * Test the reverse of the list 
+ *
+ * This method should reverse the list in memory 
+ */
+
 void reverse_test(DoublyLinkedList* test_list, char expected_output[]) {
   printf("Full List Reversal Test:\n\n");  
   printf("Expected Output:\n%s\nActual:\n", expected_output);
   reverse(test_list);  
 }
+
+void test_index_insertion(DoublyLinkedList* test_list) {
+  insert_node(test_list, 25, test_list->size + 1);   
+  insert_node(test_list, 7, 2); 
+  insert_node(test_list, 17, 4); 
+
+  to_string(test_list); 
+}
+
+/**
+ * Some Automated tests that run when the Run Tests Flag is True
+ */
 
 void run_tests() {
 
@@ -736,6 +760,8 @@ void run_tests() {
   traverse_reverse_test(&test_list); 
 
   reverse_test(&test_list, "20 <=> 15 <=> 10 <=> 5 <=> END_OF_LIST"); 
+
+  test_index_insertion(&test_list); 
 
   free_list(&test_list); 
 }
