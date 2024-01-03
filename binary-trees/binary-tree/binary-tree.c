@@ -39,7 +39,7 @@ typedef struct {
 } BinaryTree; 
 
 typedef struct {
-  int* queue; 
+  Node* queue; 
   size_t capacity;  
   size_t size;  
 } Queue;
@@ -47,16 +47,18 @@ typedef struct {
 // Queue Utility 
 
 Queue initialize_queue(int capacity); 
-void enqueue(Queue* queue, int data); 
-int dequeue(Queue* queue); 
+void enqueue(Queue* queue, Node* node); 
+Node* dequeue(Queue* queue); 
 
 // Binary Tree Methods 
 
+BinaryTree intialize_binary_tree(); 
+Node* initialize_node(int data); 
 void height(BinaryTree* tree); 
 void size(BinaryTree* tree); 
 void level(BinaryTree* tree); 
 void search(BinaryTree* tree); 
-void insert(BinaryTree* tree); 
+void insert(BinaryTree* tree, int node_data); 
 void delete(BinaryTree* tree);
 void pre_order_traversal(BinaryTree* tree); 
 void in_order_traversal(BinaryTree* tree); 
@@ -96,6 +98,53 @@ bool validate_user_input() {
  * =================================
  */
 
+BinaryTree initialize_binary_tree() {
+  BinaryTree tree; 
+  tree.root = NULL; 
+
+  return tree; 
+}
+
+Node* intialize_node(int data) {
+  Node* node; 
+  node->data = data; 
+  node->left = NULL; 
+  node->right = NULL; 
+
+  return node; 
+}
+
+void insert(BinaryTree* tree, int node_data) {
+
+  Node* new_node = initialize_node(node_data);
+
+  if(tree->root == NULL) {
+    tree->root = new_node;     
+    return; 
+  }
+
+  Queue queue = initialize_queue(20); 
+  enqueue(&queue, tree->root); 
+
+  while(queue.size != 0) {
+    Node* current_node = dequeue(&queue); 
+
+    if(current_node->left != NULL) {
+      enqueue(&queue, current_node->left);  
+    } else {
+      current_node->left = new_node; 
+      break;
+    }
+
+    if(current_node->right != NULL) {
+      enqueue(&queue, current_node->right); 
+    } else {
+      current_node->right = new_node; 
+      break; 
+    }
+  }
+}
+
 /**
  * =====================
  * || Queue Methods   ||
@@ -108,7 +157,7 @@ Queue intialize_queue(int capacity) {
   Queue queue; 
   queue.size = 0; 
   queue.capacity = capacity; 
-  queue.queue = (int*) malloc(capacity * sizeof(int)); 
+  queue.queue = (Node*) malloc(capacity * sizeof(Node)); 
 
   if(queue.queue == NULL) {
     printf("Error Intializing Queue\n"); 
@@ -119,18 +168,18 @@ Queue intialize_queue(int capacity) {
   return queue; 
 }; 
 
-void enqueue(Queue* queue, int data) {
+void enqueue(Queue* queue, Node* node) {
   if(queue->size == queue->capacity) {
     printf("Adding another item to the queue is impossible, you should restrict this program to your usecase\n\n"); 
     return; 
   }
 
-  queue->queue[queue->size] = data; 
+  queue->queue[queue->size] = *node; 
   queue->size += 1;
 }
 
-int dequeue(Queue* queue) {
-  int d = queue->queue[0];  
+Node* dequeue(Queue* queue) {
+  Node* d = &queue->queue[0];  
   
   for(int i = 0; i < queue->size; i++) {
     queue->queue[i] = queue->queue[i + 1]; 
