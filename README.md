@@ -9,6 +9,7 @@ Then I will learn more about C by implementing the known data structures within 
 
 I imagine this will be extremely difficult at times but hopefully this will aid my knowledge of how memory allocation works and help me understand how far programming has come. 
 
+**The data structures may contain errors. This is not meant to be a comprehensive handling of all edge cases for a data structure. More an experimentation with them to get to grips with how they are built and thus understand more deeply how they work**
 
 ## Included Data Structure Types 
 
