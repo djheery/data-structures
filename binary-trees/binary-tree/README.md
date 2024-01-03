@@ -3,11 +3,13 @@
 Binary trees are tree like data structures. 
 They can be visually represented like below: 
 
+```
        10 
       /  \
      20  12 
     /  \  
    15  10
+```
 
 As should be clear by the diagram above a tree consists of Nodes which have a left and a right pointer. 
 
