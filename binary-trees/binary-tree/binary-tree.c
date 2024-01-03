@@ -59,12 +59,10 @@ void size(BinaryTree* tree);
 void level(BinaryTree* tree); 
 void search(BinaryTree* tree); 
 void insert(BinaryTree* tree, int node_data); 
-void delete(BinaryTree* tree);
+void delete(BinaryTree* tree, int node_data);
 void pre_order_traversal(BinaryTree* tree); 
 void in_order_traversal(BinaryTree* tree); 
 void post_order_traversal(BinaryTree* tree); 
-void depth_first_search(BinaryTree* tree); 
-void breadth_first_search(BinaryTree* tree);
 
 /**
  * ==========================
@@ -143,6 +141,11 @@ void insert(BinaryTree* tree, int node_data) {
       break; 
     }
   }
+}
+
+
+void delete(BinaryTree* tree, int node_data) {
+   
 }
 
 /**
