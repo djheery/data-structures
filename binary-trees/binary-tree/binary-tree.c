@@ -27,6 +27,16 @@
 #include <string.h>
 #include <ctype.h>
 
+#define QUEUE_CAPACITY 20; 
+#define RUN_TESTS true
+#define DEBUG 
+
+#ifdef DEBUG
+  #define DEBUG_PRINT (fmt, ...) fprintf(stderr, fmt, __VA_ARGS__);
+#else 
+  #define DEBUG_PRINT (fmt, ...)
+#endif
+
 typedef struct {
   int data; 
   void* left; 
@@ -145,7 +155,47 @@ void insert(BinaryTree* tree, int node_data) {
 
 
 void delete(BinaryTree* tree, int node_data) {
-   
+
+  if(tree->root == NULL) return; 
+
+  bool no_leaves = tree->root->left == NULL && tree->root->right == NULL; 
+
+  if(no_leaves && tree->root->data == node_data) {
+    free(tree->root);  
+    tree->root = NULL; 
+  }
+
+  if(no_leaves && tree->root->data != node_data) return; 
+
+  bool node_found = false;  
+
+  Queue queue = initialize_queue(20);
+  enqueue(&queue, tree->root); 
+
+  Node* current_node; 
+  Node* node_to_delete; 
+  Node* prev; 
+
+  while(queue.size != 0) {
+    Node* current_node = dequeue(&queue); 
+
+    if(current_node->data == node_data) {
+      node_to_delete = current_node;  
+    }
+
+    if(current_node->left != NULL) enqueue(&queue, current_node->left); 
+    if(current_node->right != NULL) enqueue(&queue, current_node->right); 
+    
+    prev = current_node;  
+  }
+
+  if(node_to_delete == NULL) return; 
+
+}
+
+Node* delete_deepest(BinaryTree* tree, Node* node_to_delete) {
+  
+  return NULL; 
 }
 
 /**
