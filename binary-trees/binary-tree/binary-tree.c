@@ -172,21 +172,77 @@ void delete(BinaryTree* tree, int node_data) {
   Queue queue = initialize_queue(20);
   enqueue(&queue, tree->root); 
 
-  Node* current_node; 
-  Node* node_to_delete; 
-  Node* prev; 
+  Node* current_node = NULL; 
+  Node* node_to_delete = NULL; 
+  Node* prev = NULL; 
+
+  //     10
+  //    /  \
+  //   14   5
+  //  / \  / \
+  // 4  7 12 19
+  // |        | 
+  // 20      14
+
+  // TEST 1 (delete 5) 
+
+  // c=10, ntd = NULL, prev = NULL, q = [14, 5]
+  // c=14, ntd = NULL, prev = 10, q = [5, 4, 7] 
+  // c=5, ntd = 5, prev = 14, q = [4, 7, 12, 19] 
+  // c=4, ntd = 5, prev = 5, q = [7, 12, 19, 20] 
+  // c=7, ntd = 5, prev = 4, q = [12, 19, 20] 
+  // c=12, ntd = 5, prev = 4, q = [19, 20] 
+  // c=19, ntd = 5, prev = 4, q = [20, 14] 
+  // c=20, ntd = 5, prev = 19, q = [14] 
+  // c=14, ntd = 5, prev = 19, q = [] 
+  //
+  // ntd = 14, prev->left = NULL, free(c) 
+
+  // Test 2 (delete 4) 
+  //
+  // c=10 ntd = NULL, prev = NULL, q = [14, 5] 
+  // c=14 ntd = NULL, prev = 10, q = [5, 4, 7] 
+  // c=5 ntd = NULL, prev = 14, q = [4, 7, 12, 19] 
+  // c=4, ntd = 4, prev = 5, q = [4, 7, 12, 19] 
+  // c=
+  
+
 
   while(queue.size != 0) {
     Node* current_node = dequeue(&queue); 
 
-    if(current_node->data == node_data) {
+    if(current_node->data == node_data && node_to_delete == NULL) {
       node_to_delete = current_node;  
     }
 
     if(current_node->left != NULL) enqueue(&queue, current_node->left); 
     if(current_node->right != NULL) enqueue(&queue, current_node->right); 
+
+    // If the following condition is true we are at the deepest rightmost node (due to inorder traversal thus: 
+    // - set the node_to_deletes data to the deepest node data 
+    // - free the deepest node 
+    // - Set the prev node left or right to NULL depending on which points to the deepest node 
     
-    prev = current_node;  
+    if(queue.size == 0 && node_to_delete == current_node) {
+      if(prev->left == current_node) prev->left = NULL; 
+      if(prev->right == current_node) prev->right = NULL; 
+
+      free(current_node); 
+    }
+
+    if(queue.size == 0 && node_to_delete != NULL) {
+      node_to_delete->data = current_node->data; 
+
+      if(prev->left == current_node) prev->left = NULL; 
+      if(prev->right == current_node) prev->right = NULL; 
+
+      free(current_node); 
+      break; 
+    }
+
+    if(current_node->left != NULL || current_node->right != NULL) {
+      prev = current_node;  
+    }
   }
 
   if(node_to_delete == NULL) return; 
