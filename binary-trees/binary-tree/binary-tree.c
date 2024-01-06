@@ -176,37 +176,6 @@ void delete(BinaryTree* tree, int node_data) {
   Node* node_to_delete = NULL; 
   Node* prev = NULL; 
 
-  //     10
-  //    /  \
-  //   14   5
-  //  / \  / \
-  // 4  7 12 19
-  // |        | 
-  // 20      14
-
-  // TEST 1 (delete 5) 
-
-  // c=10, ntd = NULL, prev = NULL, q = [14, 5]
-  // c=14, ntd = NULL, prev = 10, q = [5, 4, 7] 
-  // c=5, ntd = 5, prev = 14, q = [4, 7, 12, 19] 
-  // c=4, ntd = 5, prev = 5, q = [7, 12, 19, 20] 
-  // c=7, ntd = 5, prev = 4, q = [12, 19, 20] 
-  // c=12, ntd = 5, prev = 4, q = [19, 20] 
-  // c=19, ntd = 5, prev = 4, q = [20, 14] 
-  // c=20, ntd = 5, prev = 19, q = [14] 
-  // c=14, ntd = 5, prev = 19, q = [] 
-  //
-  // ntd = 14, prev->left = NULL, free(c) 
-
-  // Test 2 (delete 4) 
-  //
-  // c=10 ntd = NULL, prev = NULL, q = [14, 5] 
-  // c=14 ntd = NULL, prev = 10, q = [5, 4, 7] 
-  // c=5 ntd = NULL, prev = 14, q = [4, 7, 12, 19] 
-  // c=4, ntd = 4, prev = 5, q = [4, 7, 12, 19] 
-  // c=
-  
-
 
   while(queue.size != 0) {
     Node* current_node = dequeue(&queue); 
