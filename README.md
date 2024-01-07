@@ -17,6 +17,7 @@ The list is comprised of items from the wikipedia data structures list
 
 - Arrays 
 - Binary Trees 
+    - I need to research some projects to do with this type of Data Structure.
 - Lists 
 - Graphs 
 - Hash Based Structures 
