@@ -28,13 +28,14 @@
 #include <ctype.h>
 
 #define QUEUE_CAPACITY 20; 
-#define RUN_TESTS true
+
+#define RUN_TESTS false
 #define DEBUG 
 
-#ifdef DEBUG
-  #define DEBUG_PRINT (fmt, ...) fprintf(stderr, fmt, __VA_ARGS__);
+#ifdef DEBUG 
+#define DEBUG_PRINT(fmt, ...) fprintf(stderr, fmt, __VA_ARGS__);
 #else 
-  #define DEBUG_PRINT (fmt, ...)
+#define DEBUG_PRINT(fmt, ...);
 #endif
 
 typedef struct {
@@ -71,7 +72,7 @@ void search(BinaryTree* tree);
 void insert(BinaryTree* tree, int node_data); 
 void delete(BinaryTree* tree, int node_data);
 void pre_order_traversal(BinaryTree* tree); 
-void in_order_traversal(BinaryTree* tree); 
+void in_order_traversal(Node* tree); 
 void post_order_traversal(BinaryTree* tree); 
 
 /**
@@ -120,6 +121,25 @@ Node* intialize_node(int data) {
   node->right = NULL; 
 
   return node; 
+}
+
+void free_tree_nodes(BinaryTree* tree) {
+  if(tree->root == NULL) return; 
+
+  Queue q = initialize_queue(20); 
+  enqueue(&q, tree->root); 
+
+  while(q.size != 0) {
+    Node* current = dequeue(&q);  
+
+    if(current->left != NULL) enqueue(&q, current->left);
+    if(current->right != NULL) enqueue(&q, current->right); 
+
+    DEBUG_PRINT("Freeing Node: %d\n", current->data);
+    free(current); 
+  }
+
+  DEBUG_PRINT("List freed sucessfully!!\n\n", NULL); 
 }
 
 void insert(BinaryTree* tree, int node_data) {
@@ -215,12 +235,39 @@ void delete(BinaryTree* tree, int node_data) {
   }
 
   if(node_to_delete == NULL) return; 
-
 }
 
-Node* delete_deepest(BinaryTree* tree, Node* node_to_delete) {
-  
-  return NULL; 
+void in_order_traversal(Node* node) {
+  if(node == NULL) return; 
+
+  printf("%d ", node->data); 
+
+  in_order_traversal(node->left); 
+  in_order_traversal(node->right); 
+}
+
+/**
+ * =====================
+ * || Testing Methods ||
+ * =====================
+ */
+
+void populate_tree(BinaryTree* test_tree) {
+
+  insert(test_tree, 5);  
+  insert(test_tree, 10); 
+  insert(test_tree, 15); 
+  insert(test_tree, 20); 
+
+  // expected order 5 10 15 20
+  in_order_traversal(test_tree->root);
+  printf("\n\n"); 
+}
+
+void run_tests() {
+  BinaryTree test_tree = initialize_binary_tree();  
+
+  populate_tree(&test_tree); 
 }
 
 /**
