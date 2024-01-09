@@ -7,7 +7,7 @@ To start with this project will consist of purely my attempts to create data str
 As of the start of this project I do not know C at all thus will include a small section which introduces the basic constructs of C. 
 Then I will learn more about C by implementing the known data structures within the language.  
 
-**The data structures may contain errors. This is not meant to be a comprehensive handling of all edge cases for a data structure. More an experimentation with them to get to grips with how they are built and thus understand more deeply how they work**
+**The data structures may contain errors. This is not meant to be a comprehensive handling of all edge cases for a data structure. More an experimentation with them to get to grips with how they are built and thus understand more deeply how they work. Thus bugs will probably exist in the structures so it's best to look at this code with the expectation that it will not be a perfect recreation of the data structures**
 
 ## Included Data Structure Types 
 
