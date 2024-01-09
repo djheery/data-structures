@@ -71,9 +71,9 @@ void level(BinaryTree* tree);
 void search(BinaryTree* tree); 
 void insert(BinaryTree* tree, int node_data); 
 void delete(BinaryTree* tree, int node_data);
-void pre_order_traversal(BinaryTree* tree); 
+void pre_order_traversal(Node* node); 
 void in_order_traversal(Node* tree); 
-void post_order_traversal(BinaryTree* tree); 
+void post_order_traversal(Node* tree); 
 
 // Tester methods 
 void run_tests(); 
@@ -160,6 +160,7 @@ void insert(BinaryTree* tree, int node_data) {
   Node* new_node = initialize_node(node_data);
 
   if(tree->root == NULL) {
+    DEBUG_PRINT("ADDING ROOT: %d\n", new_node->data);
     tree->root = new_node;     
     return; 
   }
@@ -169,11 +170,11 @@ void insert(BinaryTree* tree, int node_data) {
 
   while(queue.size != 0) {
     Node* current_node = dequeue(&queue); 
-    printf("CURRENT_DATA: %d\n", current_node->data); 
 
     if(current_node->left != NULL) {
       enqueue(&queue, current_node->left);  
     } else {
+      DEBUG_PRINT("ADDING LEFT: %d, TO NODE: %d\n", new_node->data, current_node->data);
       current_node->left = new_node; 
       break;
     }
@@ -182,6 +183,7 @@ void insert(BinaryTree* tree, int node_data) {
       enqueue(&queue, current_node->right); 
     } else {
       current_node->right = new_node; 
+      DEBUG_PRINT("ADDING RIGHT: %d, TO NODE: %d\n", new_node->data, current_node->data);
       break; 
     }
   }
@@ -254,10 +256,29 @@ void delete(BinaryTree* tree, int node_data) {
 void in_order_traversal(Node* node) {
   if(node == NULL) return; 
 
+  in_order_traversal(node->left); 
+
   printf("%d ", node->data); 
 
-  in_order_traversal(node->left); 
   in_order_traversal(node->right); 
+}
+
+void pre_order_traversal(Node* node) {
+  if(node == NULL) return; 
+
+  printf("%d ", node->data); 
+
+  pre_order_traversal(node->left); 
+  pre_order_traversal(node->right);
+}
+
+void post_order_traversal(Node* node) {
+  if(node == NULL) return; 
+
+  post_order_traversal(node->left); 
+  post_order_traversal(node->right);
+
+  printf("%d ", node->data); 
 }
 
 /**
@@ -268,20 +289,26 @@ void in_order_traversal(Node* node) {
 
 void populate_tree(BinaryTree* test_tree) {
 
-  insert(test_tree, 5);  
-  insert(test_tree, 10); 
-  insert(test_tree, 15); 
-  insert(test_tree, 20); 
+  insert(test_tree, 1);  
+  insert(test_tree, 2); 
+  insert(test_tree, 3); 
+  insert(test_tree, 4); 
+  insert(test_tree, 5); 
+  insert(test_tree, 6);
+  insert(test_tree, 7); 
+  // Clear the line when debug printing
+  DEBUG_PRINT("\n", NULL); 
 
-  // expected order 5 10 15 20
+  pre_order_traversal(test_tree->root);
+  printf("\n"); 
+  post_order_traversal(test_tree->root);
+  printf("\n"); 
   in_order_traversal(test_tree->root);
   printf("\n\n"); 
 }
 
 void run_tests() {
-  DEBUG_PRINT("HELLO TEST\n", NULL);
   BinaryTree test_tree = initialize_binary_tree();  
-  DEBUG_PRINT("TEST TREE\n", NULL);
 
   populate_tree(&test_tree); 
 
