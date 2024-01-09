@@ -65,10 +65,9 @@ Node* dequeue(Queue* queue);
 
 BinaryTree intialize_binary_tree(); 
 Node* initialize_node(int data); 
-void height(BinaryTree* tree); 
-void size(BinaryTree* tree); 
-void level(BinaryTree* tree); 
-void search(BinaryTree* tree); 
+int height(BinaryTree* tree); 
+int size(BinaryTree* tree); 
+bool search(BinaryTree* tree, int node_to_search); 
 void insert(BinaryTree* tree, int node_data); 
 void delete(BinaryTree* tree, int node_data);
 void pre_order_traversal(Node* node); 
@@ -83,12 +82,17 @@ void populate_tree(BinaryTree* test_tree);
  * ==========================
  * || Main Program Methods ||
  * ==========================
+ *
+ * This is for the usecase with a CLI - at the time of writing this I want to move on to BST so I will not implement a CLI 
+ * I may come back and implement a CLI if I feel it is necessary but as this BinaryTree is very simple I feel I understand it enough to move on. 
  */
 
 int main() {
+
   if(RUN_TESTS) {
     run_tests(); 
   }
+
   return 0; 
 }
 
@@ -136,6 +140,29 @@ Node* initialize_node(int data) {
   return node; 
 }
 
+int height(BinaryTree* tree) {
+  return 1;   
+}
+
+bool search(BinaryTree* tree, int node_to_search) {
+  if(tree->root == NULL) return false; 
+  
+  bool no_leaves = tree->root->left == NULL && tree->root->right == NULL; 
+  bool is_root = tree->root->data == node_to_search; 
+
+  if(is_root) return true; 
+  if(no_leaves) return false; 
+
+  Queue q = initialize_queue(20); 
+
+
+  return false;  
+}
+
+int size(BinaryTree* tree) {
+  return 1;  
+}
+
 void free_tree_nodes(BinaryTree* tree) {
   if(tree->root == NULL) return; 
 
@@ -151,6 +178,8 @@ void free_tree_nodes(BinaryTree* tree) {
     DEBUG_PRINT("Freeing Node: %d\n", current->data);
     free(current); 
   }
+
+  free(q.queue); 
 
   DEBUG_PRINT("List freed sucessfully!!\n\n", NULL); 
 }
@@ -187,6 +216,8 @@ void insert(BinaryTree* tree, int node_data) {
       break; 
     }
   }
+
+  free(queue.queue); 
 }
 
 
@@ -214,7 +245,7 @@ void delete(BinaryTree* tree, int node_data) {
 
 
   while(queue.size != 0) {
-    Node* current_node = dequeue(&queue); 
+    current_node = dequeue(&queue); 
 
     if(current_node->data == node_data && node_to_delete == NULL) {
       node_to_delete = current_node;  
@@ -233,6 +264,7 @@ void delete(BinaryTree* tree, int node_data) {
       if(prev->right == current_node) prev->right = NULL; 
 
       free(current_node); 
+      break; 
     }
 
     if(queue.size == 0 && node_to_delete != NULL) {
@@ -250,8 +282,11 @@ void delete(BinaryTree* tree, int node_data) {
     }
   }
 
+  free(queue.queue); 
+
   if(node_to_delete == NULL) return; 
 }
+
 
 void in_order_traversal(Node* node) {
   if(node == NULL) return; 
@@ -307,10 +342,27 @@ void populate_tree(BinaryTree* test_tree) {
   printf("\n\n"); 
 }
 
+void delete_test(BinaryTree* tree) {
+  printf("Before: delete test\n\n"); 
+  pre_order_traversal(tree->root); 
+  printf("\n\nBegin Deletion Tests: \n\nDelete 2: "); 
+  delete(tree, 2);  
+  pre_order_traversal(tree->root);
+  printf("\n\nDelete 5: "); 
+  delete(tree, 5); 
+  pre_order_traversal(tree->root); 
+  printf("\n\nDelete 1: "); 
+  delete(tree, 1); 
+  pre_order_traversal(tree->root);
+  printf("\n\n"); 
+}
+
 void run_tests() {
   BinaryTree test_tree = initialize_binary_tree();  
 
   populate_tree(&test_tree); 
+
+  delete_test(&test_tree); 
 
   free_tree_nodes(&test_tree); 
 }
