@@ -27,15 +27,15 @@
 #include <string.h>
 #include <ctype.h>
 
-#define QUEUE_CAPACITY 20; 
+#define QUEUE_CAPACITY 20 
 
-#define RUN_TESTS false
+#define RUN_TESTS true
 #define DEBUG 
 
 #ifdef DEBUG 
-#define DEBUG_PRINT(fmt, ...) fprintf(stderr, fmt, __VA_ARGS__);
+#define DEBUG_PRINT(fmt, ...) fprintf(stderr, fmt, __VA_ARGS__)
 #else 
-#define DEBUG_PRINT(fmt, ...);
+#define DEBUG_PRINT(fmt, ...)
 #endif
 
 typedef struct {
@@ -50,7 +50,7 @@ typedef struct {
 } BinaryTree; 
 
 typedef struct {
-  Node* queue; 
+  Node** queue; 
   size_t capacity;  
   size_t size;  
 } Queue;
@@ -75,6 +75,10 @@ void pre_order_traversal(BinaryTree* tree);
 void in_order_traversal(Node* tree); 
 void post_order_traversal(BinaryTree* tree); 
 
+// Tester methods 
+void run_tests(); 
+void populate_tree(BinaryTree* test_tree);
+
 /**
  * ==========================
  * || Main Program Methods ||
@@ -82,6 +86,9 @@ void post_order_traversal(BinaryTree* tree);
  */
 
 int main() {
+  if(RUN_TESTS) {
+    run_tests(); 
+  }
   return 0; 
 }
 
@@ -114,8 +121,14 @@ BinaryTree initialize_binary_tree() {
   return tree; 
 }
 
-Node* intialize_node(int data) {
-  Node* node; 
+Node* initialize_node(int data) {
+  Node* node = (Node*) malloc(sizeof(Node)); 
+
+  if(node == NULL) {
+    printf("There has been an error allocating the memory for the node\n\n"); 
+    exit(EXIT_FAILURE); 
+  }
+
   node->data = data; 
   node->left = NULL; 
   node->right = NULL; 
@@ -156,6 +169,7 @@ void insert(BinaryTree* tree, int node_data) {
 
   while(queue.size != 0) {
     Node* current_node = dequeue(&queue); 
+    printf("CURRENT_DATA: %d\n", current_node->data); 
 
     if(current_node->left != NULL) {
       enqueue(&queue, current_node->left);  
@@ -265,9 +279,13 @@ void populate_tree(BinaryTree* test_tree) {
 }
 
 void run_tests() {
+  DEBUG_PRINT("HELLO TEST\n", NULL);
   BinaryTree test_tree = initialize_binary_tree();  
+  DEBUG_PRINT("TEST TREE\n", NULL);
 
   populate_tree(&test_tree); 
+
+  free_tree_nodes(&test_tree); 
 }
 
 /**
@@ -278,11 +296,11 @@ void run_tests() {
  * Queues are needed for different operations so I have added a very basic queue at the bottom of the file
  */
 
-Queue intialize_queue(int capacity) {
+Queue initialize_queue(int capacity) {
   Queue queue; 
   queue.size = 0; 
   queue.capacity = capacity; 
-  queue.queue = (Node*) malloc(capacity * sizeof(Node)); 
+  queue.queue = (Node**) malloc(capacity * sizeof(Node)); 
 
   if(queue.queue == NULL) {
     printf("Error Intializing Queue\n"); 
@@ -299,12 +317,12 @@ void enqueue(Queue* queue, Node* node) {
     return; 
   }
 
-  queue->queue[queue->size] = *node; 
+  queue->queue[queue->size] = node; 
   queue->size += 1;
 }
 
 Node* dequeue(Queue* queue) {
-  Node* d = &queue->queue[0];  
+  Node* d = queue->queue[0];  
   
   for(int i = 0; i < queue->size; i++) {
     queue->queue[i] = queue->queue[i + 1]; 
