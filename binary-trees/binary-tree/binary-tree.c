@@ -140,8 +140,23 @@ Node* initialize_node(int data) {
   return node; 
 }
 
+int max(int a, int b) {
+  return (a > b) ? a : b; 
+}
+
+int tree_height_helper(Node* node) {
+  if(node == NULL) return -1;  
+
+  int left_height = tree_height_helper(node->left);
+  int right_height = tree_height_helper(node->right);
+
+  return 1 + max(left_height, right_height); 
+}
+
 int height(BinaryTree* tree) {
-  return 1;   
+  if(tree->root == NULL) return -1; 
+
+  return tree_height_helper(tree->root); 
 }
 
 bool search(BinaryTree* tree, int node_to_search) {
@@ -154,13 +169,44 @@ bool search(BinaryTree* tree, int node_to_search) {
   if(no_leaves) return false; 
 
   Queue q = initialize_queue(20); 
+  enqueue(&q, tree->root); 
+  bool is_found = false; 
 
+  while(q.size != 0) { 
+    Node* current = dequeue(&q);  
 
-  return false;  
+    if(current->data == node_to_search) {
+      is_found = true;  
+      break; 
+    }
+
+    if(current->left != NULL) enqueue(&q, current->left); 
+    if(current->right != NULL) enqueue(&q, current->right); 
+  }
+
+  free(q.queue); 
+
+  return is_found;  
 }
 
 int size(BinaryTree* tree) {
-  return 1;  
+  if(tree->root == NULL) return 0; 
+
+  int size = 0; 
+  Queue q = initialize_queue(20);
+  enqueue(&q, tree->root); 
+
+  while(q.size != 0) {
+    Node* current = dequeue(&q);  
+    size += 1; 
+
+    if(current->left != NULL) enqueue(&q, current->left); 
+    if(current->right != NULL) enqueue(&q, current->right); 
+  }
+
+  free(q.queue); 
+
+  return size;  
 }
 
 void free_tree_nodes(BinaryTree* tree) {
@@ -316,6 +362,8 @@ void post_order_traversal(Node* node) {
   printf("%d ", node->data); 
 }
 
+
+
 /**
  * =====================
  * || Testing Methods ||
@@ -331,6 +379,7 @@ void populate_tree(BinaryTree* test_tree) {
   insert(test_tree, 5); 
   insert(test_tree, 6);
   insert(test_tree, 7); 
+  insert(test_tree, 8); 
   // Clear the line when debug printing
   DEBUG_PRINT("\n", NULL); 
 
@@ -357,10 +406,39 @@ void delete_test(BinaryTree* tree) {
   printf("\n\n"); 
 }
 
+void height_test(BinaryTree* tree) {
+  int tree_height = height(tree);  
+
+  printf("Tree Height: %d\n\n", tree_height); 
+}
+
+void size_test(BinaryTree* tree) {
+  int tree_size = size(tree);  
+  
+  printf("Tree Size: %d\n\n", tree_size);
+}
+
+void search_test(BinaryTree* tree) {
+  bool search_5 = search(tree, 5);  
+  bool search_12 = search(tree, 12); 
+  bool search_8 = search(tree, 8); 
+
+  printf("Search 5: [Expected: TRUE, STATUS: %s]\n", search_5 ? "PASSED" : "FAILED"); 
+  printf("Search 12: [Expected: FALSE, STATUS: %s]\n", !search_12 ? "PASSED" : "FAILED"); 
+  printf("Search 8: [Expected: TRUE, STATUS: %s]\n\n", search_8 ? "PASSED" : "FAILED"); 
+
+}
+
 void run_tests() {
   BinaryTree test_tree = initialize_binary_tree();  
 
   populate_tree(&test_tree); 
+
+  height_test(&test_tree);
+
+  size_test(&test_tree); 
+
+  search_test(&test_tree); 
 
   delete_test(&test_tree); 
 
