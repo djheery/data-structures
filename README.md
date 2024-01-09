@@ -9,6 +9,8 @@ Then I will learn more about C by implementing the known data structures within 
 
 **The data structures may contain errors. This is not meant to be a comprehensive handling of all edge cases for a data structure. More an experimentation with them to get to grips with how they are built and thus understand more deeply how they work. Thus bugs will probably exist in the structures so it's best to look at this code with the expectation that it will not be a perfect recreation of the data structures**
 
+Each code file will be created from scratch rather than copy and pasting the boiler plate so that I can ingrain the basic syntax of C into my brain.
+
 ## Included Data Structure Types 
 
 Each folder will contain a core data structure and then the sub folders will contain their associated sub-data types. For example, Arrays will contain Stacks, Queues, etc.
