@@ -4,6 +4,7 @@
  * *-----------------------------------*
  *
  * TODO: Implement CLI Methods too lazy to implement now
+ * TODO: Test Remove Methods 
  *
  * This is my implementation of a doubly linked list Data structure 
  * The implementation follows the structure of the the Singularly Linked List Data Structure included in the lists project folder 
