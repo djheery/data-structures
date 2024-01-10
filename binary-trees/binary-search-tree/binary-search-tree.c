@@ -5,6 +5,10 @@
 #define QUEUE_CAPACITY 20
 #define RUN_TESTS true 
 #define DEBUG
+#define MIN_INT_ALLOWED 1 
+#define MAX_INT_ALLOWED 100
+#define ROOT_DATA 50
+#define ALLOW_DUPLICATES true
 
 #ifdef DEBUG
 #define DEBUG_PRINT(fmt, ...) fprintf(stderr, fmt, __VA_ARGS__)
@@ -42,14 +46,14 @@ typedef struct {
 
 // Setup & tear down methods
 
-BST initialize_tree(); 
+BST initialize_tree(bool is_test); 
 Node* initialize_node(int node_data);
 void free_tree(BST* tree); 
 
 // Util Methods 
 
 bool insert(BST* tree, int node_data); 
-bool insert_helper(Node* node, int node_data); 
+Node* insert_helper(Node* current_node, int node_data); 
 
 bool delete(BST* tree, int node_data);
 bool delete_helper(Node* node, int node_data); 
@@ -107,6 +111,137 @@ int main() {
  * ========================================
  */
 
+
+Node* initialize_node(int node_data) {
+  Node* node = (Node*) malloc(sizeof(Node));  
+
+  if(node == NULL) {
+    DEBUG_PRINT("ERROR CREATING NODE\n\n", NULL); 
+    return NULL;   
+  }
+
+  node->data = node_data; 
+  node->left = NULL; 
+  node->right = NULL; 
+
+  return node; 
+}
+
+/**
+ * Initialize the Tree 
+ *
+ * @param: is_test -> This is a flag that is used to decide whether to initialize a root node or not
+ */
+
+BST initialize_tree(bool is_test) {
+  BST tree; 
+  tree.root = is_test ? initialize_node(ROOT_DATA) : NULL; 
+  tree.size = 1; 
+  return tree; 
+}
+
+/**
+ * Free the tree nodes from memory 
+ *
+ * @param: tree -> The BST to free the nodes from
+ */
+
+void free_tree(BST* tree) {
+  if(tree->root == NULL) return; 
+
+  CircularQueue queue = initialize_queue(); 
+  enqueue(&queue, tree->root); 
+
+  while(queue.size != 0) {
+    Node* current = dequeue(&queue);
+
+    if(current->left != NULL) enqueue(&queue, current->left); 
+    if(current->right != NULL) enqueue(&queue, current->right); 
+
+    DEBUG_PRINT("Freeing node: %d\n", current->data); 
+    free(current); 
+  }
+
+  free(queue.queue); 
+
+  DEBUG_PRINT("\n\nList Freed Succesfully!\n\n", NULL);
+}
+
+/**
+ * Wrapper method for handling insertion into the binary tree 
+ *
+ * @param: tree -> The Tree to insert into 
+ * @param: node_data -> The data to be added to the new node 
+ *
+ * @returns: A boolean value depending of whether there was a succesful insertion 
+ */
+
+bool insert(BST* tree, int node_data) {
+
+  if(node_data < MIN_INT_ALLOWED || node_data > MAX_INT_ALLOWED) {
+    return false; 
+  }
+
+  if(tree->root == NULL) {
+    tree->root = initialize_node(node_data); 
+    tree->size = 1; 
+    return true; 
+  }
+
+  Node* root = insert_helper(tree->root, node_data);
+
+  bool is_root = root == tree->root; 
+
+  if(!is_root) {
+    printf("Something is very odd with your insertion or your understanding of recursive insertion\n\n"); 
+  }
+
+  return is_root;      
+}
+
+Node* insert_helper(Node* current_node, int node_data) {
+
+  if(current_node == NULL) {
+    Node* new_node = initialize_node(node_data); 
+    return new_node; 
+  }
+
+  bool is_equal = current_node->data == node_data; 
+
+  if(is_equal && !ALLOW_DUPLICATES) {
+    printf("DUPLICATES_NOT_ALLOWED!\n\n");  
+    return current_node; 
+  }
+
+  if(current_node->data < node_data) {
+    current_node->right = insert_helper(current_node->right, node_data);
+  }; 
+
+  if((current_node->data > node_data) || (is_equal && ALLOW_DUPLICATES)) {
+    current_node->left = insert_helper(current_node->left, node_data); 
+  }
+
+
+  return current_node; 
+}
+
+bool delete(BST* tree, int node_data) {
+  
+  if(tree->root == NULL || tree->size == 0) {
+    return false; 
+  }
+
+  CircularQueue queue = initialize_queue(); 
+  enqueue(&queue, tree->root);
+  bool has_deleted = false; 
+
+  while(queue.size != 0 || !has_deleted) {
+    Node* current_node = dequeue(&queue);  
+  }
+
+  return has_deleted;  
+}
+
 /**
  * The wrapper function for searching for a given node in the tree 
  *
@@ -137,10 +272,12 @@ bool search_helper(Node* node, int node_data) {
 
   if(node->data == node_data) return true; 
 
-  bool found_left = search_helper(node->left, node_data); 
-  bool found_right = search_helper(node->right, node_data); 
+  bool found = false; 
 
-  return found_left || found_right; 
+  if(node->data > node_data) found = search_helper(node->left, node_data); 
+  if(node->data < node_data) found = search_helper(node->right, node_data); 
+
+  return found; 
 }
 
 /** 
@@ -256,9 +393,9 @@ bool enqueue(CircularQueue* queue, Node* node) {
   if(queue->size == queue->capacity) return false;  
   if(queue == NULL || node == NULL) return false; 
 
+  queue->rear = (queue->rear + 1) % QUEUE_CAPACITY; 
   queue->queue[queue->rear] = node;  
   queue->size += 1; 
-  queue->rear = (queue->rear + 1) % QUEUE_CAPACITY; 
 
   return true; 
 }
