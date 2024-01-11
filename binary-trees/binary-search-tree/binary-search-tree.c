@@ -56,7 +56,7 @@ bool insert(BST* tree, int node_data);
 Node* insert_helper(Node* current_node, int node_data); 
 
 bool delete(BST* tree, int node_data);
-bool delete_helper(Node* node, int node_data); 
+Node* delete_helper(BST* tree, Node* node, int node_data); 
 
 bool search(BST* tree, int node_data); 
 bool search_helper(Node* node, int node_data);
@@ -230,16 +230,31 @@ bool delete(BST* tree, int node_data) {
   if(tree->root == NULL || tree->size == 0) {
     return false; 
   }
+  
+  return true; 
+}
 
-  CircularQueue queue = initialize_queue(); 
-  enqueue(&queue, tree->root);
-  bool has_deleted = false; 
+Node* delete_helper(BST* tree, Node* root, int node_data) {
+  if(root == NULL) return NULL;  
 
-  while(queue.size != 0 || !has_deleted) {
-    Node* current_node = dequeue(&queue);  
+  bool no_leaves = root->left == NULL && root->right == NULL; 
+
+  if(no_leaves && root->data == node_data) {
+    free(root);  
+    tree->size -= 1; 
+    return NULL; 
   }
 
-  return has_deleted;  
+  if(node_data < root->data) {
+   
+  } else if (node_data > root->data) {
+
+  } else {
+  
+  }
+
+
+  return root; 
 }
 
 /**
