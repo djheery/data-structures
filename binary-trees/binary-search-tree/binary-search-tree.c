@@ -240,10 +240,6 @@ bool delete(BST* tree, int node_data) {
     return false; 
   }
 
-  Node* node_to_delete = search(tree, node_data); 
-
-  if(node_to_delete == NULL) return false; 
-  
   return true; 
 }
 
@@ -252,12 +248,23 @@ Node* delete_helper(BST* tree, Node* root, int node_data) {
 
 
   if(node_data < root->data) {
-   
+    root->left = delete_helper(tree, root->left, node_data); 
+    return root;
   } else if (node_data > root->data) {
+    root->right = delete_helper(tree, root->right, node_data); 
+    return root; 
+  } 
+
+  
+
+  if(root->left == NULL)  {
+    
+  } else if(root->right == NULL) {
 
   } else {
-  
+
   }
+  
 
 
   return root; 
@@ -278,6 +285,7 @@ Node* search(BST* tree, int node_data) {
 }
 
 /**
+ *
  * A Helper function to search recursively through the tree 
  *
  * @param: node - The current node to check the data of
