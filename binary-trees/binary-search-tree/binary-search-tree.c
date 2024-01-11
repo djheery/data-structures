@@ -257,16 +257,6 @@ Node* delete_helper(BST* tree, Node* root, int node_data) {
 
   
 
-  if(root->left == NULL)  {
-    
-  } else if(root->right == NULL) {
-
-  } else {
-
-  }
-  
-
-
   return root; 
 }
 
