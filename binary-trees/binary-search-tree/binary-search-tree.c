@@ -58,8 +58,8 @@ Node* insert_helper(Node* current_node, int node_data);
 bool delete(BST* tree, int node_data);
 Node* delete_helper(BST* tree, Node* node, int node_data); 
 
-bool search(BST* tree, int node_data); 
-bool search_helper(Node* node, int node_data);
+Node* search(BST* tree, int node_data); 
+Node* search_helper(Node* node, int node_data);
 
 int size(BST* tree); 
 int count_nodes(BST* tree); 
@@ -199,6 +199,15 @@ bool insert(BST* tree, int node_data) {
   return is_root;      
 }
 
+/**
+ * A helper for the insertion function to insert recursively 
+ *
+ * @param: current_node -> The current node to evaluate 
+ * @param: node_data -> The node data to insert
+ *
+ * @returns: The current_node (As this is recursive it should eventually return the root back to the initial caller)
+ */
+
 Node* insert_helper(Node* current_node, int node_data) {
 
   if(current_node == NULL) {
@@ -230,6 +239,10 @@ bool delete(BST* tree, int node_data) {
   if(tree->root == NULL || tree->size == 0) {
     return false; 
   }
+
+  Node* node_to_delete = search(tree, node_data); 
+
+  if(node_to_delete == NULL) return false; 
   
   return true; 
 }
@@ -237,13 +250,6 @@ bool delete(BST* tree, int node_data) {
 Node* delete_helper(BST* tree, Node* root, int node_data) {
   if(root == NULL) return NULL;  
 
-  bool no_leaves = root->left == NULL && root->right == NULL; 
-
-  if(no_leaves && root->data == node_data) {
-    free(root);  
-    tree->size -= 1; 
-    return NULL; 
-  }
 
   if(node_data < root->data) {
    
@@ -263,17 +269,15 @@ Node* delete_helper(BST* tree, Node* root, int node_data) {
  * @returns: A boolean value depending on whether the node was found 
  */
 
-bool search(BST* tree, int node_data) {
+Node* search(BST* tree, int node_data) {
   if(tree->root == NULL) return false; 
 
-  bool is_found = search_helper(tree->root, node_data); 
+  Node* found_node = search_helper(tree->root, node_data); 
 
-  return is_found;
+  return found_node;
 }
 
 /**
- * TODO: This is not how you search in a BST given the found_left found_right options (Please change) 
- *
  * A Helper function to search recursively through the tree 
  *
  * @param: node - The current node to check the data of
@@ -282,12 +286,12 @@ bool search(BST* tree, int node_data) {
  * @returns: A boolean value depending on whether the node was found
  */
 
-bool search_helper(Node* node, int node_data) {
-  if(node == NULL) return false; 
+Node* search_helper(Node* node, int node_data) {
+  if(node == NULL) return NULL; 
 
-  if(node->data == node_data) return true; 
+  if(node->data == node_data) return node; 
 
-  bool found = false; 
+  Node* found = NULL; 
 
   if(node->data > node_data) found = search_helper(node->left, node_data); 
   if(node->data < node_data) found = search_helper(node->right, node_data); 
