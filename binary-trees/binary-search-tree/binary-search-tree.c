@@ -300,6 +300,16 @@ Node* inorder_successor(Node* root) {
   return NULL;   
 }
 
+Node* invert_tree(Node* root) {
+   if(root == NULL) return NULL; 
+
+   Node* prevLeft = invert_tree(root->left); 
+   root->left = invert_tree(root->right); 
+   root->right = prevLeft; 
+
+   return root; 
+}
+
 /**
  * The wrapper function for searching for a given node in the tree 
  *
