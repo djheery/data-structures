@@ -240,8 +240,26 @@ bool delete(BST* tree, int node_data) {
     return false; 
   }
 
+  // NOTE: This is a placeholder and is just to make sure I handle root deleltion and reference replacement in the wrapper class
+ 
+  if(tree->root->data == node_data) {
+    Node* new_root = NULL;  
+    tree->root->data = new_root->data;
+    free(new_root); 
+    return true; 
+  }
+
   return true; 
 }
+
+
+//            30 
+//         /     \
+//        15      45 
+//       /   \    / \
+//      10   25  40  50 
+//     / \   / \ / \ / \
+//    NL NL 22  NL  NL NL
 
 Node* delete_helper(BST* tree, Node* root, int node_data) {
   if(root == NULL) return NULL;  
@@ -255,9 +273,31 @@ Node* delete_helper(BST* tree, Node* root, int node_data) {
     return root; 
   } 
 
-  
+  if(root->left == NULL) {
+    Node* temp = root->right; 
+    free(root); 
+    return temp;
+  }
 
+  if(root->right == NULL) {
+    Node* temp = root->left; 
+    free(root); 
+    return temp; 
+  }
+  
   return root; 
+}
+
+Node* inorder_successor(Node* root) {
+  Node* prevSucc = root; 
+  Node* succ = prevSucc; 
+
+  while(succ->right != NULL) {
+    prevSucc = succ;
+    succ = root->right; 
+  }
+
+  return NULL;   
 }
 
 /**
