@@ -290,14 +290,14 @@ Node* delete_helper(BST* tree, Node* root, int node_data) {
 
 Node* inorder_successor(Node* root) {
   Node* prevSucc = root; 
-  Node* succ = prevSucc; 
+  Node* succ = prevSucc->right; 
 
-  while(succ->right != NULL) {
+  while(succ->left != NULL) {
     prevSucc = succ;
-    succ = root->right; 
+    succ = root->left; 
   }
 
-  return NULL;   
+  return succ;   
 }
 
 Node* invert_tree(Node* root) {
