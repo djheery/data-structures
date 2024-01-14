@@ -57,6 +57,7 @@ Node* insert_helper(Node* current_node, int node_data);
 
 bool delete(BST* tree, int node_data);
 Node* delete_helper(BST* tree, Node* node, int node_data); 
+Node* inorder_successor(Node* root); 
 
 Node* search(BST* tree, int node_data); 
 Node* search_helper(Node* node, int node_data);
@@ -284,6 +285,15 @@ Node* delete_helper(BST* tree, Node* root, int node_data) {
     free(root); 
     return temp; 
   }
+
+  Node* successor_node = inorder_successor(root); 
+
+  if(successor_node == NULL) {
+    exit(EXIT_FAILURE);
+  }
+
+  root->data = successor_node->data; 
+  free(successor_node);
   
   return root; 
 }
@@ -295,6 +305,10 @@ Node* inorder_successor(Node* root) {
   while(succ->left != NULL) {
     prevSucc = succ;
     succ = root->left; 
+  }
+
+  if(succ->right != NULL) {
+    prevSucc->left = succ->right;  
   }
 
   return succ;   
