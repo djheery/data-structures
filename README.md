@@ -37,7 +37,7 @@ The list is comprised of items from the wikipedia data structures list
     - [x] Doubly Linked List 
 - [ ] Binary Trees 
     - [x] Binary Tree 
-    - [ ] Binary Search Tree
+    - [x] Binary Search Tree
     - [ ] Red Black Tree 
 - [ ] Graphs 
     - [ ] Adjacency List 
