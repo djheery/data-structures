@@ -56,7 +56,8 @@ bool insert(BST* tree, int node_data);
 Node* insert_helper(Node* current_node, int node_data); 
 
 bool delete(BST* tree, int node_data);
-Node* delete_helper(BST* tree, Node* node, int node_data); 
+Node* delete_helper(Node* root, int node_data); 
+Node* delete_node_handler(Node* root);
 
 Node* search(BST* tree, int node_data); 
 Node* search_helper(Node* node, int node_data);
@@ -70,6 +71,8 @@ int get_max(int a, int b);
 
 Node* find_min(Node* root); 
 Node* find_max(Node* root); 
+
+Node* inorder_successor(Node* root); 
 Node* successor(Node* root, int target); 
 Node* predecessor(Node* root, int target);
 
@@ -240,36 +243,29 @@ bool delete(BST* tree, int node_data) {
     return false; 
   }
 
-  // NOTE: This is a placeholder and is just to make sure I handle root deleltion and reference replacement in the wrapper class
- 
-  if(tree->root->data == node_data) {
-    Node* new_root = NULL;  
-    tree->root->data = new_root->data;
-    free(new_root); 
-    return true; 
-  }
+  delete_helper(tree->root, node_data); 
 
   return true; 
 }
 
+/**
+ * A recursive delete function to find the node to delete 
+ * This node is then passed to the delete handler to get the successor and delete accordingly 
+ *
+ * @param: root -> Starts with the root of the tree then recursively calls itself with the next given node until the deletion node is found
+ * @param: node_data -> The node data to search for and thus the node to delete
+ * @returns: Eventually returns the root of the tree
+ */
 
-//            30 
-//         /     \
-//        15      45 
-//       /   \    / \
-//      10   25  40  50 
-//     / \   / \ / \ / \
-//    NL NL 22  NL  NL NL
-
-Node* delete_helper(BST* tree, Node* root, int node_data) {
+Node* delete_helper(Node* root, int node_data) {
   if(root == NULL) return NULL;  
 
 
   if(node_data < root->data) {
-    root->left = delete_helper(tree, root->left, node_data); 
+    root->left = delete_helper(root->left, node_data); 
     return root;
   } else if (node_data > root->data) {
-    root->right = delete_helper(tree, root->right, node_data); 
+    root->right = delete_helper(root->right, node_data); 
     return root; 
   } 
 
@@ -284,21 +280,81 @@ Node* delete_helper(BST* tree, Node* root, int node_data) {
     free(root); 
     return temp; 
   }
+
   
+  return delete_node_handler(root); 
+}
+
+/**
+ * A method to handle the deletion of a given node 
+ * 
+ * The method works by finding the inorder_successor of a given node, replacing the root->data with the successor->data and 
+ * assigning its left and right accordingly 
+ *
+ * if the parent is equal to the root passed in then we should make the root->right = to the successor->right 
+ *  - This is because we are assigning the root to the data of the successor (which is the right node of the successor) and since 
+ *    The while loop has been skipped this means the successors left is null so we can only assign the right to the parent 
+ * if the parent is not equal to the root then we can assign the parent->left to the successor->right 
+ *  - This is because we are replacing the roots data with the successor which will be the furthest left node and the parent will not be the root 
+ *    So we need to make sure that any leaf nodes are not detatched. As we know that the successor does not have another left node the only place that could be a node 
+ *    is the right node so we make sure that the parents left node = the successor->right node (which will always be less than the parent because of the way BSTs are constructed 
+ *    Before assigning the successors data to the root node (node to delete/replace) then we free the successor
+ *
+ * then replaced the root data with the successors data and free the successor 
+ *
+ * @param: root - The node with the data to delete 
+ * @returns: The root with the new data associated inside it (The data of the inorder successor which has been freed) 
+ */
+
+Node* delete_node_handler(Node* root) {
+  Node* parent = root; 
+  Node* succ = parent->right; 
+
+  while(succ->left != NULL) {
+    parent = succ;
+    succ = root->left; 
+  }
+
+  if(parent != root) {
+    parent->left = succ->right; 
+  } else {
+    parent->right = succ->right; 
+  }
+
+  root->data = succ->data; 
+  free(succ); 
+
   return root; 
 }
 
+/** 
+ * Get the inorder_successor of a given node
+ *
+ * @param: root - The node to get the inorder successor for 
+ * @returns: The inorder successor
+ */
+
 Node* inorder_successor(Node* root) {
-  Node* prevSucc = root; 
-  Node* succ = prevSucc->right; 
+  Node* parent = root; 
+  Node* succ = parent->right; 
 
   while(succ->left != NULL) {
-    prevSucc = succ;
+    parent = succ;
     succ = root->left; 
   }
 
   return succ;   
 }
+
+/**
+ *  WARNING: After using this method the insertion, deletion and search will be broken
+ *  TODO: Implement a flag to tell whether a tree is inverted and then perform the other operations based on this flag
+ *
+ * A method using for inverting the tree 
+ *
+ * @param: root - Starting with the tree->root then recursively inverts the left Subtree then the right subtree
+ * @returns: The root of the tree eventually
+ */
 
 Node* invert_tree(Node* root) {
    if(root == NULL) return NULL; 
