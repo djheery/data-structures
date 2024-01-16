@@ -56,7 +56,7 @@ bool insert(BST* tree, int node_data);
 Node* insert_helper(Node* current_node, int node_data); 
 
 bool delete(BST* tree, int node_data);
-Node* delete_helper(Node* root, int node_data); 
+Node* delete_helper(BST* tree, Node* root, int node_data); 
 Node* delete_node_handler(Node* root);
 
 Node* search(BST* tree, int node_data); 
@@ -95,7 +95,8 @@ Node* dequeue(CircularQueue* queue);
 bool enqueue(CircularQueue* queue, Node* node); 
 
 
-// Test Methods
+// Test methods
+void run_tests();
 
 /** 
  * ==========================
@@ -104,7 +105,7 @@ bool enqueue(CircularQueue* queue, Node* node);
  */
 
 int main() {
-  printf("%d\n", 20 % 20); 
+  run_tests(); 
   return 0; 
 }
 
@@ -192,6 +193,7 @@ bool insert(BST* tree, int node_data) {
   }
 
   Node* root = insert_helper(tree->root, node_data);
+  tree->size += 1; 
 
   bool is_root = root == tree->root; 
 
@@ -225,11 +227,11 @@ Node* insert_helper(Node* current_node, int node_data) {
     return current_node; 
   }
 
-  if(current_node->data < node_data) {
+  if(node_data > current_node->data) {
     current_node->right = insert_helper(current_node->right, node_data);
   }; 
 
-  if((current_node->data > node_data) || (is_equal && ALLOW_DUPLICATES)) {
+  if((node_data < current_node->data) || (is_equal && ALLOW_DUPLICATES)) {
     current_node->left = insert_helper(current_node->left, node_data); 
   }
 
@@ -243,7 +245,7 @@ bool delete(BST* tree, int node_data) {
     return false; 
   }
 
-  delete_helper(tree->root, node_data); 
+  delete_helper(tree, tree->root, node_data); 
 
   return true; 
 }
@@ -257,18 +259,18 @@ bool delete(BST* tree, int node_data) {
  * @returns: Eventually returns the root of the tree
  */
 
-Node* delete_helper(Node* root, int node_data) {
+Node* delete_helper(BST* tree, Node* root, int node_data) {
   if(root == NULL) return NULL;  
 
   // General Searching for the node
 
   if(node_data < root->data) {
-    root->left = delete_helper(root->left, node_data); 
+    root->left = delete_helper(tree, root->left, node_data); 
     return root;
   } 
 
   if (node_data > root->data) {
-    root->right = delete_helper(root->right, node_data); 
+    root->right = delete_helper(tree, root->right, node_data); 
     return root; 
   } 
 
@@ -277,38 +279,30 @@ Node* delete_helper(Node* root, int node_data) {
   if(root->left == NULL) {
     Node* temp = root->right; 
     free(root); 
+    tree->size -= 1;
     return temp;
   }
 
   if(root->right == NULL) {
     Node* temp = root->left; 
     free(root); 
+    tree->size -= 1; 
     return temp; 
   }
 
-  // Both child nodes are found so search for the successor to replace the node with 
+  // Both children found so use the function below to find the inorder_successor and replace the root->data with the succ->data 
 
-  
-  return delete_node_handler(root); 
+  delete_node_handler(root);
+  tree->size -= 1; 
+
+  return root; 
 }
 
 /**
- *  NOTE: This method whilst simple conceptually was the most difficult for me to understand from an implementation standpoint because of the recursion 
- *  NOTE: I should refer bback to this from time to time to make sure I still understand it  
- *  
  * A method to handle the deletion of a given node 
  * 
  * The method works by finding the inorder_successor of a given node, replacing the root->data with the successor->data and 
- * assigning its left and right accordingly 
- *
- * if the parent is equal to the root passed in then we should make the root->right = to the successor->right 
- *  - This is because we are assigning the root to the data of the successor (which is the right node of the successor) and since 
- *    The while loop has been skipped this means the successors left is null so we can only assign the right to the parent 
- * if the parent is not equal to the root then we can assign the parent->left to the successor->right 
- *  - This is because we are replacing the roots data with the successor which will be the furthest left node and the parent will not be the root 
- *    So we need to make sure that any leaf nodes are not detatched. As we know that the successor does not have another left node the only place that could be a node 
- *    is the right node so we make sure that the parents left node = the successor->right node (which will always be less than the parent because of the way BSTs are constructed 
- *    Before assigning the successors data to the root node (node to delete/replace) then we free the successor
+ * assigning its left and right accordingly. See this subfolders README for a basic explanation. 
  *
  * then replaced the root data with the successors data and free the successor 
  *
@@ -549,6 +543,105 @@ Node* dequeue(CircularQueue* queue) {
   return front; 
 }
 
+/**
+ * ============================
+ * || Binary Tree Tests      ||
+ * ============================
+ */
+
+void tree_walks(BST* tree) {
+  printf("\n\nIn Order: ", NULL); 
+  inorder_tree_walk(tree->root); 
+  printf("\n\nPost Order: ", NULL); 
+  postorder_tree_walk(tree->root); 
+  printf("\n\nPre Order: ", NULL);
+  preorder_tree_walk(tree->root);
+  printf("\n\n"); 
+}
+
+void populate_tree(BST* tree, int to_insert[], int length) {
+
+  for(int i = 0; i < length; i++) {
+    insert(tree, to_insert[i]);   
+  }
+
+  tree_walks(tree);
+}
+
+bool contains(int nodes_inserted[], int arr_length, int current_num) {
+   
+   for(int i = 0; i < arr_length; i++) {
+     if(nodes_inserted[i] == current_num) {
+       return true; 
+     }
+   }
+   return false;    
+}
+
+void search_tree(BST* tree, int nodes_inserted[], int arr_length)  {
+
+  int passed_count = 0;
+
+  for(int i = 0; i < 100; i++) {
+     Node* node_found = search(tree, i);   
+     bool is_in_tree = contains(nodes_inserted, arr_length, i);
+
+     if(node_found == NULL) {
+        printf("%d IS NOT IN TREE, Status: %s\n", i, is_in_tree ? "FAILED" : "PASSED");  
+        passed_count += is_in_tree ? 0 : 1; 
+        continue;  
+     }
+
+     passed_count += is_in_tree ? 1 : 0;  
+     printf("%d IS IN TREE, Status: %s\n", i, !is_in_tree ? "FAILED" : "PASSED");  
+  }
+
+  printf("\nPassed Count: %d\n\n", passed_count); 
+}
+
+void delete_tests(BST* tree, int nodes_to_delete[], int length) {
+
+  for(int i = 0; i < length; i++) {
+    printf("Deleting Node %d\n", nodes_to_delete[i]); 
+    printf("Before: "); 
+    inorder_tree_walk(tree->root);
+    printf("\nAfter: "); 
+    delete(tree, nodes_to_delete[i]);     
+    inorder_tree_walk(tree->root);
+    printf("\n\n"); 
+  }
+
+}
+
+void run_tests() {
+  BST test_tree = initialize_tree(true); 
+  bool should_delete_nodes = false; 
+
+  int to_insert[] = { 10, 25, 37, 60, 75, 87 }; 
+  int length = sizeof(to_insert) / sizeof(to_insert[0]); 
+
+  populate_tree(&test_tree, to_insert, length);
+  
+  // 50 is inserted automatically
+  int inserted[] = { 10, 25, 37, 50, 60, 75, 87 }; 
+  length = sizeof(inserted) / sizeof(inserted[0]); 
+
+  search_tree(&test_tree, inserted, length); 
+
+  if(should_delete_nodes) {
+    int nodes_to_delete[] = { 25, 75 }; 
+    length = sizeof(nodes_to_delete) / sizeof(nodes_to_delete[0]); 
+
+    delete_tests(&test_tree, nodes_to_delete, length);
+  }
+
+  // WARNING: Any more methods are broken after inverting the tree 
+  invert_tree(test_tree.root); 
+  inorder_tree_walk(test_tree.root); 
+  printf("\n\n"); 
+
+  free_tree(&test_tree); 
+}
 
 
 
