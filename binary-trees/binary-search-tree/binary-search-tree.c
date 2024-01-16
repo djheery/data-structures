@@ -260,14 +260,19 @@ bool delete(BST* tree, int node_data) {
 Node* delete_helper(Node* root, int node_data) {
   if(root == NULL) return NULL;  
 
+  // General Searching for the node
 
   if(node_data < root->data) {
     root->left = delete_helper(root->left, node_data); 
     return root;
-  } else if (node_data > root->data) {
+  } 
+
+  if (node_data > root->data) {
     root->right = delete_helper(root->right, node_data); 
     return root; 
   } 
+
+  // The node has been found so check for null leaf nodes 
 
   if(root->left == NULL) {
     Node* temp = root->right; 
@@ -280,6 +285,8 @@ Node* delete_helper(Node* root, int node_data) {
     free(root); 
     return temp; 
   }
+
+  // Both child nodes are found so search for the successor to replace the node with 
 
   
   return delete_node_handler(root); 
