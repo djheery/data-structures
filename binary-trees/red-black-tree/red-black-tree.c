@@ -50,3 +50,17 @@ int invert(Node* root);
 int main() {
   return 0; 
 }
+
+/**
+ * =========================================
+ * || RedBlackTree Method Implementations ||
+ * =========================================
+ */
+
+/**
+ * ====================================
+ * || Circular Queue Implementations ||
+ * ====================================
+ */
+
+void enqueue(CircularQueue* queue); 
