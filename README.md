@@ -38,13 +38,8 @@ The list is comprised of items from the wikipedia data structures list
 - [ ] Binary Trees 
     - [x] Binary Tree 
     - [x] Binary Search Tree
-    - [ ] Red Black Tree 
-- [ ] Graphs 
-    - [ ] Adjacency List 
-    - [ ] Adjacency Matrix 
-    - [ ] Directed Acyclic Graph 
-    - [ ] Directed Graph 
-    - [ ] Graph 
+    - [ ] Red Black Tree
+    - [ ] AVL Tree
 - [ ] Hash Based Structures 
     - [ ] Hash List 
     - [ ] Hash Table 
