@@ -47,6 +47,9 @@ int get_max(int a, int b);
 
 int invert(Node* root); 
 
+void enqueue(CircularQueue* queue, int node_data); 
+Node* dequeue(CircularQueue* queue);
+
 int main() {
   return 0; 
 }
@@ -63,4 +66,8 @@ int main() {
  * ====================================
  */
 
-void enqueue(CircularQueue* queue); 
+void enqueue(CircularQueue* queue, int node_data) {
+  if(queue->capacity == queue->size) return; 
+
+
+}; 
