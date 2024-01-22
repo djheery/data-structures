@@ -15,7 +15,7 @@ to stop the tree degerating into a linear structure and preserving the average O
 
 1. Every node has a color (Red or Black) 
 2. The root is always black 
-3. There red nodes cannot be proceeded or preceeded by another red node 
+3. Red nodes cannot be proceeded or preceeded by another red node 
 4. Every path from a node to any of its leaf nodes has the same number of black nodes
 5. Every Leaf is colored black 
 6. The black height is the number of black does on a path from root to leaf
