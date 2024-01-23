@@ -72,7 +72,7 @@ void rl_rotation(Node* root);
 int height(Node* root); 
 int get_max(int a, int b);
 
-int invert(Node* root); 
+Node* invert(Node* root); 
 
 /**
  * =======================================
@@ -229,6 +229,16 @@ bool search_helper(Node* root, int data_to_search) {
   if(data_to_search > root->data) found = search_helper(root->right, data_to_search);  
 
   return found; 
+}
+
+Node* invert(Node* root) {
+  if(root == NULL) return NULL; 
+
+  Node* prevLeft = invert(root->left); 
+  root->left = invert(root->right); 
+  root->right = prevLeft; 
+
+  return root; 
 }
 
 /**
