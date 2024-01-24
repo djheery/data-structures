@@ -77,6 +77,7 @@ Node* successor(Node* root, int target);
 Node* predecessor(Node* root, int target);
 
 void invert(BST* tree); 
+Node* invert_tree_helper(Node* root); 
 
 // DFS Traversal
 
@@ -309,7 +310,7 @@ Node* delete_helper(BST* tree, Node* root, int node_data) {
  * @param: root - The node with the data to delete 
  * @returns: The root with the new data associated inside it (The data of the inorder successor which has been freed) 
  */
-
+ 
 Node* delete_node_handler(Node* root) {
   Node* parent = root; 
   Node* succ = parent->right; 
@@ -350,21 +351,46 @@ Node* inorder_successor(Node* root) {
   return succ;   
 }
 
+BST* clone(BST* tree) {
+   BST tree_clone = initialize_tree(false);
+
+   CircularQueue q = initialize_queue(); 
+   enqueue(&q, tree->root); 
+
+   while(q.size != 0) {
+     Node* current = dequeue(&q); 
+     insert(&tree_clone, current->data); 
+
+     if(current->left != NULL) enqueue(&q, current->left); 
+     if(current->right != NULL) enqueue(&q, current->right); 
+   }
+
+   return NULL; 
+}
+
+void invert_tree(BST* tree) {
+  BST* tree_clone = clone(tree);  
+  invert_tree_helper(tree_clone->root); 
+
+  inorder_tree_walk(tree_clone->root); 
+  printf("\n\n"); 
+  
+  free_tree(tree_clone);
+
+}
+
 /**
- *  WARNING: After using this method the insertion, deletion and search will be broken
- *  TODO: Implement a flag to tell whether a tree is inverted and then perform the other operations based on this flag
- *
  * A method using for inverting the tree 
  *
  * @param: root - Starting with the tree->root then recursively inverts the left Subtree then the right subtree
  * @returns: The root of the tree eventually
  */
 
-Node* invert_tree(Node* root) {
+Node* invert_tree_helper(Node* root) {
    if(root == NULL) return NULL; 
 
-   Node* prevLeft = invert_tree(root->left); 
-   root->left = invert_tree(root->right); 
+   Node* prevLeft = invert_tree_helper(root->left); 
+   root->left = invert_tree_helper(root->right); 
    root->right = prevLeft; 
 
    return root; 
@@ -635,10 +661,7 @@ void run_tests() {
     delete_tests(&test_tree, nodes_to_delete, length);
   }
 
-  // WARNING: Any more methods are broken after inverting the tree 
-  invert_tree(test_tree.root); 
-  inorder_tree_walk(test_tree.root); 
-  printf("\n\n"); 
+  invert_tree(&test_tree); 
 
   free_tree(&test_tree); 
 }
