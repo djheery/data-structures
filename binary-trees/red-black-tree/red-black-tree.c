@@ -234,8 +234,8 @@ bool search_helper(Node* root, int data_to_search) {
 Node* invert_tree(Node* root) {
   if(root == NULL) return NULL; 
 
-  Node* prevLeft = invert(root->left); 
-  root->left = invert(root->right); 
+  Node* prevLeft = invert_tree(root->left); 
+  root->left = invert_tree(root->right); 
   root->right = prevLeft; 
 
   return root; 
