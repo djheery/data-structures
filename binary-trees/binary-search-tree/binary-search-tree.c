@@ -400,6 +400,7 @@ Node* invert_tree_helper(Node* root) {
  * The wrapper function for searching for a given node in the tree 
  *
  * @returns: A boolean value depending on whether the node was found 
+ * something
  */
 
 Node* search(BST* tree, int node_data) {
