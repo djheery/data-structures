@@ -24,9 +24,26 @@ to stop the tree degerating into a linear structure and preserving the average O
 
 The implementation of red black tree is a fair amount more complex than a normal BST (discounting search as it is the same) 
 
+
+
 ## Applications
+
+1. Most of the self-balancing BST library functions in languages like Java (java.util.TreeMap & java.util.TreeSet) an implementation of a red Black Trees
+2. They are used to implement CPU scheduling in Linux (Perhaps I could build something like this) 
+3. Use in the K-Mean clustering algorithm for Reducing the Time Complexity 
+4. MySQL uses RBTs for indexing on tables 
+5. RBTs are used in graph algorithms like Dijkstras and Prims Min Spanning Tree 
 
 ## Advantages 
 
+1. A guarneteed time complexity of O(log n) in basic operations - Insertions, Deletions and Searching 
+2. They are Self Balancing which helps preserve the O(log n) time complexity #
+
 ## Disadvantages 
+
+1. RBTs require a little bit more storage for each node, thus Memory usage is larger 
+2. The complexity of the implementation can be a turn off 
+3. They may not be the best choice for usecases where Insertions and Deletions are not frequent (for this maybe an AVL tree is better) 
+
+
 
