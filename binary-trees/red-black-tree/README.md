@@ -34,7 +34,14 @@ When inserting into a RBT there are two balancing tools used after the initial i
 ### Recoloring 
 
 Recolring is fairly self-explanitory, Relcoloring is the changing of a nodes color i.e. if a node is red 
-change it to balck
+change it to black. The Color of a NULL node is always black. 
+
+Recoloring is always tried before anything elses. Then if that does not work we go to rotation.
+
+The algorithm has two main cases depending on the colour of the uncle. 
+
+- If the unlce is Red we do a recolour. 
+- If the Uncle is black we do a rotation and/or Recolouring
 
 
 
