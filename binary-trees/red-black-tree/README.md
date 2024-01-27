@@ -24,6 +24,18 @@ to stop the tree degerating into a linear structure and preserving the average O
 
 The implementation of red black tree is a fair amount more complex than a normal BST (discounting search as it is the same) 
 
+## Insertion 
+
+When inserting into a RBT there are two balancing tools used after the initial insertion: 
+
+1. Recoloring
+2. Rotation 
+
+### Recoloring 
+
+Recolring is fairly self-explanitory, Relcoloring is the changing of a nodes color i.e. if a node is red 
+change it to balck
+
 
 
 ## Applications
