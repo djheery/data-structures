@@ -38,6 +38,14 @@ change it to black. The Color of a NULL node is always black.
 
 Recoloring is always tried before anything elses. Then if that does not work we go to rotation.
 
+### Rotation 
+
+A rotation is an operation on the Tree that changes the structure of the tree [without interfering with the overall ordering of nodes in the tree](https://en.wikipedia.org/wiki/Tree_rotation)
+
+In a tree rotation one node is moved up, and one node is moved down in the tree.
+
+### The Insertion Algorithm (Conceptual)
+
 The algorithm has two main cases depending on the colour of the uncle. 
 
 - If the unlce is Red we do a recolour. 
