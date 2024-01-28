@@ -13,14 +13,7 @@ to stop the tree degerating into a linear structure and preserving the average O
 
 ## Rules and properties of a Red-Black Tree
 
-1. Every node has a color (Red or Black) 
-2. The root is always black 
-3. Red nodes cannot be proceeded or preceeded by another red node 
-4. Every path from a node to any of its leaf nodes has the same number of black nodes
-5. Every Leaf is colored black 
-6. The black height is the number of black does on a path from root to leaf
-
-## Methods 
+1. Every node has a color (Red or Black) 2. The root is always black 3. Red nodes cannot be proceeded or preceeded by another red node 4. Every path from a node to any of its leaf nodes has the same number of black nodes 5. Every Leaf is colored black 6. The black height is the number of black does on a path from root to leaf ## Methods 
 
 The implementation of red black tree is a fair amount more complex than a normal BST (discounting search as it is the same) 
 
@@ -43,6 +36,45 @@ Recoloring is always tried before anything elses. Then if that does not work we 
 A rotation is an operation on the Tree that changes the structure of the tree [without interfering with the overall ordering of nodes in the tree](https://en.wikipedia.org/wiki/Tree_rotation)
 
 In a tree rotation one node is moved up, and one node is moved down in the tree.
+
+#### Rules for Rotation 
+
+Rotation should occur when there is a RED-RED conflict in the tree 
+
+There are two main pathways when this is true 
+
+1. If the current node is the right child of the parent 
+2. If the current node is the left child of the parent 
+
+##### Pathway 1. 
+
+- If the current nodes parent has a left child that is NULL or the parents left child is BLACK then: 
+    - if the current nodes left child is not NULL AND its color is RED then: 
+        - A Right-Left rotation should be perfomed 
+    - If the current nodes right child is not NULL AND the color of the right child is RED 
+        - A Left-Left rotation should be perfomed
+- Otherwise (ELSE)  
+    - You should let the parents left child to BLACK 
+    - You should set the current nodes color to BLACK 
+    - If the current nodes parent is not the ROOT THEN: 
+        - Set the parents color to red 
+
+##### Pathway 2 
+
+- If the current nodes parent has a right child that is NULL or the parents right child is BLACK 
+    - If the current nodes left child is not NULL and its color is REDthen: 
+        - A Right-Right rotation should be performed 
+    - If the current nodes right child is not NULL and the color of said node is RED then: 
+        - A LEFT RIGHT rotation should be performed 
+- Otherwise 
+    - Set the parents right child to BLACK 
+    - Set the current node to BLACK 
+    - If the current nodes parent is not the trees ROOT then: 
+        - Set the current nodes parent to RED 
+
+Then set the flag for a RED-RED conflict to false 
+
+Finally return the current node 
 
 ### The Insertion Algorithm (Conceptual)
 
