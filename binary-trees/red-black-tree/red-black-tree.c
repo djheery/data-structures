@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+#define LEFT 'L' 
+#define RIGHT 'R' 
 #define RED 1
 #define BLACK 0
 #define QUEUE_CAPACITY 30 
@@ -13,13 +15,16 @@
 #define DEBUG_PRINT(fmt, ...)
 #endif
 
-typedef struct {
+typedef struct Node Node; 
+
+typedef struct Node {
   int data; 
-  void* parent; 
-  void* left; 
-  void* right; 
+  Node* parent; 
+  Node* left; 
+  Node* right; 
   int color; 
-} Node; 
+} Node;  
+
 
 typedef struct {
   Node* head;
@@ -55,9 +60,10 @@ void free_tree(RedBlackTree* tree);
 // Util Methods 
 
 void insert(RedBlackTree* tree, int node_data); 
-Node* insert_helper(RedBlackTree tree, Node* root, int node_data); 
-Node* insert_rotation_helper(RedBlackTree* tree, Node* root); 
-Node* insert_confilict_helper(RedBlackTree* tree, Node* root); 
+Node* insert_helper(RedBlackTree* tree, Node* root, int node_data); 
+Node* rotation_helper(RedBlackTree* tree, Node* root); 
+bool set_conflict_flag(RedBlackTree* tree, Node* current_node, char direction); 
+void confilict_helper(RedBlackTree* tree, Node* root); 
 
 void delete(Node* root, int node_to_delete); 
 
@@ -68,11 +74,6 @@ int size(Node* root, int current_sum);
 
 Node* rotate_left(Node* root); 
 Node* rotate_right(Node* root); 
-
-void ll_rotation(Node* root); 
-void lr_rotation(Node* root); 
-void rr_rotation(Node* root); 
-void rl_rotation(Node* root); 
 
 int height(Node* root); 
 int get_max(int a, int b);
@@ -194,6 +195,81 @@ void free_tree(RedBlackTree* tree) {
   tree->rr = false; 
   tree->ll = false; 
   tree->lr = false; 
+
+}
+
+void insert(RedBlackTree* tree, int node_data) {
+ 
+}
+
+Node* insert_helper(RedBlackTree* tree, Node* root, int node_data) {
+  bool red_red_conflict = false;  
+  
+  if(root == NULL) return initialize_node(node_data); 
+  
+  if(node_data < root->data) {
+    root->left = insert_helper(tree, root->left, node_data);  
+    root->left->parent = root; 
+    red_red_conflict = set_conflict_flag(tree, root, LEFT); 
+  } else {
+    root->right = insert_helper(tree, root->right, node_data); 
+    root->right->parent = root; 
+    red_red_conflict = set_conflict_flag(tree, root, RIGHT); 
+  }
+
+  root = rotation_helper(tree, root); 
+
+  if(red_red_conflict) {
+    confilict_helper(tree, root); 
+    red_red_conflict = false;  
+  }
+
+  
+  return root; 
+}
+
+bool set_conflict_flag(RedBlackTree* tree, Node* current_node, char direction) {
+  Node* node_to_check = direction == LEFT ? current_node->left : current_node->right;  
+
+  if(current_node == tree->head) return false; 
+
+  return current_node->color == RED && node_to_check->color == RED; 
+}
+
+Node* rotation_helper(RedBlackTree* tree, Node* root) {
+
+  if(tree->ll) {
+
+    tree->ll = false; 
+  } else if (tree->rr) {
+
+    tree->rr = false;
+  } else if (tree->rl) {
+
+    tree->rl = false; 
+  } else if (tree->lr) {
+
+    tree->lr = false; 
+  }
+
+  return root; 
+}
+
+Node* rotate_left(Node* root) {
+  return root;  
+}
+
+Node* rotate_right(Node* root) {
+  return root;  
+}
+
+void confilict_helper(RedBlackTree* tree, Node* root) {
+  bool current_is_right_child = root->parent->right == root;  
+
+
+
+  // We are dealing with the left child 
+
 
 }
 
