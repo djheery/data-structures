@@ -263,49 +263,58 @@ Node* rotate_right(Node* root) {
   return root;  
 }
 
+/** 
+ * A helper for setting the rotation flags that need to be performed when there is a RED_RED conflict in the tree 
+ *
+ * This code is overly verbose but I am unsure how I can sort this I have tried to invert the outer nested if statement 
+ * which has helped a little but there is still duplication
+ *
+ * @param: tree -> the tree currently performing the insertion or deletion on 
+ * @param: root -> the current node 
+ *
+ */
+
 void confilict_helper(RedBlackTree* tree, Node* root) {
   bool current_is_right_child = root->parent->right == root;  
 
   if(current_is_right_child) {
+    bool parent_left_is_black = root->parent->left == NULL || root->parent->left->color == BLACK;
 
-    if(root->parent->left != NULL || root->parent->left->color == BLACK) {
-
-        if(root->left != NULL  && root->left->color == RED) {
-          tree->rl = true;  
-        } else if(root->right != NULL && root->right->color == RED) {
-          tree->ll = true; 
-        }
-
-    } else {
-
+    if(!parent_left_is_black) {
       root->parent->left->color = BLACK; 
       root->color = BLACK; 
 
       if(root->parent == tree->root) root->parent->color = RED; 
 
+      return; 
+    } 
+
+    if(root->left != NULL && root->left->color == RED) {
+      tree->rl = true;  
+    } else if(root->right != NULL && root->right->color == RED) {
+      tree->ll = true; 
     }
-    
+
     return;  
   }
 
   // We are dealing with the left child 
+  bool parent_right_is_black = root->parent->right != NULL || root->right->color == BLACK; 
 
-  if(root->parent->right != NULL || root->right->color == BLACK) {
-
-    if(root->left != NULL && root->left->color == RED) {
-      tree->rr = true; 
-    } else if(root->right != NULL && root->right->color == RED) {
-      tree->lr = true; 
-    } 
-
-  } else {
-
+  if(!parent_right_is_black) {
     root->parent->right->color = BLACK;
     root->color = BLACK; 
 
     if(root->parent != tree->root) root->parent->color = RED; 
-  }
 
+    return; 
+  } 
+
+  if(root->left != NULL && root->left->color == RED) {
+    tree->rr = true; 
+  } else if(root->right != NULL && root->right->color == RED) {
+    tree->lr = true; 
+  } 
 
 }
 
