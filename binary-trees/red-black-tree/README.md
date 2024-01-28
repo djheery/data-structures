@@ -51,6 +51,20 @@ The algorithm has two main cases depending on the colour of the uncle.
 - If the unlce is Red we do a recolour. 
 - If the Uncle is black we do a rotation and/or Recolouring
 
+When Inserting into a Red Black Tree you first use the standard insertion algorithm in a BST and initialize the node to RED. 
+
+If the node is the root node of the tree then you should change the color to BLACK. 
+
+If the node is not the root then you will start the balancing algorithm 
+
+- If the color of the parent node is BLACK then do not change the colour 
+- If the color of the parent node is RED then you need to: 
+    - Check  the colour of the nodes uncle 
+        - If the nodes uncle is RED 
+            - Change the color of the uncle and parent to black & change the grandfather to red 
+                - Then repeat the relcoloring for the grandparent 
+                - However if the grandfather is the root, do not change the grandfather to a red color
+- If the color of the unlce is red then we begin to check the rotation case 
 
 
 ## Applications
