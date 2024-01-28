@@ -56,6 +56,8 @@ void free_tree(RedBlackTree* tree);
 
 void insert(RedBlackTree* tree, int node_data); 
 Node* insert_helper(RedBlackTree tree, Node* root, int node_data); 
+Node* insert_rotation_helper(RedBlackTree* tree, Node* root); 
+Node* insert_confilict_helper(RedBlackTree* tree, Node* root); 
 
 void delete(Node* root, int node_to_delete); 
 
@@ -63,6 +65,9 @@ bool search(RedBlackTree* tree, int node_data);
 bool search_helper(Node* root, int node_data); 
 
 int size(Node* root, int current_sum); 
+
+Node* rotate_left(Node* root); 
+Node* rotate_right(Node* root); 
 
 void ll_rotation(Node* root); 
 void lr_rotation(Node* root); 
@@ -72,7 +77,8 @@ void rl_rotation(Node* root);
 int height(Node* root); 
 int get_max(int a, int b);
 
-Node* invert_tree(Node* root); 
+void invert_tree(RedBlackTree* tree); 
+Node* invert_tree_helper(Node* root); 
 
 /**
  * =======================================
@@ -231,11 +237,39 @@ bool search_helper(Node* root, int data_to_search) {
   return found; 
 }
 
-Node* invert_tree(Node* root) {
+RedBlackTree clone(RedBlackTree* tree) {
+  RedBlackTree test_tree = initialize_tree();   
+
+  CircularQueue q = initialize_queue(); 
+  enqueue(&q, tree->head); 
+
+  while(q.size != 0) {
+    Node* current = dequeue(&q);
+
+    insert(&test_tree, current->data);
+
+    if(current->left != NULL) enqueue(&q, current->left); 
+    if(current->right != NULL) enqueue(&q, current->right); 
+  }
+
+  return test_tree; 
+}
+
+void invert_tree(RedBlackTree* tree) {
+  RedBlackTree test_tree = clone(tree); 
+  invert_tree_helper(test_tree.head); 
+
+  // TODO: Print the inverted Tree
+  
+  free_tree(&test_tree); 
+  
+}
+
+Node* invert_tree_helper(Node* root) {
   if(root == NULL) return NULL; 
 
-  Node* prevLeft = invert_tree(root->left); 
-  root->left = invert_tree(root->right); 
+  Node* prevLeft = invert_tree_helper(root->left); 
+  root->left = invert_tree_helper(root->right); 
   root->right = prevLeft; 
 
   return root; 
