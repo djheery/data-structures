@@ -237,6 +237,15 @@ bool search_helper(Node* root, int data_to_search) {
   return found; 
 }
 
+/**
+ * A method to clone the RedBlackTree 
+ *
+ * Only really used for the purpose of inversion and will not be available to a user 
+ *
+ * @param: tree -> The tree to clone 
+ * @returns: A clone of the RedBlackTree passed as a parameter
+ */
+
 RedBlackTree clone(RedBlackTree* tree) {
   RedBlackTree test_tree = initialize_tree();   
 
@@ -255,6 +264,18 @@ RedBlackTree clone(RedBlackTree* tree) {
   return test_tree; 
 }
 
+/** 
+ * Invert the current red black tree 
+ *
+ * It performs this operation on a clone of the tree so that the integrity of the original tree is kept 
+ * This is so that the original tree can continue to be used after a dummy inversion 
+ * If I did not do this the implementation would become a lot more complex with flags for the direction of 
+ * the tree and duplicate insertions, deletion and searching methods depending on the current inversion 
+ * status of the tree 
+ *
+ * @param: tree -> the tree to clone and invert 
+ */
+
 void invert_tree(RedBlackTree* tree) {
   RedBlackTree test_tree = clone(tree); 
   invert_tree_helper(test_tree.head); 
@@ -264,6 +285,13 @@ void invert_tree(RedBlackTree* tree) {
   free_tree(&test_tree); 
   
 }
+
+/**
+ * A recursive tree inversion method 
+ *
+ * @param: root -> the current node to invert the subtree of 
+ * @returns: It will eventually return the root of the tree 
+ */ 
 
 Node* invert_tree_helper(Node* root) {
   if(root == NULL) return NULL; 
