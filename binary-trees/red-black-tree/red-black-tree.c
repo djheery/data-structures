@@ -27,7 +27,7 @@ typedef struct Node {
 
 
 typedef struct {
-  Node* head;
+  Node* root;
   int size; 
   bool ll; 
   bool rr; 
@@ -128,7 +128,7 @@ int main() {
 RedBlackTree initialize_tree() {
   RedBlackTree tree; 
 
-  tree.head = NULL; 
+  tree.root = NULL; 
   tree.size = 0; 
   tree.rl = false; 
   tree.rr = false; 
@@ -170,12 +170,12 @@ Node* initialize_node(int node_data) {
  */
 
 void free_tree(RedBlackTree* tree) {
-  if(tree == NULL || tree->head == NULL) {
+  if(tree == NULL || tree->root == NULL) {
     return; 
   }
 
   CircularQueue queue = initialize_queue(); 
-  enqueue(&queue, tree->head); 
+  enqueue(&queue, tree->root); 
 
   while(queue.size != 0) {
     Node* current = dequeue(&queue);  
@@ -189,7 +189,7 @@ void free_tree(RedBlackTree* tree) {
 
   DEBUG_PRINT("\nList Feed Successfully\n\n", NULL); 
 
-  tree->head = NULL; 
+  tree->root = NULL; 
   tree->size = 0; 
   tree->rl = false; 
   tree->rr = false; 
@@ -231,7 +231,7 @@ Node* insert_helper(RedBlackTree* tree, Node* root, int node_data) {
 bool set_conflict_flag(RedBlackTree* tree, Node* current_node, char direction) {
   Node* node_to_check = direction == LEFT ? current_node->left : current_node->right;  
 
-  if(current_node == tree->head) return false; 
+  if(current_node == tree->root) return false; 
 
   return current_node->color == RED && node_to_check->color == RED; 
 }
@@ -266,9 +266,45 @@ Node* rotate_right(Node* root) {
 void confilict_helper(RedBlackTree* tree, Node* root) {
   bool current_is_right_child = root->parent->right == root;  
 
+  if(current_is_right_child) {
 
+    if(root->parent->left != NULL || root->parent->left->color == BLACK) {
+
+        if(root->left != NULL  && root->left->color == RED) {
+          tree->rl = true;  
+        } else if(root->right != NULL && root->right->color == RED) {
+          tree->ll = true; 
+        }
+
+    } else {
+
+      root->parent->left->color = BLACK; 
+      root->color = BLACK; 
+
+      if(root->parent == tree->root) root->parent->color = RED; 
+
+    }
+    
+    return;  
+  }
 
   // We are dealing with the left child 
+
+  if(root->parent->right != NULL || root->right->color == BLACK) {
+
+    if(root->left != NULL && root->left->color == RED) {
+      tree->rr = true; 
+    } else if(root->right != NULL && root->right->color == RED) {
+      tree->lr = true; 
+    } 
+
+  } else {
+
+    root->parent->right->color = BLACK;
+    root->color = BLACK; 
+
+    if(root->parent != tree->root) root->parent->color = RED; 
+  }
 
 
 }
@@ -285,11 +321,11 @@ void confilict_helper(RedBlackTree* tree, Node* root) {
 bool search(RedBlackTree* tree, int data_to_search) {
   
   // Not really necessary but whatever
-  if(tree->head == NULL || tree->size == 0) return false;  
-  if(tree->head->data == data_to_search) return true; 
-  if(tree->head->data != data_to_search && tree->size == 1) return false; 
+  if(tree->root == NULL || tree->size == 0) return false;  
+  if(tree->root->data == data_to_search) return true; 
+  if(tree->root->data != data_to_search && tree->size == 1) return false; 
 
-  return search_helper(tree->head, data_to_search); 
+  return search_helper(tree->root, data_to_search); 
 }
 
 /**
@@ -326,7 +362,7 @@ RedBlackTree clone(RedBlackTree* tree) {
   RedBlackTree test_tree = initialize_tree();   
 
   CircularQueue q = initialize_queue(); 
-  enqueue(&q, tree->head); 
+  enqueue(&q, tree->root); 
 
   while(q.size != 0) {
     Node* current = dequeue(&q);
@@ -354,7 +390,7 @@ RedBlackTree clone(RedBlackTree* tree) {
 
 void invert_tree(RedBlackTree* tree) {
   RedBlackTree test_tree = clone(tree); 
-  invert_tree_helper(test_tree.head); 
+  invert_tree_helper(test_tree.root); 
 
   // TODO: Print the inverted Tree
   
