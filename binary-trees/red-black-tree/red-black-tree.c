@@ -198,9 +198,31 @@ void free_tree(RedBlackTree* tree) {
 
 }
 
+/** 
+ * The wrapper method for insertion into the binary tree
+ *
+ * @param: tree -> The tree to bbe inserted into 
+ * @param: node_data -> the data of the node to be inserted
+ */
+
 void insert(RedBlackTree* tree, int node_data) {
  
 }
+
+/** 
+ * A recursive method for insertion into the RedBlackTree
+ * This method is complex so I have bbroken the logic into three main helper funcitons they are: 
+ *
+ * set_conflict_flag(RBT* tree, Node* root, char direction)  
+ * rotation_helper(RBT* tree, Node* root) 
+ * conflict_helper(RBT* tree, Node* root)
+ *
+ * @param: tree -> the tree to insert into 
+ * @param: root -> the current node 
+ * @param: node_data -> the data for the new node
+ *
+ * @returns: It will eventually return the root 
+ */
 
 Node* insert_helper(RedBlackTree* tree, Node* root, int node_data) {
   bool red_red_conflict = false;  
@@ -228,7 +250,22 @@ Node* insert_helper(RedBlackTree* tree, Node* root, int node_data) {
   return root; 
 }
 
+/** 
+ * Set the conflict lag to check if there is a RED->RED conflict in the tree after insertion
+ *
+ * @param: tree -> The tree 
+ * @param: current_node -> the current_node
+ * @param: direciton -> a Char representation of the direction left or right 
+ *
+ * @returns: A boolean value indicating whether there is a RED->RED conflict or not
+ */
+
 bool set_conflict_flag(RedBlackTree* tree, Node* current_node, char direction) {
+  if(direction != LEFT && direction != RIGHT) {
+    DEBUG_PRINT("You've messed up you bozo -> the direction must be either 'L' or 'R'\n\n", NULL);  
+    exit(EXIT_FAILURE); 
+  }
+
   Node* node_to_check = direction == LEFT ? current_node->left : current_node->right;  
 
   if(current_node == tree->root) return false; 
