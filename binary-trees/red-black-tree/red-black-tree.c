@@ -262,8 +262,8 @@ Node* insert_helper(RedBlackTree* tree, Node* root, int node_data) {
 
 bool set_conflict_flag(RedBlackTree* tree, Node* current_node, char direction) {
   if(direction != LEFT && direction != RIGHT) {
-    DEBUG_PRINT("You've messed up you bozo -> the direction must be either 'L' or 'R'\n\n", NULL);  
-    exit(EXIT_FAILURE); 
+    DEBUG_PRINT("You've messed up you bozo -> the direction must be either 'L' or 'R'. Your Tree may be messed up now\n\n", NULL);  
+    return false; 
   }
 
   Node* node_to_check = direction == LEFT ? current_node->left : current_node->right;  
@@ -347,9 +347,9 @@ void confilict_helper(RedBlackTree* tree, Node* root) {
   bool current_is_right_child = root->parent->right == root;  
 
   if(current_is_right_child) {
-    bool parent_left_is_black = root->parent->left == NULL || root->parent->left->color == BLACK;
+    bool uncle_left_is_black = root->parent->left == NULL || root->parent->left->color == BLACK;
 
-    if(!parent_left_is_black) {
+    if(!uncle_left_is_black) {
       root->parent->left->color = BLACK; 
       root->color = BLACK; 
 
@@ -368,9 +368,9 @@ void confilict_helper(RedBlackTree* tree, Node* root) {
   }
 
   // We are dealing with the left child 
-  bool parent_right_is_black = root->parent->right != NULL || root->right->color == BLACK; 
+  bool uncle_right_is_black = root->parent->right != NULL || root->right->color == BLACK; 
 
-  if(!parent_right_is_black) {
+  if(!uncle_right_is_black) {
     root->parent->right->color = BLACK;
     root->color = BLACK; 
 
@@ -491,6 +491,88 @@ Node* invert_tree_helper(Node* root) {
   root->right = prevLeft; 
 
   return root; 
+}
+
+/** 
+ * Inorder Traversal Print method 
+ *
+ * @param: root -> The current node
+ */
+
+void print_tree_inorder(Node* root) {
+  if(root == NULL) return; 
+
+  print_tree_inorder(root->left); 
+  printf("%d ", root->data); 
+  print_tree_inorder(root->right); 
+  
+}
+
+/** 
+ * PostOrder Traversal Print method 
+ *
+ * @param: root -> The current node
+ */
+
+void print_tree_postorder(Node* root) {
+  if(root == NULL) return; 
+
+  print_tree_postorder(root->left); 
+  print_tree_postorder(root->right); 
+  printf("%d ", root->data);
+}
+
+/** 
+ * PreOrder Traversal Print method 
+ *
+ * @param: root -> The current node
+ */
+
+void print_tree_preorder(Node* root) {
+  if(root == NULL) return; 
+
+  printf("%d ", root->data); 
+  print_tree_preorder(root->left); 
+  print_tree_preorder(root->right);
+}
+
+
+/**
+ * =============================
+ * || Program Tester Methods  ||
+ * =============================
+ */
+
+void run_tests() {
+  
+}
+
+void populate_tree(RedBlackTree* test_tree) {
+  
+}
+
+void test_insertion(RedBlackTree* test_tree) {
+  
+}
+
+void test_deletion(RedBlackTree* test_tree) {
+  
+}
+
+void test_search(RedBlackTree* test_tree) {
+  
+}
+
+void test_inversion(RedBlackTree* test_tree) {
+  
+}
+
+void test_print_methods(RedBlackTree* test_tree) {
+  
+}
+
+void test_validate_tree(RedBlackTree* test_tree) {
+  
 }
 
 /**
