@@ -294,17 +294,19 @@ Node* rotation_helper(RedBlackTree* tree, Node* root) {
 
 Node* rotate_left(Node* root) {
   Node* x = root->parent; 
-  Node* y = root->right; 
+  Node* y = root->left; 
+  x->right = y; 
+  x->parent = root; 
   root->left = x;
-  x->parent = y; 
   return root;  
 }
 
 Node* rotate_right(Node* root) {
   Node* x = root->parent; 
-  Node* y = root->left; 
-  root->right = x; 
+  Node* y = root->right; 
+  x->left = y; 
   x->parent = root; 
+  root->right = x; 
   return root;  
 }
 

@@ -95,13 +95,53 @@ This leaves 4 types of rotation that can be performed:
 
 The sub-type rotation simply combine both a Left and a Right rotation 
 
-#### Left Rotation Algorithm 
+#### Left Rotation  
 
-#### Right Rotation Algorithm
+A left rotation is done when the current node is in the right subtree if the uncle is black (or NULL by proxy)  
 
-#### Left-Right Rotation Algorithm 
+The left rotation algorithm goes something like this: 
 
-#### Right-Left Rotation Algorithm
+```
+left_rotate(Node root) { 
+    Node x = root.parent; 
+    Node y = root.left; 
+    x.right = y; 
+    x.parent = root; 
+    root.left = x; 
+}
+```
+
+tax the following tree for example: 
+
+```
+        20 
+       /  \
+      10   45
+     /  \   \ 
+     5  15  59
+        / \ 
+       12 19
+```
+
+Lets say we want to perform a rotate where the current node is 15
+
+After rotation the tree would end up somethign like this: 
+
+```
+        20 
+       /  \
+      15   45
+     /  \   \ 
+    10  19  59
+    / \
+   5  12
+```
+
+#### Right Rotation 
+
+#### Left-Right Rotation  
+
+#### Right-Left Rotation 
 
 ### The Insertion Algorithm (Conceptual)
 
