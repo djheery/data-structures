@@ -102,16 +102,20 @@ A left rotation is done when the current node is in the right subtree if the unc
 The left rotation algorithm goes something like this: 
 
 ```
-left_rotate(Node root) { 
-    Node x = root.parent; 
-    Node y = root.left; 
-    x.right = y; 
-    x.parent = root; 
-    root.left = x; 
+Node* left_rotate(Node root) { 
+    Node x = root.right; // 15 
+    Node y = x.left; // 12 
+    x.left = root;  // 12 -> 10 
+    root.right = y; // 10 -> 12 
+    root.parent = x; // 15
+
+    if(y != NULL) y.parent = root; 
+
+    return x; // X is in the place that the root used to be 
 }
 ```
 
-tax the following tree for example: 
+Take the following tree for example: 
 
 ```
         20 
@@ -123,25 +127,26 @@ tax the following tree for example:
        12 19
 ```
 
-Lets say we want to perform a rotate where the current node is 15
+Lets say we want to perform a rotate where the current node is 10
 
 After rotation the tree would end up somethign like this: 
 
 ```
-        20 
-       /  \
-      15   45
-     /  \   \ 
-    10  19  59
-    / \
-   5  12
+    
+        20              20
+       /  \            /  \
+      10   45         15  45 
+     /  \   \  ====> /  \   \
+     5  15  59      10  19  59
+        / \        /  \
+       12 19      5    12
 ```
 
 #### Right Rotation 
 
-#### Left-Right Rotation  
+#### Left Rotation & Recolor 
 
-#### Right-Left Rotation 
+#### Right Rotation & Recolor 
 
 ### The Insertion Algorithm (Conceptual)
 

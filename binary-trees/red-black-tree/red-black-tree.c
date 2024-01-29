@@ -284,10 +284,14 @@ bool set_conflict_flag(RedBlackTree* tree, Node* current_node, char direction) {
 Node* rotation_helper(RedBlackTree* tree, Node* root) {
 
   if(tree->ll) {
-
+    root = rotate_left(root); 
+    root->color = BLACK; 
+    root->left->color = RED; 
     tree->ll = false; 
   } else if (tree->rr) {
-
+    root = rotate_right(root); 
+    root->color = BLACK; 
+    root->right->color = RED; 
     tree->rr = false;
   } else if (tree->rl) {
 
@@ -308,12 +312,15 @@ Node* rotation_helper(RedBlackTree* tree, Node* root) {
  */ 
 
 Node* rotate_left(Node* root) {
-  Node* x = root->parent; 
-  Node* y = root->left; 
-  x->right = y; 
-  x->parent = root; 
-  root->left = x;
-  return root;  
+  Node* x = root->right; 
+  Node* y = x->left; 
+  x->left = root;  
+  root->right = y;
+  root->parent = x; 
+
+  if(y != NULL) y->parent = x; 
+
+  return x;  
 }
 
 /**
@@ -324,12 +331,15 @@ Node* rotate_left(Node* root) {
  */
 
 Node* rotate_right(Node* root) {
-  Node* x = root->parent; 
-  Node* y = root->right; 
-  x->left = y; 
-  x->parent = root; 
-  root->right = x; 
-  return root;  
+  Node* x = root->left; 
+  Node* y = x->right; 
+  x->right = root; 
+  root->left = y; 
+  root->parent = x; 
+
+  if(y != NULL) y->parent = root; 
+
+  return x;  
 }
 
 /** 
@@ -367,7 +377,8 @@ void confilict_helper(RedBlackTree* tree, Node* root) {
     return;  
   }
 
-  // We are dealing with the left child 
+  //  NOTE: We are dealing with the left child 
+  
   bool uncle_right_is_black = root->parent->right != NULL || root->right->color == BLACK; 
 
   if(!uncle_right_is_black) {
