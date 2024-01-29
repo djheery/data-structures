@@ -37,7 +37,7 @@ A rotation is an operation on the Tree that changes the structure of the tree [w
 
 In a tree rotation one node is moved up, and one node is moved down in the tree.
 
-#### Rules for Rotation 
+#### Rules for Rotation when a Rotation is Necessary in RBT insertion
 
 Rotation should occur when there is a RED-RED conflict in the tree 
 
@@ -72,9 +72,36 @@ There are two main pathways when this is true
     - If the current nodes parent is not the trees ROOT then: 
         - Set the current nodes parent to RED 
 
-Then set the flag for a RED-RED conflict to false 
+#### The Different Types of Rotation
 
-Finally return the current node 
+From doing some reading there are 2 Major types of rotation which can be combined to total 4 types of rotation that can be performed. 
+
+The major types are: 
+
+1. Left Rotation 
+2. Right Rotation
+
+The sub types are: 
+
+1. Left-Right rotation
+2. Right-Left rotation 
+
+This leaves 4 types of rotation that can be performed: 
+
+1. Left Rotation 
+2. Right Rotation 
+3. Left-Right Rotation 
+4. Right-Left Rotation 
+
+The sub-type rotation simply combine both a Left and a Right rotation 
+
+#### Left Rotation Algorithm 
+
+#### Right Rotation Algorithm
+
+#### Left-Right Rotation Algorithm 
+
+#### Right-Left Rotation Algorithm
 
 ### The Insertion Algorithm (Conceptual)
 
