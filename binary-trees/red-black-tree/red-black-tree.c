@@ -273,6 +273,14 @@ bool set_conflict_flag(RedBlackTree* tree, Node* current_node, char direction) {
   return current_node->color == RED && node_to_check->color == RED; 
 }
 
+/**
+ * A helper method for rotating the tree where necessary
+ *
+ * @param: tree -> The tree to perform the rotations on 
+ * @param: root -> The current node and base for rotations
+ * @returns: .....
+ */
+
 Node* rotation_helper(RedBlackTree* tree, Node* root) {
 
   if(tree->ll) {
@@ -292,6 +300,13 @@ Node* rotation_helper(RedBlackTree* tree, Node* root) {
   return root; 
 }
 
+/**
+ * The implementation of a Left Rotation
+ *
+ * @param: root -> The base node to perform the rotation around 
+ * @returns: The new node in place after rotation
+ */ 
+
 Node* rotate_left(Node* root) {
   Node* x = root->parent; 
   Node* y = root->left; 
@@ -300,6 +315,13 @@ Node* rotate_left(Node* root) {
   root->left = x;
   return root;  
 }
+
+/**
+ * The implementation of the Right Rotation
+ *
+ * @param: root -> The base node to perform the rotation around 
+ * @returns: The new node in place after rotation
+ */
 
 Node* rotate_right(Node* root) {
   Node* x = root->parent; 
