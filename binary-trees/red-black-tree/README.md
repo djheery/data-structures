@@ -2,7 +2,8 @@
 
 This information consists of notes taken from the following sources: 
 
-1. Geeks for Geeks: https://www.geeksforgeeks.org/introduction-to-red-black-tree/
+1. Geeks for Geeks: 
+    - https//www.geeksforgeeks.org/introduction-to-red-black-tree/
 2. Rob Edwards (YT): 
     - https://www.youtube.com/watch?v=nMExd4DthdA
     - https://www.youtube.com/watch?v=v6eDztNiJwo&t=302s
