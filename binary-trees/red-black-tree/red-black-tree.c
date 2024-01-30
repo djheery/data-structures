@@ -63,7 +63,7 @@ void insert(RedBlackTree* tree, int node_data);
 Node* insert_helper(RedBlackTree* tree, Node* root, int node_data); 
 Node* rotation_helper(RedBlackTree* tree, Node* root); 
 bool set_conflict_flag(RedBlackTree* tree, Node* current_node, char direction); 
-void confilict_helper(RedBlackTree* tree, Node* root); 
+void conflict_helper(RedBlackTree* tree, Node* root); 
 
 void delete(Node* root, int node_to_delete); 
 
@@ -241,8 +241,6 @@ void insert(RedBlackTree* tree, int node_data) {
 Node* insert_helper(RedBlackTree* tree, Node* root, int node_data) {
   bool red_red_conflict = false;  
   
-  if(root == NULL) return initialize_node(node_data); 
-  
   if(node_data < root->data) {
     root->left = insert_helper(tree, root->left, node_data);  
     root->left->parent = root; 
@@ -258,7 +256,7 @@ Node* insert_helper(RedBlackTree* tree, Node* root, int node_data) {
 
   if(red_red_conflict) {
     // DEBUG_PRINT("%d->%d->%d ", root->parent->data, root->data, root->right->data);
-    confilict_helper(tree, root); 
+    conflict_helper(tree, root); 
     red_red_conflict = false;  
   }
 
@@ -378,7 +376,7 @@ Node* rotate_right(Node* root) {
  *
  */
 
-void confilict_helper(RedBlackTree* tree, Node* root) {
+void conflict_helper(RedBlackTree* tree, Node* root) {
   bool current_is_right_child = root->parent->right == root;  
 
   if(current_is_right_child) {
