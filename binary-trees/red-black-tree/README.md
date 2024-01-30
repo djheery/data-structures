@@ -102,14 +102,14 @@ A left rotation is done when the current node is in the right subtree if the unc
 The left rotation algorithm goes something like this: 
 
 ```
-Node* left_rotate(Node root) { 
-    Node x = root.right; // 15 
-    Node y = x.left; // 12 
-    x.left = root;  // 12 -> 10 
-    root.right = y; // 10 -> 12 
-    root.parent = x; // 15
+Node* left_rotate(Node* root) { 
+    Node x = root->right; // 15 
+    Node y = x->left; // 12 
+    x->left = root;  // 12 -> 10 
+    root->right = y; // 10 -> 12 
+    root->parent = x; // 15
 
-    if(y != NULL) y.parent = root; 
+    if(y != NULL) y->parent = root; 
 
     return x; // X is in the place that the root used to be 
 }
@@ -143,6 +143,50 @@ After rotation the tree would end up somethign like this:
 ```
 
 #### Right Rotation 
+
+A right rotation is basically the opposite of a left Rotation
+
+The code for a right rotation look something like this: 
+
+```
+Node* right_rotate(Node* root) {
+    Node* x = root->left; 
+    Node* y = x->right; 
+    x->right = root; 
+    root->left = y; 
+    root->parent = x; 
+
+    if(y != NULL) y->parent = root; 
+
+    return x; 
+}
+```
+
+Again let's use an example for the right rotate: 
+
+```
+        20 
+       /  \
+      10   45
+     /  \   \ 
+     5  15  59
+    / \
+   3   9
+```
+
+Lets say we want to perform a rotation where the current node is 10 again: 
+
+```
+        20                    20
+       /  \                  /  \
+      10   45               5   45
+     /  \   \              / \    \
+     5  15  59   ====>    3  10   59
+    / \                      / \
+   3   9                    9  15
+```
+
+Whilst the trees structure may be slightly differnt it should be fairly clear that the LEFT & RIGHT rotation operatons are just the reverse of each other 
 
 #### Left Rotation & Recolor 
 
