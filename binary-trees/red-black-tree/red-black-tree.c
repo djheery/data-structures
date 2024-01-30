@@ -81,6 +81,14 @@ int get_max(int a, int b);
 void invert_tree(RedBlackTree* tree); 
 Node* invert_tree_helper(Node* root); 
 
+// Traversal methods 
+
+void print_tree_inorder(Node* root); 
+void print_tree_postorder(Node* root); 
+void print_tree_postorder(Node* root);
+
+char get_node_color(Node* root); 
+
 /**
  * =======================================
  * || Circular Queue Method definitions ||
@@ -102,6 +110,9 @@ void populate_tree(RedBlackTree* test_tree);
 void test_insertion(RedBlackTree* test_tree); 
 void test_deletion(RedBlackTree* test_tree); 
 void test_search(RedBlackTree* test_tree); 
+void test_inversion(RedBlackTree* test_tree); 
+void test_print_methods(RedBlackTree* test_tree);
+void test_validate_tree(RedBlackTree* test_tree);
 
 /**
  * ==========================
@@ -110,6 +121,7 @@ void test_search(RedBlackTree* test_tree);
  */ 
 
 int main() {
+  run_tests();
   return 0; 
 }
 
@@ -206,7 +218,8 @@ void free_tree(RedBlackTree* tree) {
  */
 
 void insert(RedBlackTree* tree, int node_data) {
- 
+  tree->root = insert_helper(tree, tree->root, node_data); 
+  tree->root->color = BLACK; 
 }
 
 /** 
@@ -262,7 +275,8 @@ Node* insert_helper(RedBlackTree* tree, Node* root, int node_data) {
 
 bool set_conflict_flag(RedBlackTree* tree, Node* current_node, char direction) {
   if(direction != LEFT && direction != RIGHT) {
-    DEBUG_PRINT("You've messed up you bozo -> the direction must be either 'L' or 'R'. Your Tree may be messed up now\n\n", NULL);  
+    DEBUG_PRINT("You've messed up you bozo \n", NULL);  
+    DEBUG_PRINT("the direction must be either 'L' or 'R'. Your Tree may be messed up now\n\n", NULL);
     return false; 
   }
 
@@ -489,7 +503,8 @@ void invert_tree(RedBlackTree* tree) {
   RedBlackTree test_tree = clone(tree); 
   invert_tree_helper(test_tree.root); 
 
-  // TODO: Print the inverted Tree
+  print_tree_inorder(test_tree.root);
+  printf("\n\n"); 
   
   free_tree(&test_tree); 
   
@@ -522,7 +537,7 @@ void print_tree_inorder(Node* root) {
   if(root == NULL) return; 
 
   print_tree_inorder(root->left); 
-  printf("%d ", root->data); 
+  printf("[%d, %c]", root->data, get_node_color(root)); 
   print_tree_inorder(root->right); 
   
 }
@@ -538,7 +553,7 @@ void print_tree_postorder(Node* root) {
 
   print_tree_postorder(root->left); 
   print_tree_postorder(root->right); 
-  printf("%d ", root->data);
+  printf("[%d, %c]", root->data, get_node_color(root)); 
 }
 
 /** 
@@ -550,9 +565,13 @@ void print_tree_postorder(Node* root) {
 void print_tree_preorder(Node* root) {
   if(root == NULL) return; 
 
-  printf("%d ", root->data); 
+  printf("[%d, %c]", root->data, get_node_color(root)); 
   print_tree_preorder(root->left); 
   print_tree_preorder(root->right);
+}
+
+char get_node_color(Node* root) {
+  return root->color == RED ? 'R' : 'B';  
 }
 
 void validate_red_black_tree(Node* root) {
@@ -580,11 +599,24 @@ bool validate_has_red_conflict(Node* root, int prev_color) {
  */
 
 void run_tests() {
-  
+  RedBlackTree test_tree = initialize_tree();
+
+  populate_tree(&test_tree);
+
+  free_tree(&test_tree);
 }
 
 void populate_tree(RedBlackTree* test_tree) {
-  
+  insert(test_tree, 50);  
+  insert(test_tree, 20); 
+  insert(test_tree, 35); 
+  insert(test_tree, 75); 
+  insert(test_tree, 62); 
+  insert(test_tree, 98); 
+  insert(test_tree, 10); 
+
+  print_tree_inorder(test_tree->root);
+  printf("\n\n"); 
 }
 
 void test_insertion(RedBlackTree* test_tree) {
