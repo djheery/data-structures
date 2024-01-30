@@ -1,6 +1,11 @@
 # Red-Black Tree 
 
-This information consists of notes taken from: https://www.geeksforgeeks.org/introduction-to-red-black-tree/
+This information consists of notes taken from the following sources: 
+
+1. Geeks for Geeks: https://www.geeksforgeeks.org/introduction-to-red-black-tree/
+2. Rob Edwards (YT): 
+    - https://www.youtube.com/watch?v=nMExd4DthdA
+    - https://www.youtube.com/watch?v=v6eDztNiJwo&t=302s
 
 The Red Black Tree is an expansion of the Binary Search Tree. 
 
@@ -188,9 +193,7 @@ Lets say we want to perform a rotation where the current node is 10 again:
 
 Whilst the trees structure may be slightly differnt it should be fairly clear that the LEFT & RIGHT rotation operatons are just the reverse of each other 
 
-#### Left Rotation & Recolor 
-
-#### Right Rotation & Recolor 
+After we do a rotation we should fix the color of the nodes so that the parents are black and the children are red
 
 ### The Insertion Algorithm (Conceptual)
 
