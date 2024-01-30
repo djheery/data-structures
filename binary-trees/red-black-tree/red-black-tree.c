@@ -107,7 +107,7 @@ Node* dequeue(CircularQueue* queue);
 
 void run_tests(); 
 void populate_tree(RedBlackTree* test_tree); 
-void test_insertion(RedBlackTree* test_tree); 
+void test_insertion(RedBlackTree* test_tree, int node_data); 
 void test_deletion(RedBlackTree* test_tree); 
 void test_search(RedBlackTree* test_tree); 
 void test_inversion(RedBlackTree* test_tree); 
@@ -240,6 +240,8 @@ void insert(RedBlackTree* tree, int node_data) {
 
 Node* insert_helper(RedBlackTree* tree, Node* root, int node_data) {
   bool red_red_conflict = false;  
+
+  if(root == NULL) return initialize_node(node_data);
   
   if(node_data < root->data) {
     root->left = insert_helper(tree, root->left, node_data);  
@@ -386,7 +388,7 @@ void conflict_helper(RedBlackTree* tree, Node* root) {
       root->parent->left->color = BLACK; 
       root->color = BLACK; 
 
-      if(root->parent == tree->root) root->parent->color = RED; 
+      if(root->parent != tree->root) root->parent->color = RED; 
 
       return; 
     } 
@@ -403,7 +405,6 @@ void conflict_helper(RedBlackTree* tree, Node* root) {
   //  NOTE: We are dealing with the left child 
   
   bool uncle_right_is_black = root->parent->right == NULL || root->right->color == BLACK; 
-  DEBUG_PRINT("Right Uncle is black %b\n", uncle_right_is_black);
 
   if(!uncle_right_is_black) {
     root->parent->right->color = BLACK;
@@ -421,6 +422,40 @@ void conflict_helper(RedBlackTree* tree, Node* root) {
   } 
 
 }
+
+Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
+  if(root == NULL) return NULL;  
+
+  if(node_data < root->data) {
+    root->left = delete_helper(tree, root->left, node_data); 
+    return root;
+  }
+
+  if(node_data > root->data) {
+    root->right = delete_helper(tree, root->right, node_data); 
+    return root; 
+  }
+
+  if(root->left == NULL) {
+    Node* temp = root;  
+    root = root->right; 
+    free(temp); 
+    return root; 
+  }
+   
+  if(root->right == NULL) {
+    Node* temp = root; 
+    root = root->left; 
+    free(temp); 
+    return root; 
+  }
+
+
+
+  return root; 
+}
+
+
 
 /**
  * A method to search for whether a node with specific data exists within the tree
@@ -609,42 +644,21 @@ void run_tests() {
 }
 
 void populate_tree(RedBlackTree* test_tree) {
-  insert(test_tree, 50);  
-  print_tree_inorder(test_tree->root);
-  printf("\n\n"); 
-  printf("Root: %d\n\n", test_tree->root->data);  
-  insert(test_tree, 20); 
-  print_tree_inorder(test_tree->root);
-  printf("\n\n"); 
-  printf("Root: %d\n\n", test_tree->root->data);  
-  insert(test_tree, 35); 
-  print_tree_inorder(test_tree->root);
-  printf("\n\n"); 
-  printf("Root: %d\n\n", test_tree->root->data);  
-  insert(test_tree, 75); 
-  print_tree_inorder(test_tree->root);
-  printf("\n\n"); 
-  printf("Root: %d\n\n", test_tree->root->data);  
-  insert(test_tree, 62); 
-  print_tree_inorder(test_tree->root);
-  printf("\n\n"); 
-  printf("Root: %d\n\n", test_tree->root->data);  
-  insert(test_tree, 98); 
-  print_tree_inorder(test_tree->root);
-  printf("\n\n"); 
-  printf("Root: %d\n\n", test_tree->root->data);  
-  insert(test_tree, 10); 
-  print_tree_inorder(test_tree->root);
-  printf("\n\n"); 
-  printf("Root: %d\n\n", test_tree->root->data);  
-
-  print_tree_inorder(test_tree->root);
-  printf("\n\n"); 
-  printf("Root: %d\n\n", test_tree->root->data);  
+  test_insertion(test_tree, 50);  
+  test_insertion(test_tree, 20); 
+  test_insertion(test_tree, 35); 
+  test_insertion(test_tree, 75); 
+  test_insertion(test_tree, 62); 
+  test_insertion(test_tree, 98); 
+  test_insertion(test_tree, 10); 
+  test_insertion(test_tree, 66);
+  test_insertion(test_tree, 1); 
 }
 
-void test_insertion(RedBlackTree* test_tree) {
-  
+void test_insertion(RedBlackTree* test_tree, int node_data) {
+  insert(test_tree, node_data); 
+  print_tree_inorder(test_tree->root);
+  printf("\n\nRoot: %d\n\n", test_tree->root->data);  
 }
 
 void test_deletion(RedBlackTree* test_tree) {
