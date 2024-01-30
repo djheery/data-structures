@@ -196,6 +196,61 @@ Whilst the trees structure may be slightly differnt it should be fairly clear th
 
 After we do a rotation we should fix the color of the nodes so that the parents are black and the children are red
 
+### Left-Right Rotation  
+
+With a LEFT-RIGHT rotation the prcess works slightly different whilst the logic for both the left and the right rotation work the same.
+
+A Left Right rotation indicates that the colision has occured in the Left Subtrees right Subtree. 
+This sounds confusing but take the following example given that the root node is currently 10: 
+
+```
+        20 
+       /  \
+      10   45
+     /  \   \ 
+     5  15  59
+    / \
+   3   9
+```
+
+In this circumstance an LEFT-RIGHT colision would indicate that the colision has occured with the 5 (Left) and the 9 (Right) hence 
+left right.
+
+To handle this the following outer logic is used: 
+
+```
+root->left = rotate_left(root->left); 
+root->left->parent = root; 
+root = rotate_right(root); 
+root->color = BLACK; 
+root->right->color = RED; 
+tree->lr = false; 
+```
+
+So to break this down: 
+
+1. We perform a rotation using the left nodes subtree as a base 
+2. We assign the parent of the left node to the current node (root) 
+3. we then perform a right rotation on the current node (root)
+4. We assign the current nodes (roots) color to BLACK
+5. We assign the current nodes right child to the color of RED
+6. We indicate that there is no need to perform a LEFT-RIGHT rotation again at this point
+
+To see how this works in action lets do it step by step
+
+```
+        20                          20                             20
+       /  \                        /  \                           /  \
+      10   45                     10  45                         9   45
+     /  \   \  left rotation     /  \   \    right rotation     / \    \
+     5  15  59 ============>    9   15  59   ==============>   5  10   59
+      \                        /                                    \ 
+       9                      5                                     15
+```
+
+Whilst the tree is fairly skewed the demonstration still works and you should be able to see the way the rotation works
+The skewed nature is just because of a bad choice to perform the rotation on 
+
 ### The Insertion Algorithm (Conceptual)
 
 The algorithm has two main cases depending on the colour of the uncle. 

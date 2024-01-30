@@ -294,10 +294,18 @@ Node* rotation_helper(RedBlackTree* tree, Node* root) {
     root->right->color = RED; 
     tree->rr = false;
   } else if (tree->rl) {
-
+    root->right = rotate_right(root->right); 
+    root->right->parent = root; 
+    root = rotate_left(root); 
+    root->color = BLACK; 
+    root->left->color = RED; 
     tree->rl = false; 
   } else if (tree->lr) {
-
+    root->left = rotate_left(root->left); 
+    root->left->parent = root; 
+    root = rotate_right(root); 
+    root->color = BLACK; 
+    root->right->color = RED;
     tree->lr = false; 
   }
 
@@ -545,6 +553,23 @@ void print_tree_preorder(Node* root) {
   printf("%d ", root->data); 
   print_tree_preorder(root->left); 
   print_tree_preorder(root->right);
+}
+
+void validate_red_black_tree(Node* root) {
+ 
+}
+
+/** 
+ * A helper function for validating the RedBlackTree and checking there are no RED-RED conflicts
+ *
+ * @param: root -> The current node to check
+ * @param: prev_color -> The color of the previous node
+ * @returns: A boolean value indicating if there is a RED-RED conflict
+ */
+
+bool validate_has_red_conflict(Node* root, int prev_color) {
+  bool red_conflict = ((root && root->color == RED) && prev_color == RED);  
+  return red_conflict; 
 }
 
 
