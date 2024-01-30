@@ -218,6 +218,7 @@ void free_tree(RedBlackTree* tree) {
  */
 
 void insert(RedBlackTree* tree, int node_data) {
+  DEBUG_PRINT("Inserting Node %d\n\n", node_data); 
   tree->root = insert_helper(tree, tree->root, node_data); 
   tree->root->color = BLACK; 
 }
@@ -251,10 +252,12 @@ Node* insert_helper(RedBlackTree* tree, Node* root, int node_data) {
     root->right->parent = root; 
     red_red_conflict = set_conflict_flag(tree, root, RIGHT); 
   }
+  
 
   root = rotation_helper(tree, root); 
 
   if(red_red_conflict) {
+    // DEBUG_PRINT("%d->%d->%d ", root->parent->data, root->data, root->right->data);
     confilict_helper(tree, root); 
     red_red_conflict = false;  
   }
@@ -401,7 +404,8 @@ void confilict_helper(RedBlackTree* tree, Node* root) {
 
   //  NOTE: We are dealing with the left child 
   
-  bool uncle_right_is_black = root->parent->right != NULL || root->right->color == BLACK; 
+  bool uncle_right_is_black = root->parent->right == NULL || root->right->color == BLACK; 
+  DEBUG_PRINT("Right Uncle is black %b\n", uncle_right_is_black);
 
   if(!uncle_right_is_black) {
     root->parent->right->color = BLACK;
@@ -608,15 +612,37 @@ void run_tests() {
 
 void populate_tree(RedBlackTree* test_tree) {
   insert(test_tree, 50);  
+  print_tree_inorder(test_tree->root);
+  printf("\n\n"); 
+  printf("Root: %d\n\n", test_tree->root->data);  
   insert(test_tree, 20); 
+  print_tree_inorder(test_tree->root);
+  printf("\n\n"); 
+  printf("Root: %d\n\n", test_tree->root->data);  
   insert(test_tree, 35); 
+  print_tree_inorder(test_tree->root);
+  printf("\n\n"); 
+  printf("Root: %d\n\n", test_tree->root->data);  
   insert(test_tree, 75); 
+  print_tree_inorder(test_tree->root);
+  printf("\n\n"); 
+  printf("Root: %d\n\n", test_tree->root->data);  
   insert(test_tree, 62); 
+  print_tree_inorder(test_tree->root);
+  printf("\n\n"); 
+  printf("Root: %d\n\n", test_tree->root->data);  
   insert(test_tree, 98); 
+  print_tree_inorder(test_tree->root);
+  printf("\n\n"); 
+  printf("Root: %d\n\n", test_tree->root->data);  
   insert(test_tree, 10); 
+  print_tree_inorder(test_tree->root);
+  printf("\n\n"); 
+  printf("Root: %d\n\n", test_tree->root->data);  
 
   print_tree_inorder(test_tree->root);
   printf("\n\n"); 
+  printf("Root: %d\n\n", test_tree->root->data);  
 }
 
 void test_insertion(RedBlackTree* test_tree) {
