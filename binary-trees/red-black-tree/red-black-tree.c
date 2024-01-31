@@ -496,7 +496,7 @@ Node* bst_delete_helper(RedBlackTree* tree, Node* root, int node_data) {
     return temp; 
   }
 
-  delete_min_successor(root); 
+  bst_delete_min_successor(root); 
   tree->size -= 1; 
 
   return root; 
