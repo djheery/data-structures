@@ -66,6 +66,7 @@ bool set_conflict_flag(RedBlackTree* tree, Node* current_node, char direction);
 void conflict_helper(RedBlackTree* tree, Node* root); 
 
 void delete(Node* root, int node_to_delete); 
+Node* delete_min_successor(Node* root); 
 
 bool search(RedBlackTree* tree, int node_data); 
 bool search_helper(Node* root, int node_data); 
@@ -437,20 +438,40 @@ Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
   }
 
   if(root->left == NULL) {
-    Node* temp = root;  
-    root = root->right; 
-    free(temp); 
-    return root; 
+    Node* temp = root->right;  
+    free(root); 
+    return temp; 
   }
    
   if(root->right == NULL) {
-    Node* temp = root; 
-    root = root->left; 
-    free(temp); 
-    return root; 
+    Node* temp = root->left; 
+    free(root); 
+    return temp; 
   }
 
+  delete_min_successor(root); 
+  tree->size -= 1; 
 
+  return root; 
+}
+
+Node* delete_min_successor(Node* root) {
+  Node* parent = root;  
+  Node* successor = parent->right;  
+
+  while(successor->left != NULL) {
+    parent = successor; 
+    successor = successor->left; 
+  }
+
+  if(parent != root) {
+    parent->left = successor->right;  
+  } else {
+    parent->right = successor->right; 
+  }
+
+  root->data = successor->data; 
+  free(successor); 
 
   return root; 
 }
