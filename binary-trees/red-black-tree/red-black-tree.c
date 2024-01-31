@@ -65,8 +65,8 @@ Node* rotation_helper(RedBlackTree* tree, Node* root);
 bool set_conflict_flag(RedBlackTree* tree, Node* current_node, char direction); 
 void conflict_helper(RedBlackTree* tree, Node* root); 
 
-void delete(Node* root, int node_to_delete); 
-Node* delete_min_successor(Node* root); 
+bool delete(RedBlackTree* tree, int node_to_delete); 
+Node* delete_helper(RedBlackTree* tree, Node* root, int node_to_delete);
 
 bool search(RedBlackTree* tree, int node_data); 
 bool search_helper(Node* root, int node_data); 
@@ -226,6 +226,7 @@ void insert(RedBlackTree* tree, int node_data) {
   DEBUG_PRINT("Inserting Node %d\n\n", node_data); 
   tree->root = insert_helper(tree, tree->root, node_data); 
   tree->root->color = BLACK; 
+  tree->size += 1; 
 }
 
 /** 
@@ -427,6 +428,48 @@ void conflict_helper(RedBlackTree* tree, Node* root) {
   } 
 
 }
+
+/**
+ * A wraper method for the delete function
+ *
+ * @param: tree -> The red black tree to delete from 
+ * @param: node_data -> The data to be deleted 
+ * @returns: A boolean value indicating whether a node was deleted or not 
+ */
+
+bool delete(RedBlackTree* tree, int node_data) {
+  if(tree->size == 0 || tree->root == NULL) return false;
+
+  //  NOTE: Maybe an unecerssary overhead but good for flagging to users if a node does not exist
+
+  bool node_exists = search_helper(tree->root, node_data); 
+
+  if(!node_exists) return false; 
+
+  tree->root = delete_helper(tree, tree->root, node_data); 
+
+  return true;
+}
+
+/** 
+ * A recursive method for deleting a node from a RedBlackTree 
+ *
+ * @param: tree -> The tree to delete a node from
+ * @param: root -> The current node
+ * @param: node_data -> The data of a node to be deleted
+ * @returns: Eventually will return the root of the tree 
+ */
+
+Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
+
+  return NULL; 
+}
+
+/**
+ * !WARNING: DELETE THIS CODE WHEN A PROPER METHOD HAS BEEN MADE 
+ *
+ * BST DELETE METHODS FOR REFERENCE TO BE DELETED
+ */
 
 Node* bst_delete_helper(RedBlackTree* tree, Node* root, int node_data) {
   if(root == NULL) return NULL;  
@@ -638,6 +681,58 @@ char get_node_color(Node* root) {
 
 void validate_red_black_tree(Node* root) {
  
+}
+
+/**
+ * Get the minimum node in the tree 
+ *
+ * @param: root -> the current node being recursed through until eventually the min 
+ * @returns: The minimum value node in the tree
+ */
+
+Node* get_min_node(Node* root) {
+
+  if(root->left == NULL) return root; 
+
+  return get_min_node(root->left); 
+
+}
+
+/**
+ * Get the maximum node in the tree 
+ *
+ * @param: root -> The current node being recursed through until eventually the node with the max value
+ * @returns: The node with the max value in the tree 
+ */
+
+Node* get_max_node(Node* root) {
+  if(root->right == NULL) return root; 
+
+  return get_max_node(root->right);
+}
+
+/** 
+ * Get the height of the tree 
+ *
+ * @param: root -> The current node being recursed through 
+ * @returns: The max value of either the left or right subtree
+ */
+
+int height(Node* root) {
+  if(root == NULL) return 0;  
+
+  return get_max(1 + height(root->left), 1 + height(root->right));
+}
+
+/**
+ * Get the max of two values (specifically for the height method above 
+ *
+ * @param: { a, b } -> The integers to compare
+ * @returns: The larger of either a or b
+ */
+
+int get_max(int a, int b) {
+  return a > b ? a : b; 
 }
 
 /** 
