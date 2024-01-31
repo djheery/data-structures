@@ -90,6 +90,10 @@ void print_tree_postorder(Node* root);
 
 char get_node_color(Node* root); 
 
+//  NOTE: Remove When done. This is just for a refresher on BST deletion
+Node*  bst_delete_helper(RedBlackTree* tree, Node* root, int node_data); 
+Node* bst_delete_min_successor(Node* root);
+
 /**
  * =======================================
  * || Circular Queue Method definitions ||
@@ -424,16 +428,16 @@ void conflict_helper(RedBlackTree* tree, Node* root) {
 
 }
 
-Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
+Node* bst_delete_helper(RedBlackTree* tree, Node* root, int node_data) {
   if(root == NULL) return NULL;  
 
   if(node_data < root->data) {
-    root->left = delete_helper(tree, root->left, node_data); 
+    root->left = bst_delete_helper(tree, root->left, node_data); 
     return root;
   }
 
   if(node_data > root->data) {
-    root->right = delete_helper(tree, root->right, node_data); 
+    root->right = bst_delete_helper(tree, root->right, node_data); 
     return root; 
   }
 
@@ -455,7 +459,7 @@ Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
   return root; 
 }
 
-Node* delete_min_successor(Node* root) {
+Node* bst_delete_min_successor(Node* root) {
   Node* parent = root;  
   Node* successor = parent->right;  
 
