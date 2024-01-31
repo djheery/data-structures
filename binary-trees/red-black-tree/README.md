@@ -456,6 +456,10 @@ At this point a rotation flag will have been set to true on the tree struct itse
 
 The confusion generally occurs because of the recursive nature of this method. But writing it out iteratively would likely be a lot longer winded and more confusing than this
 
+## Deletion 
+
+
+
 ## Applications
 
 1. Most of the self-balancing BST library functions in languages like Java (java.util.TreeMap & java.util.TreeSet) an implementation of a red Black Trees
