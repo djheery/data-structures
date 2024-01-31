@@ -9,7 +9,9 @@ Then I will learn more about C by implementing the known data structures within 
 
 **The data structures may/ will contain errors. This is not meant to be a comprehensive handling of all data structures. More an experimentation with them to get to grips with how they are built and thus understand more deeply how they work. Thus bugs will probably exist so it's best to look at this code with the expectation that it will not be a perfect recreation of the data structures. If you're wanting to clone the repositry maybe see if you can fix the issues i've unknowingly created**
 
-Each code file will be created from scratch rather than copy and pasting the boiler plate so that I can ingrain the basic syntax of C into my brain.
+Each code file will be created from scratch rather than copy and pasting the boiler plate so that I can ingrain these Data Structures and C into my brain. 
+
+Upon creating this code base i've become aware how difficult it is to implement some of the more complex data structures without the code looking like its been verbatum copied from somewhere. Thus I am spending extra time making some ReadMe documents for the more complex documents to ensure that I understand how the code is actually working and refactoring any code that I pull from as a reference when building each of the structures to make it more legible (Especially with RBT and BST) 
 
 ## Included Data Structure Types 
 
