@@ -25,7 +25,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include <ctype.h>
 
 #define QUEUE_CAPACITY 20 
 
@@ -37,6 +36,8 @@
 #else 
 #define DEBUG_PRINT(fmt, ...)
 #endif
+
+// The structure of a Node in this program 
 
 typedef struct {
   int data; 
