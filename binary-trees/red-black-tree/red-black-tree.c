@@ -461,6 +461,19 @@ bool delete(RedBlackTree* tree, int node_data) {
  */
 
 Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
+  if(root == NULL) return NULL
+
+  if(node_data < root->data) {
+    root->left = delete_helper(tree, root->left, node_data);
+    return root;
+  }
+
+  if(node_data > root->data) {
+    root->right = delete_helper(tree, root->right, node_data); 
+    return root;
+  }
+
+   
 
   return NULL; 
 }
