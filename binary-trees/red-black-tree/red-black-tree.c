@@ -463,6 +463,8 @@ bool delete(RedBlackTree* tree, int node_data) {
 Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
   if(root == NULL) return NULL
 
+  int original_color = root->color;
+
   if(node_data < root->data) {
     root->left = delete_helper(tree, root->left, node_data);
     return root;
@@ -473,9 +475,45 @@ Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
     return root;
   }
 
+  if(root->left == NULL) {
+    Node* temp = root->right;
+    free(root);
+    tree->size -= 1;
+    return temp;
+  }
+
+  if(root->right == NULL) {
+    Node* temp = root-left;
+    free(root);
+    tree->size -= 1;
+    return temp;
+  }
+
+  Node* y = min_right_subtree(root);
+  int y_color = y->color;
+  
+  
    
 
   return NULL; 
+}
+
+Node* min_right_subtree(Node* root) {
+  Node* parent = root;
+  Node* sucessor = root->right;
+
+  while(successor->left != NULL) {
+    parent = successor;
+    sucessor = sucessor->left;
+  }
+
+  if(parent != root) {
+    parent->left = successor->right; 
+  } else {
+    parent->right = successor->right;
+  }
+
+  return successor;
 }
 
 /**
