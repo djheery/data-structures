@@ -458,6 +458,89 @@ The confusion generally occurs because of the recursive nature of this method. B
 
 ## Deletion 
 
+Source: https://www.youtube.com/watch?v=lU99loSvD8s
+
+Trasplant is sued to move subrees within the tree
+
+Delete method deletes the nodes
+
+Delete fixup - fixes the violation 
+
+### Transplant 
+
+Transplant helps us move subtrees within the RBT to fix the structure of the tree
+
+Generally transplant is called with two arguments `Node* root` and `Node* v` where root is the current node and v is the right child of the root
+
+Within the trasplant methods there are 3 subsequent checks:
+
+1. whether `root` is the actual tree-root.
+2. Whether the root is the left child of the parent
+3. Whether root is the right child of the parent
+
+Finally we set the parent of `v` to the parent of `u`
+
+In code it is represented like this: 
+
+``` 
+Node* transplant(RedBlackTree* tree, Node* root, Node* root_child) {
+    if (root->parent == None) {
+       tree->root = root_child; 
+    } else if (root == root->parent->left) {
+        root->parent->left = root_child; 
+    } else {
+        root->parent->right = root_child; 
+    }
+
+    root_child->parent = root->parent; 
+
+    return root_child;
+}
+```
+The creator of the video says that it is important to not that there is no code updating `v.right` or `v.left`
+
+This is because it is the responsibility of the calling function to perform these updates
+
+### Delete Methods
+
+Delete can be deleted into three cases: 
+
+1. Left child is == NULL
+2. Right child is == NULL 
+3. Neither child is NULL
+
+#### Left Child is NULL
+
+Node to delete (z) 
+
+We make note of the original color (BLACK for the example) and call transplant with (z, and z->right) 
+
+Then we call a method called delete_fixup with node z->right which will now be (root) this method will fix the colors in the tree should their be a violation of the Rule
+
+#### Right Child is NULL 
+
+This is the same as when the left child is null except we simply invert the child using z->left instead
+
+Again we call delete_fixup(root) (where root is the new root)
+
+#### Neither Child is Null 
+
+This seems to be very similar to bst_delete to start. 
+
+You find the minimum in `z's` right child subtree (y) we make note of the original color and the right child of (y) which can be reffered to as x
+
+We then call transplant with y & x. The result of which is that x will move up into `y's` place
+
+We then set y's right child to be z's right child and call transplant with (z, y) 
+
+we then fix our pointers and have y->left be z->left and can remove z 
+
+We call delete fixup with x to fix the coloring of the tree 
+
+
+
+
+
 
 
 ## Applications

@@ -67,6 +67,8 @@ void conflict_helper(RedBlackTree* tree, Node* root);
 
 bool delete(RedBlackTree* tree, int node_to_delete); 
 Node* delete_helper(RedBlackTree* tree, Node* root, int node_to_delete);
+Node* delete_fixup(RedBlackTree* tree, Node* x); 
+Node* transplant(RedBlackTree* tree, Node* root, Node* child);
 
 bool search(RedBlackTree* tree, int node_data); 
 bool search_helper(Node* root, int node_data); 
@@ -476,25 +478,53 @@ Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
   }
 
   if(root->left == NULL) {
-    Node* temp = root->right;
+    Node* new_root = transplant(tree, root, root->right);
     free(root);
+    delete_fixup(tree, new_root); 
     tree->size -= 1;
     return temp;
   }
 
   if(root->right == NULL) {
-    Node* temp = root-left;
-    free(root);
-    tree->size -= 1;
-    return temp;
+    Node* new_root = transplant(tree, root, root->left); 
+    free(root); 
+    delete_fixup(tree, new_root); 
+    tree->size -= 1; 
+    return new_root;
   }
 
-  Node* y = min_right_subtree(root);
+  Node* target_nodes = min_right_subtree(root);
+  Node* y = target_node[0];
   int y_color = y->color;
-  
-  
-   
 
+  
+
+
+  return root; 
+}
+
+Node* transplant(RedBlackTree* tree, Node* root, Node* child) {
+  if(root->parent == NULL) {
+    tree->root = child; 
+    child->parent = NULL; 
+    return child; 
+  } 
+
+  bool root_is_left_child = root == root->parent->left; 
+
+  if (root_is_left_child) {
+    root->parent->left = child; 
+  } else {
+    // root is the right child of the parent 
+    root->parent->right = child; 
+  }
+
+  child->parent = root->parent; 
+
+  return child; 
+}
+
+[]Node* delete_fixup(RedBlackTree* tree, Node* x) {
   return NULL; 
 }
 
@@ -513,7 +543,9 @@ Node* min_right_subtree(Node* root) {
     parent->right = successor->right;
   }
 
-  return successor;
+  Node* data[] = { successor, successor->right }; 
+
+  return data;
 }
 
 /**
