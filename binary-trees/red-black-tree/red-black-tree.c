@@ -503,6 +503,15 @@ Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
   return root; 
 }
 
+/**
+ * Transplant root with child to restucture the tree after deletion 
+ *
+ * @param: tree -> The tree to perform the traspant within
+ * @param: root -> The node to be transplanted
+ * @param: child -> The child of the root
+ * @returns: The child that has been transplated
+ */
+
 Node* transplant(RedBlackTree* tree, Node* root, Node* child) {
   if(root->parent == NULL) {
     tree->root = child; 
@@ -528,6 +537,14 @@ Node* delete_fixup(RedBlackTree* tree, Node* x) {
   return NULL; 
 }
 
+/**
+ * Get the mininimum successor 
+ *
+ * @param: root -> The current node 
+ * @returns: An array of [Successor, successor_right_chid]
+ */
+
+
 []Node* min_right_subtree(Node* root) {
   Node* parent = root;
   Node* sucessor = root->right;
@@ -547,65 +564,6 @@ Node* delete_fixup(RedBlackTree* tree, Node* x) {
 
   return data;
 }
-
-/**
- * !WARNING: DELETE THIS CODE WHEN A PROPER METHOD HAS BEEN MADE 
- *
- * BST DELETE METHODS FOR REFERENCE TO BE DELETED
- */
-
-Node* bst_delete_helper(RedBlackTree* tree, Node* root, int node_data) {
-  if(root == NULL) return NULL;  
-
-  if(node_data < root->data) {
-    root->left = bst_delete_helper(tree, root->left, node_data); 
-    return root;
-  }
-
-  if(node_data > root->data) {
-    root->right = bst_delete_helper(tree, root->right, node_data); 
-    return root; 
-  }
-
-  if(root->left == NULL) {
-    Node* temp = root->right;  
-    free(root); 
-    return temp; 
-  }
-   
-  if(root->right == NULL) {
-    Node* temp = root->left; 
-    free(root); 
-    return temp; 
-  }
-
-  bst_delete_min_successor(root); 
-  tree->size -= 1; 
-
-  return root; 
-}
-
-Node* bst_delete_min_successor(Node* root) {
-  Node* parent = root;  
-  Node* successor = parent->right;  
-
-  while(successor->left != NULL) {
-    parent = successor; 
-    successor = successor->left; 
-  }
-
-  if(parent != root) {
-    parent->left = successor->right;  
-  } else {
-    parent->right = successor->right; 
-  }
-
-  root->data = successor->data; 
-  free(successor); 
-
-  return root; 
-}
-
 
 
 /**
