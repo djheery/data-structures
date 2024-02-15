@@ -524,11 +524,11 @@ Node* transplant(RedBlackTree* tree, Node* root, Node* child) {
   return child; 
 }
 
-[]Node* delete_fixup(RedBlackTree* tree, Node* x) {
+Node* delete_fixup(RedBlackTree* tree, Node* x) {
   return NULL; 
 }
 
-Node* min_right_subtree(Node* root) {
+[]Node* min_right_subtree(Node* root) {
   Node* parent = root;
   Node* sucessor = root->right;
 
