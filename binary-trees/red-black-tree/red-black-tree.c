@@ -69,6 +69,7 @@ bool delete(RedBlackTree* tree, int node_to_delete);
 Node* delete_helper(RedBlackTree* tree, Node* root, int node_to_delete);
 Node* delete_fixup(RedBlackTree* tree, Node* x); 
 Node* transplant(RedBlackTree* tree, Node* root, Node* child);
+Node** min_right_subtree(Node* root);
 
 bool search(RedBlackTree* tree, int node_data); 
 bool search_helper(Node* root, int node_data); 
@@ -463,7 +464,7 @@ bool delete(RedBlackTree* tree, int node_data) {
  */
 
 Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
-  if(root == NULL) return NULL
+  if(root == NULL) return NULL;
 
   int original_color = root->color;
 
@@ -482,7 +483,7 @@ Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
     free(root);
     delete_fixup(tree, new_root); 
     tree->size -= 1;
-    return temp;
+    return new_root;
   }
 
   if(root->right == NULL) {
@@ -493,14 +494,22 @@ Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
     return new_root;
   }
 
-  Node* target_nodes = min_right_subtree(root);
-  Node* y = target_node[0];
+  Node** target_node_arr = min_right_subtree(root);
+  Node* y = target_node_arr[0];
+  Node* x = target_node_arr[1];
+
   int y_color = y->color;
+  Node* new_y = transplant(tree, y, x); 
 
+  y->right = root->right; 
+  Node* new_root = transplant(tree, root, y); 
+  delete_fixup(tree, x);
   
+  
+  free(target_node_arr); 
+  free(root); 
 
-
-  return root; 
+  return new_root;
 }
 
 /**
@@ -513,6 +522,8 @@ Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
  */
 
 Node* transplant(RedBlackTree* tree, Node* root, Node* child) {
+
+  // Is root the actual tree root, could also be written as root == tree->root
   if(root->parent == NULL) {
     tree->root = child; 
     child->parent = NULL; 
@@ -545,13 +556,13 @@ Node* delete_fixup(RedBlackTree* tree, Node* x) {
  */
 
 
-[]Node* min_right_subtree(Node* root) {
+Node** min_right_subtree(Node* root) {
   Node* parent = root;
-  Node* sucessor = root->right;
+  Node* successor = root->right;
 
   while(successor->left != NULL) {
     parent = successor;
-    sucessor = sucessor->left;
+    successor = successor->left;
   }
 
   if(parent != root) {
@@ -560,7 +571,9 @@ Node* delete_fixup(RedBlackTree* tree, Node* x) {
     parent->right = successor->right;
   }
 
-  Node* data[] = { successor, successor->right }; 
+  Node** data = (Node**) malloc(sizeof(Node) * 2); 
+  data[0] = successor; 
+  data[1] = successor->right; 
 
   return data;
 }
