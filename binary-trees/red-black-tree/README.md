@@ -525,7 +525,7 @@ Again we call delete_fixup(root) (where root is the new root)
 
 #### Neither Child is Null 
 
-This seems to be very similar to bst_delete to start. 
+This seems to be very similar to  bst_delete to start. 
 
 You find the minimum in `z's` right child subtree (y) we make note of the original color and the right child of (y) which can be reffered to as x
 
@@ -538,9 +538,74 @@ we then fix our pointers and have y->left be z->left and can remove z
 We call delete fixup with x to fix the coloring of the tree 
 
 
+#### Delete Fixup 
 
+Delete fixup is a method for rebalancing and recoloring the tree
 
+Delete fixup has the following method signature `delete_fixup(Node* x)` 
 
+In the context below `w` refers to the sibling of `x`
+
+There are 4 cases when fixing a red black tree: 
+
+1. `w` is RED 
+2. `w` is BLACK and `w->left->color == BLACK && w->right->color == BLACK`
+3. `w` is BLACK and `w->left->color == RED && w->right->color == BLACK`
+4. `w` is BLACK and `w->left->color == BLACK && w->right->color == RED`
+
+It is worth noting that more than one of these fixes and cases may occur per invocation of `delete_fixup`
+
+In this video it says that we only call delete_fixup when the original color of `y` is BLACK
+
+We only execute the fixes when the node that is passed `x` is black 
+
+At the end of `delete_fixup` we color `x` to `BLACK` 
+
+##### Case 1: W is RED
+
+When W is red we perform the following code: 
+
+```
+if (w->color == RED) {
+    w->color == BLACK;
+    x->color == RED;
+    Node* x_parent = left_rotate(x->parent); 
+    w = x_parent->right; 
+}
+```
+
+To explain this code we set `w's` color the BLACK and `x's` color to red 
+Then we perform a `left rotation` on `x->parent` and set w equal to `x_parent->right`
+
+##### Case 2: W is BLACK and both of W's children are BLACK
+
+In this case we set:
+
+```
+w->color = RED 
+x = x->parent
+```
+
+##### Case 3: W is Black and only W's left child is RED
+
+```
+w->left->color = BLACK
+w->color = RED
+w = rotate_right(w) 
+w = x->parent->right
+```
+
+##### Case 4: W is Black and left color is RED
+
+IF we do case 3 then case four is automatically done 
+
+```
+w->color = x->parent->color; 
+x->parent->color = BLACK;
+w->right->color = BLACK 
+Node* x_parent = left_rotate(x->parent) 
+x = tree->root; 
+```
 
 
 ## Applications

@@ -481,7 +481,9 @@ Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
   if(root->left == NULL) {
     Node* new_root = transplant(tree, root, root->right);
     free(root);
-    delete_fixup(tree, new_root); 
+
+    if (new_root->color == BLACK) delete_fixup(tree, new_root); 
+
     tree->size -= 1;
     return new_root;
   }
@@ -489,7 +491,7 @@ Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
   if(root->right == NULL) {
     Node* new_root = transplant(tree, root, root->left); 
     free(root); 
-    delete_fixup(tree, new_root); 
+    if (new_root->color == BLACK) delete_fixup(tree, new_root); 
     tree->size -= 1; 
     return new_root;
   }
@@ -503,7 +505,8 @@ Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
 
   y->right = root->right; 
   Node* new_root = transplant(tree, root, y); 
-  delete_fixup(tree, x);
+
+  if(y->color == BLACK) delete_fixup(tree, x);
   
   
   free(target_node_arr); 
