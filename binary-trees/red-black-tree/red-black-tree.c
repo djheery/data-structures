@@ -547,7 +547,32 @@ Node* transplant(RedBlackTree* tree, Node* root, Node* child) {
   return child; 
 }
 
+bool is_black(Node* x) {
+  return x == NULL || x->color == BLACK; 
+}
+
 Node* delete_fixup(RedBlackTree* tree, Node* x) {
+
+  while (is_black(x) && x != tree->root) {
+
+    Node* sibling = x->parent->left == x ? x->parent->right : x->parent->left; 
+    bool sibling_is_red = is_black(sibling) == false; 
+
+    if(sibling_is_red) {
+      sibling->color = BLACK; 
+      x->color = BLACK; 
+      Node* x_parent = rotate_left(x->parent); 
+      x = x->parent; 
+      continue; 
+    }
+
+    if(!is_black(sibling->left) && is_black(sibling->right)) {
+      sibling->left->color = BLACK; 
+      x = x->parent; 
+    }
+    
+  }
+  
   return NULL; 
 }
 
