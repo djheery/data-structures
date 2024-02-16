@@ -560,15 +560,22 @@ Node* delete_fixup(RedBlackTree* tree, Node* x) {
 
     if(sibling_is_red) {
       sibling->color = BLACK; 
-      x->color = BLACK; 
+      x->color = RED;
       Node* x_parent = rotate_left(x->parent); 
+      sibling = x->parent->right; 
+    }
+
+    if(is_black(sibling->left) && is_black(sibling->right)) {
+      sibling->color = BLACK; 
       x = x->parent; 
       continue; 
     }
 
     if(!is_black(sibling->left) && is_black(sibling->right)) {
       sibling->left->color = BLACK; 
-      x = x->parent; 
+      sibling->color = RED; 
+      sibling = rotate_right(sibling); 
+      sibling = x->parent->right; 
     }
     
   }
