@@ -547,9 +547,24 @@ Node* transplant(RedBlackTree* tree, Node* root, Node* child) {
   return child; 
 }
 
+/** 
+ * A utility method to check if a given node is black from which the user can infer the color of the node if its not black (it's red you dummy) ; 
+ *
+ * @param: x -> The node with a color to check 
+ * @returns: A boolean value representing whether the given node is Black or not
+ */
+
+
 bool is_black(Node* x) {
   return x == NULL || x->color == BLACK; 
 }
+
+/**
+ * A method for fixing the structure and color of the tree to keep to the rules of a RedBlackTree
+ *
+ * @param: tree -> The red black tree to fix the structure of
+ * @param: x -> The child node of y in the delete method (see this method and the README for more information)
+ */
 
 Node* delete_fixup(RedBlackTree* tree, Node* x) {
 
@@ -558,26 +573,51 @@ Node* delete_fixup(RedBlackTree* tree, Node* x) {
     Node* sibling = x->parent->left == x ? x->parent->right : x->parent->left; 
     bool sibling_is_red = is_black(sibling) == false; 
 
+    if (sibling == x->parent->right) {
+
+      if(sibling_is_red) {
+        sibling->color = BLACK; 
+        x->color = RED;
+        Node* x_parent = rotate_left(x->parent); 
+        sibling = x->parent->right; 
+      }
+
+      if(is_black(sibling->left) && is_black(sibling->right)) {
+        sibling->color = BLACK; 
+        x = x->parent; 
+        continue; 
+      }
+
+      if(!is_black(sibling->left) && is_black(sibling->right)) {
+        sibling->left->color = BLACK; 
+        sibling->color = RED; 
+        sibling = rotate_right(sibling); 
+        sibling = x->parent->right; 
+      }
+
+      continue;
+    }
+
     if(sibling_is_red) {
       sibling->color = BLACK; 
-      x->color = RED;
+      x->color = RED; 
       Node* x_parent = rotate_left(x->parent); 
-      sibling = x->parent->right; 
+      sibling = x->parent->left; 
     }
 
     if(is_black(sibling->left) && is_black(sibling->right)) {
-      sibling->color = BLACK; 
-      x = x->parent; 
+      sibling->color = BLACK;
+      x = x->parent;
       continue; 
     }
 
     if(!is_black(sibling->left) && is_black(sibling->right)) {
-      sibling->left->color = BLACK; 
-      sibling->color = RED; 
-      sibling = rotate_right(sibling); 
-      sibling = x->parent->right; 
+      sibling->right->color = BLACK;
+      sibling->color = RED;
+      sibling = rotate_left(sibling);
+      sibling = x->parent->left; 
+      
     }
-    
   }
   
   return NULL; 
