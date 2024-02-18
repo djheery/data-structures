@@ -105,6 +105,7 @@ The sub-type rotation simply combine both a Left and a Right rotation
 
 Note below We are not concerened with colors as you would be when implementing a RBT, rather just the rotations
 The colors may be referenced but just as an aside
+
 #### Left Rotation  
 
 A left rotation is done when the current node is in the right subtree if the uncle is BLACK (or NULL by proxy)  
@@ -609,6 +610,161 @@ x->parent->color = BLACK;
 w->right->color = BLACK 
 Node* x_parent = left_rotate(x->parent) 
 x = tree->root; 
+```
+
+### Delete Implementation 
+
+Below exists the sort of implementation that would exist for a delete method:
+
+```
+
+Node* delete(RedBlackTree* tree, Node* root, int node_data) {
+    
+    if(root == NULL) return NULL; 
+
+    if(node_data < root->data) {
+        root->left = delete(tree, root->left, node_data); 
+        return root; 
+    }
+
+    if(node_data > root->data) {
+        root->right = delete(tree, root->right, node_data);
+        return root; 
+    }
+
+    if(root->left = NULL) {
+        Node* temp = root->right; 
+        free(root); 
+        if(temp->color == BLACK) delete_fixup(tree, temp); 
+        tree->size -= 1;  
+        return temp; 
+    }
+
+    if(root->right = NULL) {
+        Node* temp = root->left; 
+        free(root); 
+        if(temp->color == BLACK) delete_fixup(tree, temp); 
+        tree->size -= 1; 
+        return temp; 
+    }
+
+    Node* y = min_successor(root); 
+    Node* x = y->right; 
+
+    int y_original_color = y->color; 
+
+    if(y != root->right) {
+        y = transplant(tree, x, y); 
+        y->right = root->right; 
+        y->right->parent = y; 
+    } else {
+       x->parent = y; 
+       y = transplant(tree, root, y); 
+       y->left->parent = y; 
+       y->color = root->color; 
+    }
+
+    if(y_original_color == BLACK) delete_fixup(x); 
+
+    free(root); 
+
+    return y; 
+}
+
+Node* transplant(RedBlackTree* tree, Node* root, Node* replacement_node) {
+    if (root->parent == NULL) {
+        tree->root = replacement_node; 
+        replacement_node->parent = NULL; 
+        return replacement_node; 
+    }
+
+    if (root == root->parent->left) {
+        root->parent->left = replacement_node;
+    } else (root == root->parent->right) {
+        root->parent->right = replacement_node; 
+    }
+
+    replacement_node->parent = root->parent;
+
+    return replacement_node; 
+}
+
+void delete_fixup(RedBlackTree* tree, Node* x) {
+
+    while (x != tree->root && x->color == BLACK) {
+        
+        bool x_is_in_left_subtree = x == x->parent->left; 
+
+        if (x_is_in_left_subtree) {
+
+            Node* sibling = x->parent->right; 
+
+            if(!is_black(sibling)) {
+                sibling->color = BLACK; 
+                x->parent->color = RED; 
+                Node* x_parent = rotate_left(x->parent); 
+                sibling = x_parent->right; 
+            }
+
+            if(is_black(sibling->left) && is_black(sibling->right) {
+                sibling->color = RED;  
+                x = x->parent; 
+                continue;
+            }
+
+            if(is_black(sibling->right)) {
+                sibling->left->color = BLACK; 
+                sibling->color = RED; 
+                sibling = right_rotate(sibling); 
+                sibling = x->parent->right; 
+            }
+
+            sibling->color = x->parent->color; 
+            x->parent->color = BLACK; 
+            sibling->right->color = BLACK; 
+            rotate_left(tree, x->parent); 
+            x = tree->root; 
+            continue; 
+        }
+
+        // We are in the right subtree 
+
+        Node* sibling = x->parent->left; 
+
+        if(!is_black(sibling)) {
+            sibling->color = BLACK; 
+            X->parent->color = RED; 
+            Node* x_parent = rotate_right(x->parent); 
+            sibling = x_parent->right; 
+        }
+
+        if(is_black(sibling->left) && is_black(sibling->right)) {
+            sibling->color = RED; 
+            x = x->parent; 
+            continue; 
+        }
+
+        if(is_black(sibling->left)) {
+            sibling->right->color = BLACK; 
+            sibling->color = RED; 
+            sibling = right_rotate(sibling); 
+            sibling = x->parent->right; 
+        }
+
+        sibling->color = x->parent->color; 
+        x->parent->color = BLACK; 
+        sibling->right->color = BLACK; 
+        rotate_right(tree, x->parent); 
+        x = tree->root; 
+    }
+
+    x->color = BLACK; 
+}
+
+bool is_black(Node* x) {
+    return x == NULL || x->color == BLACK; 
+}
+
 ```
 
 
