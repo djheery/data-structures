@@ -2,6 +2,28 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+/**
+ * ===================================
+ * || Red Black Tree Implementation ||
+ * ===================================
+ *
+ * This is my implementation of a Red Black tree
+ *
+ * The project structure is as follows: 
+ *
+ * - Begins with some definitions and macros
+ * - Setup the data structures
+ * - Method delarations 
+ * - Red Black Tree method Implementations
+ * - Tests 
+ * - Utility Data Structure implementations 
+ *
+ *  WARNING: This is still a work in progress
+ *  NOTE: I seem to have unwitingly used two separate ways of implementing a Red Black Tree as can be seen in the differences between Insert and Delete 
+ *  NOTE: Insert relies on recursion and delete is a mix of Recursion and procedural programming - This is because when implementing delete I started to read "Introduction to Algorithms" (Corman, T. et al)
+ *  NOTE: Red black trees are confusing to those new to this, so I have tried to make this code as verbose as possible.
+ */
+
 #define LEFT 'L' 
 #define RIGHT 'R' 
 #define RED 1
