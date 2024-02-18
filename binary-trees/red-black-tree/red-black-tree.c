@@ -69,7 +69,7 @@ bool delete(RedBlackTree* tree, int node_to_delete);
 Node* delete_helper(RedBlackTree* tree, Node* root, int node_to_delete);
 Node* delete_fixup(RedBlackTree* tree, Node* x); 
 Node* transplant(RedBlackTree* tree, Node* root, Node* child);
-Node** min_right_subtree(Node* root);
+Node* min_right_subtree(Node* root);
 
 bool search(RedBlackTree* tree, int node_data); 
 bool search_helper(Node* root, int node_data); 
@@ -496,23 +496,28 @@ Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
     return new_root;
   }
 
-  Node** target_node_arr = min_right_subtree(root);
-  Node* y = target_node_arr[0];
-  Node* x = target_node_arr[1];
+  Node* min_successor = min_right_subtree(root);
+  Node* min_right = min_successor->right;
 
-  int y_color = y->color;
-  Node* new_y = transplant(tree, y, x); 
+  if (min_successor != root->right) {
+    min_successor = transplant(tree, min_successor, min_right); 
+    min_successor->right = root->right; 
+    min_successor->right->parent = min_right;
+  } else {
+    min_right->parent = min_successor; 
+    min_successor = transplant(tree, root, min_successor); 
+    min_successor->left = root->left; 
+    min_successor->left->parent = min_successor; 
+    min_successor->color = root->color; 
+  }
 
-  y->right = root->right; 
-  Node* new_root = transplant(tree, root, y); 
-
-  if(y->color == BLACK) delete_fixup(tree, x);
+  if(min_successor->color == BLACK) delete_fixup(tree, min_right);
   
   
-  free(target_node_arr); 
   free(root); 
+  tree->size -= 1;
 
-  return new_root;
+  return min_successor;
 }
 
 /**
@@ -631,7 +636,7 @@ Node* delete_fixup(RedBlackTree* tree, Node* x) {
  */
 
 
-Node** min_right_subtree(Node* root) {
+Node* min_right_subtree(Node* root) {
   Node* parent = root;
   Node* successor = root->right;
 
@@ -640,17 +645,7 @@ Node** min_right_subtree(Node* root) {
     successor = successor->left;
   }
 
-  if(parent != root) {
-    parent->left = successor->right; 
-  } else {
-    parent->right = successor->right;
-  }
-
-  Node** data = (Node**) malloc(sizeof(Node) * 2); 
-  data[0] = successor; 
-  data[1] = successor->right; 
-
-  return data;
+  return successor;
 }
 
 
