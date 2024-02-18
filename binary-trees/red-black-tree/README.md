@@ -561,6 +561,10 @@ We only execute the fixes when the node that is passed `x` is black
 
 At the end of `delete_fixup` we color `x` to `BLACK` 
 
+Something that wasn't entirely clear is that this method has two branches defining whether the `sibling` is the right child or the left child.
+
+The above cases apply when the sibiling is the left child (not the right) everything is the same when the `sibling` is the right child however we just invert the cases where we call `node->left` to `node->right` and `rotate_left` will become `rotate_right`
+
 ##### Case 1: W is RED
 
 When W is red we perform the following code: 
