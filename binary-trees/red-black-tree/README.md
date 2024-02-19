@@ -498,9 +498,23 @@ Node* transplant(RedBlackTree* tree, Node* root, Node* root_child) {
     return root_child;
 }
 ```
+
 The creator of the video says that it is important to not that there is no code updating `v.right` or `v.left`
 
 This is because it is the responsibility of the calling function to perform these updates
+
+A Below demonstates a scenarios for Transplant:
+
+```
+        20                                      20
+       /  \      transplant 12 and 10          /  \ 
+      10  39     ====================>        12  39
+     / \    \                                /      \
+    4  12   44                              4       44
+
+```
+
+Not that all that transplant does is return a node to be swapped with a differnt node, removing the original `root` from the tree
 
 ### Delete Methods
 

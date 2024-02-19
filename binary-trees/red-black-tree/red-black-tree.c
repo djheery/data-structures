@@ -500,26 +500,33 @@ Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
     return root;
   }
 
+  DEBUG_PRINT("%d => %d\n\n", root->data, node_data);
+
+
   if(root->left == NULL) {
     Node* new_root = transplant(tree, root, root->right);
-    free(root);
-
-    if (new_root->color == BLACK) delete_fixup(tree, new_root); 
-
+    DEBUG_PRINT("I'm still alive\n\n", NULL);
+    if (original_color == BLACK) delete_fixup(tree, new_root); 
     tree->size -= 1;
+    free(root);
     return new_root;
   }
 
+
   if(root->right == NULL) {
-    Node* new_root = transplant(tree, root, root->left); 
+    Node* new_root = root->left; 
     free(root); 
-    if (new_root->color == BLACK) delete_fixup(tree, new_root); 
+    if (original_color == BLACK) delete_fixup(tree, new_root); 
     tree->size -= 1; 
     return new_root;
   }
 
+  DEBUG_PRINT("Who knows", NULL);
+
   Node* y = min_successor(root);
   Node* x = y->right;
+
+  DEBUG_PRINT("letst do this", NULL);
 
   if (y != root->right) {
     y = transplant(tree, y, x); 
@@ -533,8 +540,9 @@ Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
     y->color = root->color; 
   }
 
+  DEBUG_PRINT("Root: %d, Y: %d, X: %d", root->data, y->data, x->data); 
+
   if(y->color == BLACK) delete_fixup(tree, x);
-  
   
   free(root); 
   tree->size -= 1;
@@ -596,12 +604,18 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
 
   while (is_black(x) && x != tree->root) {
 
+    DEBUG_PRINT("I'm in the loop %d\n\n", x->parent->data);
+
     Node* sibling = x->parent->left == x ? x->parent->right : x->parent->left; 
+    DEBUG_PRINT("I'm in the loop 2\n\n", NULL);
     bool sibling_is_red = is_black(sibling) == false; 
 
-    if (sibling == x->parent->right) {
+    if (x == x->parent->left) {
+
+      DEBUG_PRINT("CASE LEFT\n\n", NULL);
 
       if(sibling_is_red) {
+        DEBUG_PRINT("CASE 1\n\n", NULL);
         sibling->color = BLACK; 
         x->color = RED;
         Node* x_parent = rotate_left(x->parent); 
@@ -609,18 +623,21 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
       }
 
       if(is_black(sibling->left) && is_black(sibling->right)) {
+        DEBUG_PRINT("CASE 2\n\n", NULL);
         sibling->color = RED; 
         x = x->parent; 
         continue; 
       }
 
       if(is_black(sibling->right)) {
+        DEBUG_PRINT("CASE 3\n\n", NULL);
         sibling->left->color = BLACK; 
         sibling->color = RED; 
         sibling = rotate_right(sibling); 
         sibling = x->parent->right; 
       }
 
+      DEBUG_PRINT("CASE 4\n\n", NULL);
       sibling->color = x->parent->color;
       x->parent->color = BLACK;
       sibling->right->color = BLACK;
@@ -629,7 +646,11 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
       continue;
     }
 
+
+    DEBUG_PRINT("CASE RIGHT", NULL);
+
     if(sibling_is_red) {
+      DEBUG_PRINT("CASE 1\n\n", NULL);
       sibling->color = BLACK; 
       x->color = RED; 
       Node* x_parent = rotate_right(x->parent); 
@@ -637,18 +658,21 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
     }
 
     if(is_black(sibling->left) && is_black(sibling->right)) {
+      DEBUG_PRINT("CASE 2\n\n", NULL);
       sibling->color = RED;
       x = x->parent;
       continue; 
     }
 
     if(is_black(sibling->left)) {
+      DEBUG_PRINT("CASE 3\n\n", NULL);
       sibling->right->color = BLACK;
       sibling->color = RED;
       sibling = rotate_left(sibling);
       sibling = x->parent->left; 
     }
 
+    DEBUG_PRINT("CASE 4\n\n", NULL);
     sibling->color = x->parent->color;
     x->parent->color = BLACK;
     sibling->left->color = BLACK;
@@ -915,6 +939,8 @@ void run_tests() {
 
   populate_tree(&test_tree);
 
+  test_deletion(&test_tree);
+
   free_tree(&test_tree);
 }
 
@@ -937,7 +963,12 @@ void test_insertion(RedBlackTree* test_tree, int node_data) {
 }
 
 void test_deletion(RedBlackTree* test_tree) {
-  
+  delete(test_tree, 68); 
+  print_tree_inorder(test_tree->root);
+  printf("\n\n"); 
+  delete(test_tree, 50); 
+  print_tree_inorder(test_tree->root);
+  printf("\n\n");
 }
 
 void test_search(RedBlackTree* test_tree) {
