@@ -95,6 +95,7 @@ Node* min_successor(Node* root);
 
 bool search(RedBlackTree* tree, int node_data); 
 bool search_helper(Node* root, int node_data); 
+Node* get_node(Node* root, int node_data); 
 
 int size(Node* root, int current_sum); 
 
@@ -504,8 +505,7 @@ Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
 
 
   if(root->left == NULL) {
-    Node* new_root = transplant(tree, root, root->right);
-    DEBUG_PRINT("I'm still alive\n\n", NULL);
+    Node* new_root = root->right;
     if (original_color == BLACK) delete_fixup(tree, new_root); 
     tree->size -= 1;
     free(root);
@@ -515,8 +515,8 @@ Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
 
   if(root->right == NULL) {
     Node* new_root = root->left; 
-    free(root); 
     if (original_color == BLACK) delete_fixup(tree, new_root); 
+    free(root); 
     tree->size -= 1; 
     return new_root;
   }
@@ -602,9 +602,11 @@ bool is_black(Node* x) {
 
 void delete_fixup(RedBlackTree* tree, Node* x) {
 
+  DEBUG_PRINT("I got called\n\n", NULL);
+
   while (is_black(x) && x != tree->root) {
 
-    DEBUG_PRINT("I'm in the loop %d\n\n", x->parent->data);
+    DEBUG_PRINT("I'm in the loop %d\n\n", 2);
 
     Node* sibling = x->parent->left == x ? x->parent->right : x->parent->left; 
     DEBUG_PRINT("I'm in the loop 2\n\n", NULL);
@@ -742,6 +744,26 @@ bool search_helper(Node* root, int data_to_search) {
   if(data_to_search > root->data) found = search_helper(root->right, data_to_search);  
 
   return found; 
+}
+
+/**
+ * A search method that returns the actual node if it exists
+ *
+ * @param: root -> The current node 
+ * @param: node_data -> The data of the node we are looking for 
+ * @returns: NULL or a pointer to the node that was found (This should be checked in the caller) 
+ */
+
+Node* get_node(Node* root, int node_data) {
+  if (root == NULL) return NULL; 
+  if (root->data == node_data) return root; 
+
+  Node* n; 
+
+  if (node_data < root->data) n = get_node(root->left, node_data);
+  if (node_data > root->data) n = get_node(root->right, node_data); 
+
+  return n;
 }
 
 /**
