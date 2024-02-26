@@ -513,12 +513,12 @@ void delete_helper(RedBlackTree* tree, Node* root, Node* to_delete) {
       y->right->parent = y; 
     } else {
       x->parent = y;
-      transplant(tree, to_delete, y); 
-      y->left = to_delete->left; 
-      y->left->parent = y; 
-      y->color = to_delete->color; 
     } 
 
+    transplant(tree, to_delete, y); 
+    y->left = to_delete->left; 
+    y->left->parent = y; 
+    y->color = to_delete->color; 
   }
 
   DEBUG_PRINT("GOTEM %d\n", to_delete->data);
@@ -544,13 +544,7 @@ Node* transplant(RedBlackTree* tree, Node* root, Node* child) {
   // Is root the actual tree root, could also be written as root == tree->root
   if(root->parent == NULL) {
     tree->root = child; 
-    child->parent = NULL; 
-    return child; 
-  } 
-
-  bool root_is_left_child = root == root->parent->left; 
-
-  if (root_is_left_child) {
+  } else if (root->parent->left == root) {
     root->parent->left = child; 
   } else {
     root->parent->right = child; 
@@ -582,13 +576,15 @@ bool is_black(Node* x) {
 
 void delete_fixup(RedBlackTree* tree, Node* x) {
 
+  DEBUG_PRINT("%p\n", x);
+
 
   while (is_black(x) && x != tree->root) {
 
     Node* sibling = x->parent->left == x ? x->parent->right : x->parent->left; 
+    DEBUG_PRINT("GOT PAST FIRST CHECK: %b::%b\n\n", sibling == NULL, x == NULL);
     bool sibling_is_red = is_black(sibling) == false; 
 
-    DEBUG_PRINT("GOT PAST FIRST CHECK: %b::%b\n\n", sibling == NULL, x == NULL);
 
     if (x == x->parent->left) {
 
