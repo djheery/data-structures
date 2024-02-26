@@ -30,6 +30,8 @@
 #define BLACK 0
 #define QUEUE_CAPACITY 30 
 #define DEBUG 
+#define INSERT 'I'
+#define DELETE 'D'
 
 #ifdef DEBUG
 #define DEBUG_PRINT(fmt, ...) fprintf(stderr, fmt, __VA_ARGS__)
@@ -84,11 +86,11 @@ void free_tree(RedBlackTree* tree);
 void insert(RedBlackTree* tree, int node_data); 
 Node* insert_helper(RedBlackTree* tree, Node* root, int node_data); 
 Node* rotation_helper(RedBlackTree* tree, Node* root); 
-bool set_conflict_flag(RedBlackTree* tree, Node* current_node, char direction); 
+bool set_conflict_flag(RedBlackTree* tree, Node* current_node, char direction, char caller); 
 void conflict_helper(RedBlackTree* tree, Node* root); 
 
 bool delete(RedBlackTree* tree, int node_to_delete); 
-Node* delete_helper(RedBlackTree* tree, Node* root, int node_to_delete);
+void delete_helper(RedBlackTree* tree, Node* root, Node* to_delete);
 void delete_fixup(RedBlackTree* tree, Node* x); 
 Node* transplant(RedBlackTree* tree, Node* root, Node* child);
 Node* min_successor(Node* root);
@@ -278,11 +280,11 @@ Node* insert_helper(RedBlackTree* tree, Node* root, int node_data) {
   if(node_data < root->data) {
     root->left = insert_helper(tree, root->left, node_data);  
     root->left->parent = root; 
-    red_red_conflict = set_conflict_flag(tree, root, LEFT); 
+    red_red_conflict = set_conflict_flag(tree, root, LEFT, INSERT); 
   } else {
     root->right = insert_helper(tree, root->right, node_data); 
     root->right->parent = root; 
-    red_red_conflict = set_conflict_flag(tree, root, RIGHT); 
+    red_red_conflict = set_conflict_flag(tree, root, RIGHT, INSERT); 
   }
   
 
@@ -307,7 +309,7 @@ Node* insert_helper(RedBlackTree* tree, Node* root, int node_data) {
  * @returns: A boolean value indicating whether there is a RED->RED conflict or not
  */
 
-bool set_conflict_flag(RedBlackTree* tree, Node* current_node, char direction) {
+bool set_conflict_flag(RedBlackTree* tree, Node* current_node, char direction, char caller) {
   if(direction != LEFT && direction != RIGHT) {
     DEBUG_PRINT("You've messed up you bozo \n", NULL);  
     DEBUG_PRINT("the direction must be either 'L' or 'R'. Your Tree may be messed up now\n\n", NULL);
@@ -315,11 +317,14 @@ bool set_conflict_flag(RedBlackTree* tree, Node* current_node, char direction) {
   }
 
   Node* node_to_check = direction == LEFT ? current_node->left : current_node->right;  
+  int color_to_check = caller == INSERT ? RED : BLACK;
 
   if(current_node == tree->root) return false; 
 
   return current_node->color == RED && node_to_check->color == RED; 
 }
+
+
 
 /**
  * A helper method for rotating the tree where necessary
@@ -466,13 +471,11 @@ void conflict_helper(RedBlackTree* tree, Node* root) {
 bool delete(RedBlackTree* tree, int node_data) {
   if(tree->size == 0 || tree->root == NULL) return false;
 
-  //  NOTE: Maybe an unecerssary overhead but good for flagging to users if a node does not exist
+  Node* to_delete = get_node(tree->root, node_data); 
 
-  bool node_exists = search_helper(tree->root, node_data); 
+  if(to_delete == NULL) return false; 
 
-  if(!node_exists) return false; 
-
-  tree->root = delete_helper(tree, tree->root, node_data); 
+  delete_helper(tree, tree->root, to_delete); 
 
   return true;
 }
@@ -486,40 +489,45 @@ bool delete(RedBlackTree* tree, int node_data) {
  * @returns: Eventually will return the root of the tree 
  */
 
-Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
-  if(root == NULL) return NULL;
-  
-  bool double_black_flag = false; 
-  int original_color = root->color;
+void delete_helper(RedBlackTree* tree, Node* root, Node* to_delete) {
 
-  if(node_data < root->data) {
-    int left_og_color = root->left->color; 
-    root->left = delete_helper(tree, root->left, node_data);
-    return root;
+  Node* x;
+  Node* y = to_delete; 
+  int y_color = y->color;
+
+  if (to_delete->left == NULL) {
+    x = to_delete->right;  
+    transplant(tree, to_delete, to_delete->left);
+  } else if (to_delete->right == NULL) {
+    x = to_delete->left; 
+    transplant(tree, to_delete, to_delete->right); 
+  } else {
+
+    y = min_successor(to_delete);
+    y_color = y->color; 
+    x = y->right; 
+
+    if (y != to_delete->right) {
+      transplant(tree, y, y->right); 
+      y->right = to_delete->right; 
+      y->right->parent = y; 
+    } else {
+      x->parent = y;
+      transplant(tree, to_delete, y); 
+      y->left = to_delete->left; 
+      y->left->parent = y; 
+      y->color = to_delete->color; 
+    } 
+
   }
 
-  if(node_data > root->data) {
-    int right_og_color = root->right->color; 
-    root->right = delete_helper(tree, root->right, node_data); 
-    return root;
-  }
+  DEBUG_PRINT("GOTEM %d\n", to_delete->data);
 
-  if(root->left == NULL) {
-    Node* new_root = root->right;
-    tree->size -= 1;
-    free(root);
-    return new_root;
-  }
+  if (y_color == BLACK) delete_fixup(tree, x);
 
+  free(to_delete); 
+  tree->size -= 1; 
 
-  if(root->right == NULL) {
-    Node* new_root = root->left; 
-    free(root); 
-    tree->size -= 1; 
-    return new_root;
-  }
-
-  return root;
 }
 
 /**
@@ -548,7 +556,7 @@ Node* transplant(RedBlackTree* tree, Node* root, Node* child) {
     root->parent->right = child; 
   }
 
-  child->parent = root->parent; 
+  if(child != NULL) child->parent = root->parent; 
 
   return child; 
 }
@@ -577,12 +585,10 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
 
   while (is_black(x) && x != tree->root) {
 
-
     Node* sibling = x->parent->left == x ? x->parent->right : x->parent->left; 
     bool sibling_is_red = is_black(sibling) == false; 
 
     if (x == x->parent->left) {
-
 
       if(sibling_is_red) {
         sibling->color = BLACK; 
@@ -610,9 +616,6 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
       x = tree->root; 
       continue;
     }
-
-
-    DEBUG_PRINT("CASE RIGHT", NULL);
 
     if(sibling_is_red) {
       sibling->color = BLACK; 
