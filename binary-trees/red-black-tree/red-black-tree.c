@@ -24,7 +24,7 @@
  *  NOTE: Red black trees are confusing to those new to this, so I have tried to make this code as verbose as possible.
  */
 
-#define LEFT 'L' 
+#define LEFT 'L' red-bla
 #define RIGHT 'R' 
 #define RED 1
 #define BLACK 0
@@ -596,22 +596,16 @@ bool is_black(Node* x) {
 
 void delete_fixup(RedBlackTree* tree, Node* x) {
 
-  DEBUG_PRINT("I got called\n\n", NULL);
-
   while (is_black(x) && x != tree->root) {
 
-    DEBUG_PRINT("I'm in the loop %d\n\n", 2);
 
     Node* sibling = x->parent->left == x ? x->parent->right : x->parent->left; 
-    DEBUG_PRINT("I'm in the loop 2\n\n", NULL);
     bool sibling_is_red = is_black(sibling) == false; 
 
     if (x == x->parent->left) {
 
-      DEBUG_PRINT("CASE LEFT\n\n", NULL);
 
       if(sibling_is_red) {
-        DEBUG_PRINT("CASE 1\n\n", NULL);
         sibling->color = BLACK; 
         x->color = RED;
         Node* x_parent = rotate_left(x->parent); 
@@ -619,21 +613,18 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
       }
 
       if(is_black(sibling->left) && is_black(sibling->right)) {
-        DEBUG_PRINT("CASE 2\n\n", NULL);
         sibling->color = RED; 
         x = x->parent; 
         continue; 
       }
 
       if(is_black(sibling->right)) {
-        DEBUG_PRINT("CASE 3\n\n", NULL);
         sibling->left->color = BLACK; 
         sibling->color = RED; 
         sibling = rotate_right(sibling); 
         sibling = x->parent->right; 
       }
 
-      DEBUG_PRINT("CASE 4\n\n", NULL);
       sibling->color = x->parent->color;
       x->parent->color = BLACK;
       sibling->right->color = BLACK;
@@ -642,11 +633,7 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
       continue;
     }
 
-
-    DEBUG_PRINT("CASE RIGHT", NULL);
-
     if(sibling_is_red) {
-      DEBUG_PRINT("CASE 1\n\n", NULL);
       sibling->color = BLACK; 
       x->color = RED; 
       Node* x_parent = rotate_right(x->parent); 
@@ -654,21 +641,18 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
     }
 
     if(is_black(sibling->left) && is_black(sibling->right)) {
-      DEBUG_PRINT("CASE 2\n\n", NULL);
       sibling->color = RED;
       x = x->parent;
       continue; 
     }
 
     if(is_black(sibling->left)) {
-      DEBUG_PRINT("CASE 3\n\n", NULL);
       sibling->right->color = BLACK;
       sibling->color = RED;
       sibling = rotate_left(sibling);
       sibling = x->parent->left; 
     }
 
-    DEBUG_PRINT("CASE 4\n\n", NULL);
     sibling->color = x->parent->color;
     x->parent->color = BLACK;
     sibling->left->color = BLACK;
