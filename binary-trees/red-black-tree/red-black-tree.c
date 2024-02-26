@@ -24,7 +24,7 @@
  *  NOTE: Red black trees are confusing to those new to this, so I have tried to make this code as verbose as possible.
  */
 
-#define LEFT 'L' red-bla
+#define LEFT 'L' 
 #define RIGHT 'R' 
 #define RED 1
 #define BLACK 0
@@ -488,25 +488,24 @@ bool delete(RedBlackTree* tree, int node_data) {
 
 Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
   if(root == NULL) return NULL;
-
+  
+  bool double_black_flag = false; 
   int original_color = root->color;
 
   if(node_data < root->data) {
+    int left_og_color = root->left->color; 
     root->left = delete_helper(tree, root->left, node_data);
     return root;
   }
 
   if(node_data > root->data) {
+    int right_og_color = root->right->color; 
     root->right = delete_helper(tree, root->right, node_data); 
     return root;
   }
 
-  DEBUG_PRINT("%d => %d\n\n", root->data, node_data);
-
-
   if(root->left == NULL) {
     Node* new_root = root->right;
-    if (original_color == BLACK) delete_fixup(tree, new_root); 
     tree->size -= 1;
     free(root);
     return new_root;
@@ -515,33 +514,12 @@ Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
 
   if(root->right == NULL) {
     Node* new_root = root->left; 
-    if (original_color == BLACK) delete_fixup(tree, new_root); 
     free(root); 
     tree->size -= 1; 
     return new_root;
   }
 
-  Node* y = min_successor(root);
-  Node* x = y->right;
-
-  if (y != root->right) {
-    y = transplant(tree, y, x); 
-    y->right = root->right; 
-    y->right->parent = x;
-  } else {
-    x->parent = y; 
-    y = transplant(tree, root, y); 
-    y->left = root->left; 
-    y->left->parent = y; 
-    y->color = root->color; 
-  }
-
-  if(y->color == BLACK) delete_fixup(tree, x);
-  
-  free(root); 
-  tree->size -= 1;
-
-  return y;
+  return root;
 }
 
 /**
@@ -596,6 +574,7 @@ bool is_black(Node* x) {
 
 void delete_fixup(RedBlackTree* tree, Node* x) {
 
+
   while (is_black(x) && x != tree->root) {
 
 
@@ -624,7 +603,6 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
         sibling = rotate_right(sibling); 
         sibling = x->parent->right; 
       }
-
       sibling->color = x->parent->color;
       x->parent->color = BLACK;
       sibling->right->color = BLACK;
@@ -632,6 +610,9 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
       x = tree->root; 
       continue;
     }
+
+
+    DEBUG_PRINT("CASE RIGHT", NULL);
 
     if(sibling_is_red) {
       sibling->color = BLACK; 
