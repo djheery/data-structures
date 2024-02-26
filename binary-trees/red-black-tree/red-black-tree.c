@@ -236,12 +236,14 @@ void free_tree(RedBlackTree* tree) {
   while(queue.size != 0) {
     Node* current = dequeue(&queue);  
 
-    if(current->left != NULL) enqueue(&queue, current->left); 
-    if(current->right != NULL) enqueue(&queue, current->right); 
+    if(current->left != tree->TNIL) enqueue(&queue, current->left); 
+    if(current->right != tree->TNIL) enqueue(&queue, current->right); 
     
     DEBUG_PRINT("Freeing Node: %d\n", current->data); 
     free(current); 
   }
+
+  free(tree->TNIL); 
 
   DEBUG_PRINT("\nList Feed Successfully\n\n", NULL); 
 
@@ -251,6 +253,7 @@ void free_tree(RedBlackTree* tree) {
   tree->rr = false; 
   tree->ll = false; 
   tree->lr = false; 
+
 
 }
 
@@ -358,7 +361,7 @@ Node* rotation_helper(RedBlackTree* tree, Node* root) {
     root->right->color = RED; 
     tree->rr = false;
   } else if (tree->rl) {
-    root->right = rotate_right(root->right); 
+    root->right = rotate_right(root->right, tree); 
     root->right->parent = root; 
     root = rotate_left(root, tree); 
     root->color = BLACK; 
