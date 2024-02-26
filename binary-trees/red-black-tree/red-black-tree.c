@@ -289,7 +289,6 @@ Node* insert_helper(RedBlackTree* tree, Node* root, int node_data) {
   root = rotation_helper(tree, root); 
 
   if(red_red_conflict) {
-    // DEBUG_PRINT("%d->%d->%d ", root->parent->data, root->data, root->right->data);
     conflict_helper(tree, root); 
     red_red_conflict = false;  
   }
@@ -379,6 +378,7 @@ Node* rotate_left(Node* root) {
 
   return x;  
 }
+
 
 /**
  * The implementation of the Right Rotation
@@ -521,12 +521,8 @@ Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
     return new_root;
   }
 
-  DEBUG_PRINT("Who knows", NULL);
-
   Node* y = min_successor(root);
   Node* x = y->right;
-
-  DEBUG_PRINT("letst do this", NULL);
 
   if (y != root->right) {
     y = transplant(tree, y, x); 
@@ -539,8 +535,6 @@ Node* delete_helper(RedBlackTree* tree, Node* root, int node_data) {
     y->left->parent = y; 
     y->color = root->color; 
   }
-
-  DEBUG_PRINT("Root: %d, Y: %d, X: %d", root->data, y->data, x->data); 
 
   if(y->color == BLACK) delete_fixup(tree, x);
   
