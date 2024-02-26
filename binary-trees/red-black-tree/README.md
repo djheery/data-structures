@@ -17,6 +17,13 @@ When the shape of the tree has atrophied the tree can degerate into a linear str
 Red Black Trees address this problem by self-balancing on insertion and deletion. Ensuring the tree is balanced is a preventative measure 
 to stop the tree degerating into a linear structure and preserving the average O(log n) search time 
 
+## Quick Note
+
+After reviewing `introduction to algorithms (Corman, et al)` I have seen that it is common practice to use a sentinel node to represent all NULL leaf nodes in the tree whose parent is the root of the tree.
+This is to make the tree slightly more memory efficient - However, for the purpose of this implementation and clarity I have not implemented the sentinel node. 
+
+**ALSO DELETE IS BROKEN so I am going to have to review my code and change it to match that of the reference matrial mentioned above**
+
 ## Rules and properties of a Red-Black Tree
 
 1. Every node has a color (Red or Black) 2. The root is always BLACK 3. Red nodes cannot be proceeded or preceeded by another red node 4. Every path from a node to any of its leaf nodes has the same number of black nodes 5. Every Leaf is colored black 6. The black height is the number of black does on a path from root to leaf ## Methods 
