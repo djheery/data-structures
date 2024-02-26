@@ -57,6 +57,7 @@ typedef struct {
   bool rr; 
   bool lr; 
   bool rl; 
+  Node* TNIL; 
 } RedBlackTree; 
 
 typedef struct {
@@ -78,7 +79,7 @@ typedef struct {
 // Setup/ Teardown Methods
 
 RedBlackTree initialize_tree(); 
-Node* initialize_node(int node_data); 
+Node* initialize_node(int node_data, RedBlackTree* tree); 
 void free_tree(RedBlackTree* tree); 
 
 // Util Methods 
@@ -101,8 +102,8 @@ Node* get_node(Node* root, int node_data);
 
 int size(Node* root, int current_sum); 
 
-Node* rotate_left(Node* root); 
-Node* rotate_right(Node* root); 
+Node* rotate_left(Node* root, RedBlackTree* tree); 
+Node* rotate_right(Node* root, RedBlackTree* tree); 
 
 int height(Node* root); 
 int get_max(int a, int b);
@@ -180,6 +181,16 @@ RedBlackTree initialize_tree() {
   tree.ll = false; 
   tree.lr = false; 
 
+  Node* TNIL = (Node*) malloc(sizeof(Node)); 
+  
+  if (TNIL == NULL) {
+    DEBUG_PRINT("Error initializing TNIL\n", NULL); 
+    exit(EXIT_FAILURE);
+  }
+
+  TNIL->color = BLACK; 
+  tree.TNIL = TNIL;
+
   return tree;  
 }
 
@@ -190,7 +201,7 @@ RedBlackTree initialize_tree() {
  * @returns: A pointer to the node on the heap
  */
 
-Node* initialize_node(int node_data) {
+Node* initialize_node(int node_data, RedBlackTree* tree) {
   Node* node = (Node*) malloc(sizeof(Node));  
 
   if(node == NULL) {
@@ -201,8 +212,8 @@ Node* initialize_node(int node_data) {
 
   node->data = node_data; 
   node->parent = NULL; 
-  node->left = NULL; 
-  node->right = NULL; 
+  node->left = tree->TNIL; 
+  node->right = tree->TNIL; 
   node->color = RED; 
 
   return node;
@@ -275,7 +286,7 @@ void insert(RedBlackTree* tree, int node_data) {
 Node* insert_helper(RedBlackTree* tree, Node* root, int node_data) {
   bool red_red_conflict = false;  
 
-  if(root == NULL) return initialize_node(node_data);
+  if(root == NULL || root == tree->TNIL) return initialize_node(node_data, tree);
   
   if(node_data < root->data) {
     root->left = insert_helper(tree, root->left, node_data);  
@@ -337,26 +348,26 @@ bool set_conflict_flag(RedBlackTree* tree, Node* current_node, char direction, c
 Node* rotation_helper(RedBlackTree* tree, Node* root) {
 
   if(tree->ll) {
-    root = rotate_left(root); 
+    root = rotate_left(root, tree); 
     root->color = BLACK; 
     root->left->color = RED; 
     tree->ll = false; 
   } else if (tree->rr) {
-    root = rotate_right(root); 
+    root = rotate_right(root, tree); 
     root->color = BLACK; 
     root->right->color = RED; 
     tree->rr = false;
   } else if (tree->rl) {
     root->right = rotate_right(root->right); 
     root->right->parent = root; 
-    root = rotate_left(root); 
+    root = rotate_left(root, tree); 
     root->color = BLACK; 
     root->left->color = RED; 
     tree->rl = false; 
   } else if (tree->lr) {
-    root->left = rotate_left(root->left); 
+    root->left = rotate_left(root->left, tree); 
     root->left->parent = root; 
-    root = rotate_right(root); 
+    root = rotate_right(root, tree); 
     root->color = BLACK; 
     root->right->color = RED;
     tree->lr = false; 
@@ -372,14 +383,14 @@ Node* rotation_helper(RedBlackTree* tree, Node* root) {
  * @returns: The new node in place after rotation
  */ 
 
-Node* rotate_left(Node* root) {
+Node* rotate_left(Node* root, RedBlackTree* tree) {
   Node* x = root->right; 
   Node* y = x->left; 
   x->left = root;  
   root->right = y;
   root->parent = x; 
 
-  if(y != NULL) y->parent = x; 
+  if(y != tree->TNIL) y->parent = x; 
 
   return x;  
 }
@@ -392,7 +403,7 @@ Node* rotate_left(Node* root) {
  * @returns: The new node in place after rotation
  */
 
-Node* rotate_right(Node* root) {
+Node* rotate_right(Node* root, RedBlackTree* tree) {
   Node* x = root->left; 
   Node* y = x->right; 
   x->right = root; 
@@ -419,7 +430,7 @@ void conflict_helper(RedBlackTree* tree, Node* root) {
   bool current_is_right_child = root->parent->right == root;  
 
   if(current_is_right_child) {
-    bool uncle_left_is_black = root->parent->left == NULL || root->parent->left->color == BLACK;
+    bool uncle_left_is_black = root->parent->left == tree->TNIL || root->parent->left->color == BLACK;
 
     if(!uncle_left_is_black) {
       root->parent->left->color = BLACK; 
@@ -430,7 +441,7 @@ void conflict_helper(RedBlackTree* tree, Node* root) {
       return; 
     } 
 
-    if(root->left != NULL && root->left->color == RED) {
+    if(root->left != tree->TNIL && root->left->color == RED) {
       tree->rl = true;  
     } else if(root->right != NULL && root->right->color == RED) {
       tree->ll = true; 
@@ -441,7 +452,7 @@ void conflict_helper(RedBlackTree* tree, Node* root) {
 
   //  NOTE: We are dealing with the left child 
   
-  bool uncle_right_is_black = root->parent->right == NULL || root->right->color == BLACK; 
+  bool uncle_right_is_black = root->parent->right == tree->TNIL || root->right->color == BLACK; 
 
   if(!uncle_right_is_black) {
     root->parent->right->color = BLACK;
@@ -452,9 +463,9 @@ void conflict_helper(RedBlackTree* tree, Node* root) {
     return; 
   } 
 
-  if(root->left != NULL && root->left->color == RED) {
+  if(root->left != tree->TNIL && root->left->color == RED) {
     tree->rr = true; 
-  } else if(root->right != NULL && root->right->color == RED) {
+  } else if(root->right != tree->TNIL && root->right->color == RED) {
     tree->lr = true; 
   } 
 
@@ -495,10 +506,10 @@ void delete_helper(RedBlackTree* tree, Node* root, Node* to_delete) {
   Node* y = to_delete; 
   int y_color = y->color;
 
-  if (to_delete->left == NULL) {
+  if (to_delete->left == tree->TNIL) {
     x = to_delete->right;  
     transplant(tree, to_delete, to_delete->left);
-  } else if (to_delete->right == NULL) {
+  } else if (to_delete->right == tree->TNIL) {
     x = to_delete->left; 
     transplant(tree, to_delete, to_delete->right); 
   } else {
@@ -550,7 +561,7 @@ Node* transplant(RedBlackTree* tree, Node* root, Node* child) {
     root->parent->right = child; 
   }
 
-  if(child != NULL) child->parent = root->parent; 
+  child->parent = root->parent; 
 
   return child; 
 }
@@ -563,8 +574,8 @@ Node* transplant(RedBlackTree* tree, Node* root, Node* child) {
  */
 
 
-bool is_black(Node* x) {
-  return x == NULL || x->color == BLACK; 
+bool is_black(Node* x, RedBlackTree* tree) {
+  return x == NULL || x->color == BLACK || x == tree->TNIL; 
 }
 
 /**
@@ -579,11 +590,11 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
   DEBUG_PRINT("%p\n", x);
 
 
-  while (is_black(x) && x != tree->root) {
+  while (is_black(x, tree) && x != tree->root) {
 
     Node* sibling = x->parent->left == x ? x->parent->right : x->parent->left; 
     DEBUG_PRINT("GOT PAST FIRST CHECK: %b::%b\n\n", sibling == NULL, x == NULL);
-    bool sibling_is_red = is_black(sibling) == false; 
+    bool sibling_is_red = is_black(sibling, tree) == false; 
 
 
     if (x == x->parent->left) {
@@ -591,26 +602,27 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
       if(sibling_is_red) {
         sibling->color = BLACK; 
         x->color = RED;
-        Node* x_parent = rotate_left(x->parent); 
+        Node* x_parent = rotate_left(x->parent, tree); 
         sibling = x->parent->right; 
       }
 
-      if(is_black(sibling->left) && is_black(sibling->right)) {
+      if(is_black(sibling->left, tree) && is_black(sibling->right, tree)) {
         sibling->color = RED; 
         x = x->parent; 
         continue; 
       }
 
-      if(is_black(sibling->right)) {
+      if(is_black(sibling->right, tree)) {
         sibling->left->color = BLACK; 
         sibling->color = RED; 
-        sibling = rotate_right(sibling); 
+        sibling = rotate_right(sibling, tree); 
         sibling = x->parent->right; 
       }
+
       sibling->color = x->parent->color;
       x->parent->color = BLACK;
       sibling->right->color = BLACK;
-      rotate_left(x->parent); 
+      rotate_left(x->parent, tree); 
       x = tree->root; 
       continue;
     }
@@ -618,27 +630,27 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
     if(sibling_is_red) {
       sibling->color = BLACK; 
       x->color = RED; 
-      Node* x_parent = rotate_right(x->parent); 
+      Node* x_parent = rotate_right(x->parent, tree); 
       sibling = x->parent->left; 
     }
 
-    if(is_black(sibling->left) && is_black(sibling->right)) {
+    if(is_black(sibling->left, tree) && is_black(sibling->right, tree)) {
       sibling->color = RED;
       x = x->parent;
       continue; 
     }
 
-    if(is_black(sibling->left)) {
+    if(is_black(sibling->left, tree)) {
       sibling->right->color = BLACK;
       sibling->color = RED;
-      sibling = rotate_left(sibling);
+      sibling = rotate_left(sibling, tree);
       sibling = x->parent->left; 
     }
 
     sibling->color = x->parent->color;
     x->parent->color = BLACK;
     sibling->left->color = BLACK;
-    rotate_left(x->parent); 
+    rotate_left(x->parent, tree); 
     x = tree->root; 
   }
 
