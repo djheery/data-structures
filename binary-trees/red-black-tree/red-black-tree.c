@@ -588,6 +588,8 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
     Node* sibling = x->parent->left == x ? x->parent->right : x->parent->left; 
     bool sibling_is_red = is_black(sibling) == false; 
 
+    DEBUG_PRINT("GOT PAST FIRST CHECK: %b::%b\n\n", sibling == NULL, x == NULL);
+
     if (x == x->parent->left) {
 
       if(sibling_is_red) {
