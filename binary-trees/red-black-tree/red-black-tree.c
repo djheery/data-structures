@@ -113,9 +113,9 @@ Node* invert_tree_helper(Node* root);
 
 // Traversal methods 
 
-void print_tree_inorder(Node* root); 
-void print_tree_postorder(Node* root); 
-void print_tree_postorder(Node* root);
+void print_tree_inorder(RedBlackTree* tree, Node* root); 
+void print_tree_postorder(RedBlackTree* tree, Node* root); 
+void print_tree_preorder(RedBlackTree* tree, Node* root);
 
 char get_node_color(Node* root); 
 
@@ -590,13 +590,9 @@ bool is_black(Node* x, RedBlackTree* tree) {
 
 void delete_fixup(RedBlackTree* tree, Node* x) {
 
-  DEBUG_PRINT("%p\n", x);
-
-
   while (is_black(x, tree) && x != tree->root) {
 
     Node* sibling = x->parent->left == x ? x->parent->right : x->parent->left; 
-    DEBUG_PRINT("GOT PAST FIRST CHECK: %b::%b\n\n", sibling == NULL, x == NULL);
     bool sibling_is_red = is_black(sibling, tree) == false; 
 
 
@@ -784,7 +780,7 @@ void invert_tree(RedBlackTree* tree) {
   RedBlackTree test_tree = clone(tree); 
   invert_tree_helper(test_tree.root); 
 
-  print_tree_inorder(test_tree.root);
+  print_tree_inorder(tree, test_tree.root);
   printf("\n\n"); 
   
   free_tree(&test_tree); 
@@ -814,12 +810,12 @@ Node* invert_tree_helper(Node* root) {
  * @param: root -> The current node
  */
 
-void print_tree_inorder(Node* root) {
-  if(root == NULL) return; 
+void print_tree_inorder(RedBlackTree* tree, Node* root) {
+  if(root == tree->TNIL) return; 
 
-  print_tree_inorder(root->left); 
+  print_tree_inorder(tree, root->left); 
   printf("[%d, %c]", root->data, get_node_color(root)); 
-  print_tree_inorder(root->right); 
+  print_tree_inorder(tree, root->right); 
   
 }
 
@@ -829,11 +825,11 @@ void print_tree_inorder(Node* root) {
  * @param: root -> The current node
  */
 
-void print_tree_postorder(Node* root) {
-  if(root == NULL) return; 
+void print_tree_postorder(RedBlackTree* tree, Node* root) {
+  if(root == tree->TNIL) return; 
 
-  print_tree_postorder(root->left); 
-  print_tree_postorder(root->right); 
+  print_tree_postorder(tree, root->left); 
+  print_tree_postorder(tree, root->right); 
   printf("[%d, %c]", root->data, get_node_color(root)); 
 }
 
@@ -843,12 +839,12 @@ void print_tree_postorder(Node* root) {
  * @param: root -> The current node
  */
 
-void print_tree_preorder(Node* root) {
-  if(root == NULL) return; 
+void print_tree_preorder(RedBlackTree* tree, Node* root) {
+  if(root == tree->TNIL) return; 
 
   printf("[%d, %c]", root->data, get_node_color(root)); 
-  print_tree_preorder(root->left); 
-  print_tree_preorder(root->right);
+  print_tree_preorder(tree, root->left); 
+  print_tree_preorder(tree, root->right);
 }
 
 char get_node_color(Node* root) {
@@ -955,16 +951,19 @@ void populate_tree(RedBlackTree* test_tree) {
 
 void test_insertion(RedBlackTree* test_tree, int node_data) {
   insert(test_tree, node_data); 
-  print_tree_inorder(test_tree->root);
+  print_tree_inorder(test_tree, test_tree->root);
   printf("\n\nRoot: %d\n\n", test_tree->root->data);  
 }
 
 void test_deletion(RedBlackTree* test_tree) {
   delete(test_tree, 68); 
-  print_tree_inorder(test_tree->root);
+  print_tree_inorder(test_tree, test_tree->root);
   printf("\n\n"); 
   delete(test_tree, 50); 
-  print_tree_inorder(test_tree->root);
+  print_tree_inorder(test_tree, test_tree->root);
+  printf("\n\n");
+  delete(test_tree, 62); 
+  print_tree_inorder(test_tree, test_tree->root);
   printf("\n\n");
 }
 
