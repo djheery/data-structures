@@ -418,6 +418,46 @@ Node* rotate_right(Node* root, RedBlackTree* tree) {
   return x;  
 }
 
+void rotate_left_del(RedBlackTree* tree, Node* root) {
+  Node* y = root->right; 
+  root->right = y->left;
+
+  if (y->left != tree->TNIL) {
+    y->left->parent = y; 
+  }
+
+  y->parent = root->parent; 
+
+  if (root->parent == NULL) {
+    tree->root = y;
+  } else if ( root == root->parent->left) {
+    root->parent->left = y;
+  } else  {
+    root->parent->right = y; 
+  }
+
+  y->left = root; 
+  root->parent = y; 
+}
+
+void rotate_right_del(RedBlackTree* tree, Node* root) {
+  Node* y = root->left; 
+  root->left = y->right; 
+
+  y->parent = root->parent; 
+
+  if (root->parent == NULL) {
+    tree->root = y; 
+  } else if (root == root->parent->left) {
+    root->parent->left = y; 
+  } else {
+    root->parent->right = y; 
+  }
+
+  root->parent = y;
+  y->right = root;
+}
+
 /** 
  * A helper for setting the rotation flags that need to be performed when there is a RED_RED conflict in the tree 
  *
@@ -601,7 +641,7 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
       if(sibling_is_red) {
         sibling->color = BLACK; 
         x->color = RED;
-        Node* x_parent = rotate_left(x->parent, tree); 
+        rotate_left_del(tree, x->parent); 
         sibling = x->parent->right; 
       }
 
@@ -614,14 +654,14 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
       if(is_black(sibling->right, tree)) {
         sibling->left->color = BLACK; 
         sibling->color = RED; 
-        sibling = rotate_right(sibling, tree); 
+        rotate_right_del(tree, sibling); 
         sibling = x->parent->right; 
       }
 
       sibling->color = x->parent->color;
       x->parent->color = BLACK;
       sibling->right->color = BLACK;
-      rotate_left(x->parent, tree); 
+      rotate_left_del(tree, x->parent); 
       x = tree->root; 
       continue;
     }
@@ -629,7 +669,7 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
     if(sibling_is_red) {
       sibling->color = BLACK; 
       x->color = RED; 
-      Node* x_parent = rotate_right(x->parent, tree); 
+      rotate_right_del(tree, x->parent); 
       sibling = x->parent->left; 
     }
 
@@ -642,14 +682,14 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
     if(is_black(sibling->left, tree)) {
       sibling->right->color = BLACK;
       sibling->color = RED;
-      sibling = rotate_left(sibling, tree);
+      rotate_left_del(tree, sibling);
       sibling = x->parent->left; 
     }
 
     sibling->color = x->parent->color;
     x->parent->color = BLACK;
     sibling->left->color = BLACK;
-    rotate_left(x->parent, tree); 
+    rotate_left_del(tree, x->parent); 
     x = tree->root; 
   }
 
