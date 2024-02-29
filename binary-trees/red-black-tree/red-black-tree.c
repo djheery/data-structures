@@ -639,14 +639,13 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
   while (is_black(x, tree) && x != tree->root) {
 
     Node* sibling = x->parent->left == x ? x->parent->right : x->parent->left; 
-    bool sibling_is_red = is_black(sibling, tree) == false; 
 
 
     if (x == x->parent->left) {
 
-      if(sibling_is_red) {
+      if(sibling->color == RED) {
         sibling->color = BLACK; 
-        x->color = RED;
+        x->parent->color = RED;
         rotate_left_del(tree, x->parent); 
         sibling = x->parent->right; 
       }
@@ -655,48 +654,54 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
         sibling->color = RED; 
         x = x->parent; 
         continue; 
+
+      } else {
+
+        if(is_black(sibling->right, tree)) {
+          sibling->left->color = BLACK; 
+          sibling->color = RED; 
+          rotate_right_del(tree, sibling); 
+          sibling = x->parent->right; 
+        }
+
+        sibling->color = x->parent->color;
+        x->parent->color = BLACK;
+        sibling->right->color = BLACK;
+        rotate_left_del(tree, x->parent); 
+        x = tree->root; 
+
       }
 
-      if(is_black(sibling->right, tree)) {
-        sibling->left->color = BLACK; 
-        sibling->color = RED; 
-        rotate_right_del(tree, sibling); 
-        sibling = x->parent->right; 
+    } else {
+
+      if(sibling->color == RED) {
+        sibling->color = BLACK; 
+        x->parent->color = RED; 
+        rotate_right_del(tree, x->parent); 
+        sibling = x->parent->left; 
       }
 
-      sibling->color = x->parent->color;
-      x->parent->color = BLACK;
-      sibling->right->color = BLACK;
-      rotate_left_del(tree, x->parent); 
-      x = tree->root; 
-      continue;
+      if (is_black(sibling->left, tree) && is_black(sibling->right, tree)) {
+        sibling->color = RED;
+        x = x->parent;
+      } else {
+
+        if(is_black(sibling->left, tree)) {
+          sibling->right->color = BLACK;
+          sibling->color = RED;
+          rotate_left_del(tree, sibling);
+          sibling = x->parent->left; 
+        }
+
+        sibling->color = x->parent->color;
+        x->parent->color = BLACK;
+        sibling->left->color = BLACK;
+        rotate_right_del(tree, x->parent); 
+        x = tree->root; 
+
+      }
     }
 
-    if(sibling_is_red) {
-      sibling->color = BLACK; 
-      x->color = RED; 
-      rotate_right_del(tree, x->parent); 
-      sibling = x->parent->left; 
-    }
-
-    if(is_black(sibling->left, tree) && is_black(sibling->right, tree)) {
-      sibling->color = RED;
-      x = x->parent;
-      continue; 
-    }
-
-    if(is_black(sibling->left, tree)) {
-      sibling->right->color = BLACK;
-      sibling->color = RED;
-      rotate_left_del(tree, sibling);
-      sibling = x->parent->left; 
-    }
-
-    sibling->color = x->parent->color;
-    x->parent->color = BLACK;
-    sibling->left->color = BLACK;
-    rotate_left_del(tree, x->parent); 
-    x = tree->root; 
   }
 
   x->color = BLACK; 
