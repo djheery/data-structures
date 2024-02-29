@@ -95,6 +95,8 @@ void delete_helper(RedBlackTree* tree, Node* root, Node* to_delete);
 void delete_fixup(RedBlackTree* tree, Node* x); 
 Node* transplant(RedBlackTree* tree, Node* root, Node* child);
 Node* min_successor(Node* root);
+void rotate_left_del(RedBlackTree* tree, Node* node); 
+void rotate_right_del(RedBlackTree* tree, Node* node);
 
 bool search(RedBlackTree* tree, int node_data); 
 bool search_helper(Node* root, int node_data); 
@@ -443,6 +445,10 @@ void rotate_left_del(RedBlackTree* tree, Node* root) {
 void rotate_right_del(RedBlackTree* tree, Node* root) {
   Node* y = root->left; 
   root->left = y->right; 
+
+  if(y->right != tree->TNIL) {
+    y->right->parent = y; 
+  }
 
   y->parent = root->parent; 
 
