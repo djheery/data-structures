@@ -557,10 +557,10 @@ void delete_helper(RedBlackTree* tree, Node* root, Node* to_delete) {
 
   if (to_delete->left == tree->TNIL) {
     x = to_delete->right;  
-    transplant(tree, to_delete, to_delete->left);
+    transplant(tree, to_delete, to_delete->right);
   } else if (to_delete->right == tree->TNIL) {
     x = to_delete->left; 
-    transplant(tree, to_delete, to_delete->right); 
+    transplant(tree, to_delete, to_delete->left); 
   } else {
 
     y = min_successor(to_delete);
@@ -640,7 +640,6 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
 
     Node* sibling = x->parent->left == x ? x->parent->right : x->parent->left; 
 
-
     if (x == x->parent->left) {
 
       if(sibling->color == RED) {
@@ -698,7 +697,6 @@ void delete_fixup(RedBlackTree* tree, Node* x) {
         sibling->left->color = BLACK;
         rotate_right_del(tree, x->parent); 
         x = tree->root; 
-
       }
     }
 
