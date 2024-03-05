@@ -18,7 +18,7 @@ Below Is the order I would go through this folder:
 3. AVL Tree 
 4. Red Black Tree (Currently I would not really look at this) 
 
-## Note of Red-Black Tree
+## Note on Red-Black Tree
 
 The Red-Black tree implemention and notes are not very good as I did not stick to a specific implementation style for the tree. 
 This is due to picking up "Introduction to Algorithms" (Cormen, T. et al) half way through the implementation of this structure which uses an iterative method to implement it's operations, whereas I had already used a recursive method to implement the operations for insertion and search. 
