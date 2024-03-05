@@ -1,5 +1,7 @@
 # Red-Black Tree 
 
+*Note* I've been working at this one for a while and it's been putting me off completing this project so I've moved on to do some other data structures to return to this when I have got my mojo back
+
 This information consists of notes taken from the following sources: 
 
 1. Geeks for Geeks: 
