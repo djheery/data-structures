@@ -19,12 +19,11 @@ When the shape of the tree has atrophied the tree can degerate into a linear str
 Red Black Trees address this problem by self-balancing on insertion and deletion. Ensuring the tree is balanced is a preventative measure 
 to stop the tree degerating into a linear structure and preserving the average O(log n) search time 
 
-## Quick Note
+## I would not reccommend using these notes
 
-After reviewing `introduction to algorithms (Corman, et al)` I have seen that it is common practice to use a sentinel node to represent all NULL leaf nodes in the tree whose parent is the root of the tree.
-This is to make the tree slightly more memory efficient - However, for the purpose of this implementation and clarity I have not implemented the sentinel node. 
+I wouldn't reccommend reading these notes as there are many inconsitencies and incorrect code examples.
 
-**ALSO DELETE IS BROKEN so I am going to have to review my code and change it to match that of the reference matrial mentioned above**
+The Notes on Deletion are not very good and should be disregarded. This is due to the fact I started reading "Introduction to Algorithms" (Cormen, T. et al) when I started to implement this method which uses an iterative pattern rather than the recursive pattern that I was using for Insertion and Search Operations. This means that the notes and code for Rotation do not work with an iterative method for deletion or atleast a major refactor of the delete fixup method is needed, thus I would not reccommend reading these notes if you wish to use the iterative method in the afformentioned books. 
 
 ## Rules and properties of a Red-Black Tree
 
