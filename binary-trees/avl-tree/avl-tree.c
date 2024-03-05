@@ -2,8 +2,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <sys/types.h>
 
 #define QUEUE_CAPACITY 50
+#define DEBUG
+
+#ifdef DEBUG
+#define DEBUG_PRINT(fmt, ...) fprintf(stderr, fmt, __VA_ARGS__)
+#else
+#define DEBUG_PRINT(fmt, ...)
+#endif
 
 typedef struct Node Node; 
 
@@ -26,8 +34,100 @@ typedef struct {
   uint16_t length; 
 } CircularQueue; 
 
+// Setup / Teardown methods 
+
+AVLTree initialize_tree(); 
+Node* initialize_node(int32_t node_data); 
+void free_tree(AVLTree* tree); 
+
+// General Tree Methods 
+
+bool node_exists(Node* root); 
+Node* search_and_get(Node* root); 
+
+void insert(AVLTree* tree, int32_t node_data); 
+Node* insert_helper(AVLTree* tree, Node* root, int32_t node_data); 
+
+void delete(AVLTree* tree, int32_t node_data); 
+Node* delete_helper(AVLTree* tree, Node* root, int32_t node_data); 
+
+void rotate_left(AVLTree* tree, Node* x); 
+void rotate_right(AVLTree* tree, Node* x); 
+
+int get_tree_balance(Node* root); 
+
+int get_tree_height(Node* root);
+int get_max(uint a, uint b); 
+
+// Queue methods 
+
+CircularQueue initialize_queue();
+Node* dequeue(CircularQueue* circ_queue); 
+void enqueue(CircularQueue* circ_queue, Node* node); 
+void free_queue(CircularQueue* circ_queue); 
+
 int main() {
   return 0; 
+}
+
+/**
+ * =====================
+ * || Program Methods || 
+ * =====================
+ */
+
+AVLTree initialize_tree() {
+  AVLTree tree; 
+  tree.root = NULL; 
+  tree.size = 0;
+
+  return tree; 
+}
+
+Node* initialize_node(int32_t node_data) {
+  Node* node = (Node*) malloc(sizeof(Node)); 
+
+  if (node == NULL) {
+    DEBUG_PRINT("Error  allocating memory for node with data: %d\n", node_data); 
+    exit(EXIT_FAILURE); 
+  }
+
+  node->data = node_data; 
+  node->left = NULL;
+  node->right = NULL; 
+
+  return node; 
+}
+
+void free_tree(AVLTree* tree) {
+  
+  if (tree->root == NULL) {
+    printf("There are no nodes in the tree that can be reached\n\n");  
+    return; 
+  }
+
+  if (tree->size == 0) {
+    DEBUG_PRINT("The tree size is 0 but there are nodes in the tree - something is wrong\n\n", NULL);
+    return; 
+  }
+
+  CircularQueue circ_queue = initialize_queue(); 
+  enqueue(&circ_queue, tree->root); 
+
+  while (circ_queue.length > 0) {
+    Node* current = dequeue(&circ_queue);
+
+    if (current->left != NULL) enqueue(&circ_queue, current->left); 
+    if (current->right != NULL) enqueue(&circ_queue, current->right); 
+
+    DEBUG_PRINT("Freeing node with data: %d\n", current->data); 
+    free(current); 
+  }
+
+  DEBUG_PRINT("\nAll nodes found have been freed\n\n", NULL); 
+
+  free_queue(&circ_queue); 
+
 }
 
 /**
