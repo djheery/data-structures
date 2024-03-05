@@ -36,6 +36,12 @@ int main() {
  * ====================
  */
 
+/**
+ * Initialize the queue 
+ *
+ * @returns: A new CircularQueue
+ */
+
 CircularQueue initialize_queue() {
   CircularQueue circ_queue; 
 
@@ -54,6 +60,12 @@ CircularQueue initialize_queue() {
   return circ_queue; 
 }
 
+/**
+ * Free the queue and set the struct to NULL 
+ *
+ * @param: circ_queue -> The queue to set to NULL which contains the queue to free 
+ */
+
 void free_queue(CircularQueue* circ_queue) {
   
   if (circ_queue == NULL) {
@@ -63,7 +75,15 @@ void free_queue(CircularQueue* circ_queue) {
 
   free(circ_queue->queue); 
   circ_queue = NULL; 
+
 }
+
+/** 
+ * Enqueue a new node in the queue 
+ *
+ * @param: circ_queue -> The queue struct to enqueue within 
+ * @param: node -> The node to enqueue
+ */
 
 void enqueue(CircularQueue* circ_queue, Node* node) {
 
@@ -85,6 +105,33 @@ void enqueue(CircularQueue* circ_queue, Node* node) {
   circ_queue->rear += 1;
   circ_queue->queue[circ_queue->rear] = node; 
   circ_queue->length += 1;
+
+}
+
+/**
+ * Standard dequeue method for a circular queue
+ *
+ * @param: circ_queue -> The queue struct to dequeue from 
+ * @returns: The element at the front of the queue (Can return NULL if the queue is empty) 
+ */
+
+Node* dequeue(CircularQueue* circ_queue) {
+
+  if (circ_queue == NULL) {
+    printf("Queue should not be NULL when calling dequeue\n"); 
+    exit(EXIT_FAILURE); 
+  }
+
+  if (circ_queue->length == 0 || circ_queue->queue[circ_queue->front] == NULL) {
+    printf("There is nothing to dequeue\n"); 
+    return NULL; 
+  }
+
+  Node* dequeued_node = circ_queue->queue[circ_queue->front]; 
+  circ_queue->front -= 1; 
+  circ_queue->length -= 1; 
+
+  return dequeued_node; 
 
 }
 
