@@ -27,5 +27,5 @@ Try as I might, I could not get a working recursive implemention of RBT delete s
 
 It is my intention to go back and edit the red-black tree and make a recursive delete; however, I was losing motivation to complete this project due to how long I was spending on RBT so I have moved on to get some confidence back and will circle back around to it at a later date. 
 
-I would reccommend creating a fresh Red-Black tree for your own purpose and writing your own notes - whilst I intend to get back to it and update it
+I would reccommend creating a fresh Red-Black tree for your own purpose and writing your own notes - whilst I intend to get back to it and update it I feel this will not be for a while
 
