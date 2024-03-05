@@ -40,7 +40,7 @@ A binary tree is defined to be an AVL tree if the invariant holds for every node
 
 *Note: [An invariant is a property of a mathematical object which remains unchanged after operations or transofrmations](https://en.wikipedia.org/wiki/Invariant_(mathematics)#Invariants_in_computer_science)*
 
-The invariant in this scenario is that the `BF(x) <= 1` 
+The invariant in this scenario is that the `BF(x) <= 1 && BF(x) >= -1`  
 
 A `BF(x) > 0` is called right heavy and the opposite (`BF(x) > 0`) is called left heavy where equal to 0 is generally called balanced. 
 
@@ -75,6 +75,13 @@ Of course this could also be done iteratively if that is the preffered method us
 
 ### Insertion 
 
+Inserting a node into an AVL tree initially follows the same process as a standard Binary Search Tree. 
+
+If the tree is empty you simply insert the new node as the root - if not you recursively go down the tree until you find an empty space to insert the new node
+
+After insertion you must check the ancestors of the new node to see if the tree has become unbalanced. 
+
+Only the ancestors will be subject to becoming unbalanced because only their nodes subtrees have been altered. 
 
 
 ### Deletion 

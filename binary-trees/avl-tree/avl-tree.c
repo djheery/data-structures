@@ -19,6 +19,7 @@ typedef struct Node {
   int32_t data; 
   Node* left; 
   Node* right; 
+  uint16_t height; 
 } Node; 
 
 typedef struct {
@@ -42,8 +43,11 @@ void free_tree(AVLTree* tree);
 
 // General Tree Methods 
 
-bool node_exists(Node* root); 
-Node* search_and_get(Node* root); 
+int16_t balance_factor(Node* x); 
+uint16_t height(Node* x); 
+
+bool node_exists(Node* root, int32_t node_data); 
+Node* search_and_get(Node* root, int32_t node_data); 
 
 void insert(AVLTree* tree, int32_t node_data); 
 Node* insert_helper(AVLTree* tree, Node* root, int32_t node_data); 
@@ -51,8 +55,8 @@ Node* insert_helper(AVLTree* tree, Node* root, int32_t node_data);
 void delete(AVLTree* tree, int32_t node_data); 
 Node* delete_helper(AVLTree* tree, Node* root, int32_t node_data); 
 
-void rotate_left(AVLTree* tree, Node* x); 
-void rotate_right(AVLTree* tree, Node* x); 
+Node* rotate_left(Node* x); 
+Node* rotate_right(Node* x); 
 
 int get_tree_balance(Node* root); 
 
@@ -95,6 +99,7 @@ Node* initialize_node(int32_t node_data) {
   node->data = node_data; 
   node->left = NULL;
   node->right = NULL; 
+  node->height = 1; 
 
   return node; 
 }
@@ -128,6 +133,106 @@ void free_tree(AVLTree* tree) {
 
   free_queue(&circ_queue); 
 
+}
+
+/**
+ * Get the balance factor of node x by checking its decendents
+ *
+ * @param: x -> The node to check the balance factor of 
+ * @returns: The balance factor of node x, ideally this should never be greater the 2 or less than -2 as this indicates that their is an unbalanced tree and rotations are needed; 
+ */
+
+int16_t balance_factor(Node* x) {
+  if (x == NULL) return 0;  
+
+  return height(x->left) - height(x->right); 
+}
+
+/** 
+ * Get the height of a given node "x"
+ *
+ * @param: x -> The node to get the height of
+ * @returns: the height of the given node or 0 should the node be NULL
+ */
+
+uint16_t height(Node* x) {
+  if (x == NULL) return 0; 
+
+  return x->height; 
+}
+
+/**
+ * Get the max between two unsigned integers
+ *
+ * @param: { a, b } - The two integers to compare
+ * @param: The max number of either a or b. If they are equal it will implicitly return b 
+ */
+
+uint16_t max(uint16_t a, uint16_t b) {
+  return a > b ? a : b; 
+}
+
+Node* rotate_left(Node* x) {
+  Node* y = x->right;  
+  Node* z = y->left; 
+  x->right = z; 
+  y->left = x; 
+
+  y->height = 1 + max(height(x->left), height(x->right)); 
+  x->height = 1 + max(height(y->left), height(y->right)); 
+
+  return y;
+}
+
+Node* rotate_right(Node* x) {
+  Node* y = x->left; 
+  Node* z = y->right; 
+  x->left = z; 
+  y->right = x; 
+
+  y->height = 1 + max(height(x->left), height(x->right));
+  x->height = 1 + max(height(y->left), height(y->right)); 
+
+  return y; 
+}
+
+Node* search_and_get(Node* root, int32_t node_data) {
+  if (root == NULL) return NULL; 
+  if (node_data == root->data) return root;
+
+  Node* found_node; 
+
+  if (node_data < root->data) found_node = search_and_get(root->left, node_data);
+  if (node_data > root->data) found_node = search_and_get(root->right, node_data);
+
+  return found_node; 
+}
+
+bool node_exists(Node* root, int32_t node_data) {
+  if (root == NULL) return false; 
+  if (node_data == root->data) return true; 
+
+  bool is_found = false; 
+
+  if (node_data < root->data) is_found = node_exists(root->left, node_data);
+  if (node_data > root->data) is_found = node_exists(root->right, node_data);
+  
+  return is_found; 
+}
+
+void print_preorder(Node* root) {
+  if (root == NULL) return;  
+
+}
+
+void print_inorder(Node* root) {
+  if (root == NULL) return; 
+  
+}
+
+void print_postorder(Node* root) {
+  if (root == NULL) return;
+  
 }
 
 /**
