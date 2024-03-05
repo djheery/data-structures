@@ -209,8 +209,8 @@ Node* rotate_left(Node* x) {
   x->right = z; 
   y->left = x; 
 
-  y->height = 1 + max(height(x->left), height(x->right)); 
-  x->height = 1 + max(height(y->left), height(y->right)); 
+  y->height = 1 + max(height(y->left), height(y->right)); 
+  x->height = 1 + max(height(x->left), height(x->right)); 
 
   return y;
 }
@@ -228,8 +228,8 @@ Node* rotate_right(Node* x) {
   x->left = z; 
   y->right = x; 
 
-  y->height = 1 + max(height(x->left), height(x->right));
-  x->height = 1 + max(height(y->left), height(y->right)); 
+  y->height = 1 + max(height(y->left), height(y->right));
+  x->height = 1 + max(height(x->left), height(x->right)); 
 
   return y; 
 }

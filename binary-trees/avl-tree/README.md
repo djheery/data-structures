@@ -96,8 +96,8 @@ As you can see a left rotate are simply inverted versions of each other. In code
 ```
 
 Node* left_rotate(Node* x) {
-   z = x->right;  
-   t2 = z->left; 
+   Node* z = x->right;  
+   Node* t2 = z->left; 
    x->right = t2;
    z->left = x; 
 
@@ -105,8 +105,8 @@ Node* left_rotate(Node* x) {
 }
 
 Node* right_rotate(Node* z) {
-    x = z->left; 
-    t2 = x->right;
+    Node* x = z->left; 
+    Node* t2 = x->right;
     z->left = t2; 
     x->right = z; 
 
@@ -116,6 +116,26 @@ Node* right_rotate(Node* z) {
 ```
 
 To reiteratee this is without any code for resetting the heights which is needed for AVL trees
+
+When rotating subtrees with an AVL tree we need to set the new height of node `z` and node `x` after the rotation is performed
+
+Below is an example of this using `left_rotate`
+
+```
+
+Node* left_rotate(Node* x) {
+    Node* z = x->right; 
+    Node* t2 = z->left; 
+    x->right = t2;
+    z->left = x; 
+
+    z->height = 1 + get_max(height(z->left), height(z->right)); 
+    x->height = 1 + get_max(height(x->left), height(x->right)); 
+
+    return z;
+}
+
+```
 
 ### Search 
 
