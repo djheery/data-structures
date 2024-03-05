@@ -46,7 +46,76 @@ A `BF(x) > 0` is called right heavy and the opposite (`BF(x) > 0`) is called lef
 
 ## Operations 
 
-### Rotations 
+### Rebalancing 
+
+When modifying the tree with an Insertion or Deletion occurs there will be situations when an AVL tree does not fit to the rules/invariants of the tree. 
+
+In this circumstance a rotation/ number of rotations will be needed to restore the balance within the tree such that there is no violation of the AVL tree invariants 
+
+Rotations work to satisfy the constraints of an AVL tree as they move the nodes vertically such that the in-order sequence of keys is fully preserved and the general properties of a BST are not violated. 
+
+There are four possible variants of the violation of the invariants of an AVL tree:
+
+`X = current_node`
+`Z = child_node_of_X`
+
+1. Right Right -> `Z` is a right child of `X` and `BF(X) >= 0`
+2. Left Left -> `Z` is a left child of `X` and `BF(Z) <= 0`
+3. Right Left -> `Z` is a right child of `X` and `BF(Z) < 0`
+4. Left Right -> `Z` is a left child of `X` and `BF(Z) > 0` 
+
+To Solve These violations we would do the following:
+
+#### Rotations 
+
+There are two main types of rotation:
+
+1. Left Rotation 
+2. Right Rotation 
+
+Then as an addition there are two subtypes for right-left and left-right violations:
+
+3. Right-Left Rotation
+4. Left-Right Rotation 
+
+Point 3 and 4 are simply a combination of left rotation and right rotaton depending on where the violation occurs in the rooted nodes subtree 
+
+Take the diagram below to see how the mechanics of a rotation work:
+
+```
+    X       Left Rotate         Z
+   / \      ---------->        / \
+  T1  Z     <----------       X  T3
+     / \    Right rotate     / \
+    T2 T3                   T1 T2
+
+```
+
+As you can see a left rotate are simply inverted versions of each other. In code (without any AVL specific code) it may look something like this:
+
+```
+
+Node* left_rotate(Node* x) {
+   z = x->right;  
+   t2 = z->left; 
+   x->right = t2;
+   z->left = x; 
+
+   return z; 
+}
+
+Node* right_rotate(Node* z) {
+    x = z->left; 
+    t2 = x->right;
+    z->left = t2; 
+    x->right = z; 
+
+    return x; 
+}
+
+```
+
+To reiteratee this is without any code for resetting the heights which is needed for AVL trees
 
 ### Search 
 
@@ -84,7 +153,16 @@ After insertion you must check the ancestors of the new node to see if the tree 
 Only the ancestors will be subject to becoming unbalanced because only their nodes subtrees have been altered. 
 
 This means that it is necessary to check each of the node's ancestors for consistency with the invariants of the AVL trees.
+
 The process of checking the consistency of the nodes ancestors is called retracing and is accomplished by considering the balance factor of each node. 
+
+Since a single insertion cannot cause an AVLs subtree to vary more than 1, the temporary balance factor of a node after insertion will range from [-2, +2]. 
+
+If the Balance Factor remains within the tree invariants then only an update of the balance factor and no rotation is necessary
+
+However, if the tempory balance factor falls outside the range of the tree invariantes (-2 or +2) the subtree rooted at the current node is seen as AVL unbanlanced.
+
+To solve this lack of balance a rotation is needed. 
 
 
 ### Deletion 

@@ -253,7 +253,11 @@ Node* insert_helper(AVLTree* tree, Node* root, int32_t node_data) {
     root->left = insert_helper(tree, root->left, node_data);
   } else if (node_data > root->data) {
     root->right = insert_helper(tree, root->right, node_data); 
-  }
+  } 
+
+  root->height = 1 + max(height(root->left), height(root->right)); 
+
+  int16_t bf = balance_factor(root);
 
   // Check the balance of the tree 
 
