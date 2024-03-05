@@ -19,6 +19,15 @@ AVL stands for "Adelson-Velsky and Landis" who are/were (probably aint alive any
 
 AVL trees are the oldest self-balancing BST data structure to be invented. 
 
+Its a common misconception that AVL trees are more complex to implement than Red-Black trees. It is my opinion that AVL trees are simpler by an order of magnitude to implement than Red Black trees. 
+
+I've come to this conclusion due to 2 factors:
+
+1. Whilst the balancing requirements are stricter - There is only one rule - Balance factor is in set { 1, 0, -1 } whereas Red Black Trees have more rules to obey
+2. Due to the simpler balancing requirements there is much less boiler plate in the final code base due to no fixup methods and RED-RED/BLACK-BLACK conflict checks
+
+Due to this I would recommend people implement an AVL tree before implementing a Red-Black tree
+
 ## Balancing Factor 
 
 In a binary tree the balance factor of node `x` is defined to be the height difference of its two child sub-trees rooted at node-x. 
@@ -47,7 +56,6 @@ If the data matches `x->data` then this node will be returned (or a true stateme
 The code looks something like this: 
 
 ```
-
 Node* search(Node* x, int data) {
     if (x == NULL) return NULL;
 
@@ -60,7 +68,6 @@ Node* search(Node* x, int data) {
 
     return found_node; 
 }
-
 
 ```
 
