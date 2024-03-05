@@ -80,6 +80,12 @@ int main() {
  * =====================
  */
 
+/** 
+ * Initialize a new AVL Tree
+ *
+ * @returns: A new AVL tree
+ */
+
 AVLTree initialize_tree() {
   AVLTree tree; 
   tree.root = NULL; 
@@ -87,6 +93,13 @@ AVLTree initialize_tree() {
 
   return tree; 
 }
+
+/**
+ * Initialize a new node to be placed within the tree 
+ *
+ * @param: node_data -> an i32 representing the value for the new nodes data 
+ * @returns: A pointer to the new node to be placed within the tree 
+ */
 
 Node* initialize_node(int32_t node_data) {
   Node* node = (Node*) malloc(sizeof(Node)); 
@@ -103,6 +116,12 @@ Node* initialize_node(int32_t node_data) {
 
   return node; 
 }
+
+/**
+ * Free all tree nodes from memory 
+ *
+ * @param: tree -> The AVL tree to free the nodes from 
+ */
 
 void free_tree(AVLTree* tree) {
   
@@ -172,6 +191,13 @@ uint16_t max(uint16_t a, uint16_t b) {
   return a > b ? a : b; 
 }
 
+/** 
+ * AVL Tree left rotation method 
+ *
+ * @param: x -> The node to perform the rotation around
+ * @returns: The new node in x's place with the heights set to their new value 
+ */
+
 Node* rotate_left(Node* x) {
   Node* y = x->right;  
   Node* z = y->left; 
@@ -183,6 +209,13 @@ Node* rotate_left(Node* x) {
 
   return y;
 }
+
+/** 
+ * AVL Tree right rotation method 
+ *
+ * @param: x -> The node to perform the rotation around
+ * @returns: The new node in x's place with the heights set to their new value 
+ */
 
 Node* rotate_right(Node* x) {
   Node* y = x->left; 
@@ -196,6 +229,13 @@ Node* rotate_right(Node* x) {
   return y; 
 }
 
+/**
+ * Searches the tree for a node with given node_data and returns it if it exists
+ *
+ * @param: root -> The current node being checked
+ * @returns: The node with the given node_data or NULL if it does not exist
+ */
+
 Node* search_and_get(Node* root, int32_t node_data) {
   if (root == NULL) return NULL; 
   if (node_data == root->data) return root;
@@ -207,6 +247,15 @@ Node* search_and_get(Node* root, int32_t node_data) {
 
   return found_node; 
 }
+
+/**
+ * Searches the tree for a node with the given node_data and returns a boolean value 
+ * indicating whether the node exists
+ * 
+ * @param: root -> The current node being checked 
+ * @param: node_data -> The node data to find 
+ * @returns: a boolean value indicating whether a node with the given data has been found 
+ */
 
 bool node_exists(Node* root, int32_t node_data) {
   if (root == NULL) return false; 
@@ -220,18 +269,42 @@ bool node_exists(Node* root, int32_t node_data) {
   return is_found; 
 }
 
+/**
+ * Print the tree using Pre order traversal
+ */
+
 void print_preorder(Node* root) {
   if (root == NULL) return;  
 
+  printf("%d ", root->data); 
+  print_preorder(root->left);
+  print_preorder(root->right); 
+
 }
+
+/**
+ * Print the tree using in order traversal
+ */
 
 void print_inorder(Node* root) {
   if (root == NULL) return; 
+
+  print_inorder(root->left);
+  printf("%d ", root->data); 
+  print_inorder(root->right); 
   
 }
 
+/**
+ * Print the tree using post order traversal
+ */
+
 void print_postorder(Node* root) {
   if (root == NULL) return;
+
+  print_postorder(root->left);
+  print_postorder(root->right); 
+  printf("%d ", root->data); 
   
 }
 
