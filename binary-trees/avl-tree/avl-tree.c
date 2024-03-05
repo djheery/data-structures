@@ -54,6 +54,7 @@ Node* insert_helper(AVLTree* tree, Node* root, int32_t node_data);
 
 void delete(AVLTree* tree, int32_t node_data); 
 Node* delete_helper(AVLTree* tree, Node* root, int32_t node_data); 
+Node* min_successor(Node* root); 
 
 Node* rotate_left(Node* x); 
 Node* rotate_right(Node* x); 
@@ -62,6 +63,10 @@ int get_tree_balance(Node* root);
 
 int get_tree_height(Node* root);
 int get_max(uint a, uint b); 
+
+void print_preorder(Node* root);
+void print_postorder(Node* root);
+void print_inorder(Node* root); 
 
 // Queue methods 
 
@@ -227,6 +232,32 @@ Node* rotate_right(Node* x) {
   x->height = 1 + max(height(y->left), height(y->right)); 
 
   return y; 
+}
+
+/**
+ * Wrapper method for tree insert 
+ *
+ * @param: tree -> The tree to insert within 
+ * @param: node_data -> The data to insert to a new node 
+ */
+
+void insert(AVLTree* tree, int32_t node_data) {
+   tree->root = insert_helper(tree, tree->root, node_data); 
+}
+
+Node* insert_helper(AVLTree* tree, Node* root, int32_t node_data) {
+
+  if (root == NULL) return initialize_node(node_data);
+ 
+  if (node_data < root->data) {
+    root->left = insert_helper(tree, root->left, node_data);
+  } else if (node_data > root->data) {
+    root->right = insert_helper(tree, root->right, node_data); 
+  }
+
+  // Check the balance of the tree 
+
+  return root; 
 }
 
 /**

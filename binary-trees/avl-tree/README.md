@@ -83,6 +83,9 @@ After insertion you must check the ancestors of the new node to see if the tree 
 
 Only the ancestors will be subject to becoming unbalanced because only their nodes subtrees have been altered. 
 
+This means that it is necessary to check each of the node's ancestors for consistency with the invariants of the AVL trees.
+The process of checking the consistency of the nodes ancestors is called retracing and is accomplished by considering the balance factor of each node. 
+
 
 ### Deletion 
 
