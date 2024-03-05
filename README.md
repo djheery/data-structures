@@ -41,7 +41,7 @@ The list is comprised of items from the wikipedia data structures list
 - [ ] Binary Trees 
     - [x] Binary Tree 
     - [x] Binary Search Tree
-    - [ ] Red Black Tree
+    - [x] Red Black Tree
     - [ ] AVL Tree
 - [ ] Hash Based Structures 
     - [ ] Hash List 
