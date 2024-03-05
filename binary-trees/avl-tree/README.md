@@ -75,5 +75,7 @@ Of course this could also be done iteratively if that is the preffered method us
 
 ### Insertion 
 
+
+
 ### Deletion 
 

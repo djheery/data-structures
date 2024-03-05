@@ -5,7 +5,7 @@ int addNums(int x, int y) {
   return x + y; 
 }
 
-int typeWeirdity() {
+void typeWeirdity() {
   float sum =  5 / 2; // Should be 2.5
   printf("%f\n", sum); // This will be odd
 
