@@ -401,7 +401,7 @@ CircularQueue initialize_queue() {
 void free_queue(CircularQueue* circ_queue) {
   
   if (circ_queue == NULL) {
-    printf("Queeu should not be NULL when calling free queue\n\n"); 
+    printf("Queue should not be NULL when calling free queue\n\n"); 
     exit(EXIT_FAILURE); 
   }
 
