@@ -180,7 +180,21 @@ Below demonstrates the rotation:
 
 ##### Left Left Rotation
 
+This example below is the inverted version of the above where the balance factor of 30 is +2 which does not meet the invariants of a red black tree
 
+This as the `bf(30) = +2` we know that the tree is left heavy. We also know that the inserted data (10) is less than 30->left(20). This means a `LEFT-LEFT` rotation should be performed. 
+
+```
+   30                20
+   /                /  \
+  20 ----LL--->    10  30
+  / 
+ 10
+```
+
+Remember that a left-left rotation is actually just a singular `right_rotate(X)` where X is 30 thus 30->left will move up in the tree forcing 30 down in the tree to 20->right and the heights of the respective nodes will be reset
+
+##### Right Left Rotation
 
 ### Search 
 
