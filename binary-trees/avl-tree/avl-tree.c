@@ -245,9 +245,22 @@ void insert(AVLTree* tree, int32_t node_data) {
    tree->root = insert_helper(tree, tree->root, node_data); 
 }
 
+/**
+ * A recursive insert method
+ *
+ * @param: tree -> The avl tree to insert into 
+ * @param: root -> The current node being checked 
+ * @param: node_data -> The data to insert into the new node 
+ * @returns: Recursively returns the current node until reaching the root of the tree after insertion
+ */
+
 Node* insert_helper(AVLTree* tree, Node* root, int32_t node_data) {
 
-  if (root == NULL) return initialize_node(node_data);
+  if (root == NULL) {
+    Node* leaf = initialize_node(node_data); 
+    tree->size += 1; 
+    return leaf; 
+  }
  
   if (node_data < root->data) {
     root->left = insert_helper(tree, root->left, node_data);
@@ -262,25 +275,103 @@ Node* insert_helper(AVLTree* tree, Node* root, int32_t node_data) {
   Node* node_left = root->left; 
   Node* node_right = root->right; 
 
+  // ll
   if (bf > 1 && node_data < node_left->data) {
     return rotate_right(root); 
   }
 
+  // rr
   if (bf < -1 && node_data > node_right->data) {
     return rotate_left(root); 
   }
 
+  // lr
   if (bf > 1 && node_data > node_left->data) {
     root->left = rotate_left(root->left); 
     return rotate_right(root); 
   }
 
+  // rl 
   if (bf < -1 && node_data < node_right->data) {
     root->right = rotate_right(root->right);
     return rotate_left(root); 
   }
 
   return root; 
+}
+
+/**
+ * Delete wrapper method 
+ *
+ * @param: tree -> The tree to delete from
+ * @param: node_data -> The data of the node to find and delete 
+ */
+
+void delete(AVLTree* tree, int32_t node_data) {
+  bool is_found = node_exists(tree->root, node_data); 
+
+  if (!is_found) return; 
+
+}
+
+Node* delete_helper(AVLTree* tree, Node* root, int32_t node_data) {
+   if (root == NULL) return NULL;
+
+   if(node_data < root->data) {
+     root->left = delete_helper(tree, root->left, node_data);
+   } else if (node_data > root->data) {
+     root->right = delete_helper(tree, root->right, node_data); 
+   } else {
+
+     if (root->left == NULL) {
+       Node* temp = root->right;  
+       free(root); 
+       tree->size -= 1; 
+       return temp;
+     } 
+
+     if (root->right == NULL) {
+        Node* temp = root->left;  
+        free(root); 
+        tree->size -= 1; 
+        return temp; 
+     }
+
+     Node* y = min_successor(root);
+     root->data = y->data; 
+     free(y);
+     tree->size -= 1; 
+
+     return root; 
+
+   }
+
+   // Rebalance tree
+   root->height = 1 + max(height(root->left), height(root->right)); 
+
+   int16_t bf = balance_factor(root);
+
+
+  
+   return root; 
+}
+
+Node* min_successor(Node* root) {
+  Node* parent = root;
+  Node* successor = parent->right; 
+
+  while(successor->left != NULL) {
+    parent = successor;
+    successor = successor->left; 
+  }
+
+  if (parent != root) {
+    parent->left = successor->right;
+  } else {
+    parent->right = successor->right; 
+  }
+
+  return successor;
 }
 
 /**
