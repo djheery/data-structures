@@ -138,6 +138,50 @@ Node* left_rotate(Node* x) {
 
 ```
 
+Depending on the violation found either a single rotation will be performed or a stacked rotation of both `left_rotate` and `right_rotate` with the order they are called in dependent on the specific violation. 
+
+#### Rotation Scenario Examples 
+
+Lets do a few examples to demonstrate: 
+
+##### Right-Right Rotation
+
+Take the tree below where 30 is the inserted node:
+
+```
+    10
+      \
+      20
+        \
+        30
+```
+
+In this tree eventually the balance factor `bf` of 10 would evaluate to -2:
+
+`bf(10) = height(10->right(20=2)) - height(10->left(Null)=0)`
+
+Given this information we review the table and see which violation is met:
+
+`bf(10) < -1 && insertion_data(30) > 10->right`
+
+The above means that the node inserted `Y` is the right child of node `Z` - This would conform to a right-right rotate.
+
+What seems to be confusing is that a right right rotate actually does a left_roation on the tree. This is because a left rotate raises up the Right child. 
+
+Below demonstrates the rotation:
+
+```
+    10                  20
+      \                /  \
+      20  --RR-->    10   30
+        \
+        30
+```
+
+##### Left Left Rotation
+
+
+
 ### Search 
 
 Search is much the same in any balanced or unbalanced BST where a `search(x, data)` will check a given nodes data against the data that is being searched for. 

@@ -209,8 +209,8 @@ Node* rotate_left(Node* x) {
   x->right = z; 
   y->left = x; 
 
-  y->height = 1 + max(height(y->left), height(y->right)); 
   x->height = 1 + max(height(x->left), height(x->right)); 
+  y->height = 1 + max(height(y->left), height(y->right)); 
 
   return y;
 }
@@ -228,8 +228,8 @@ Node* rotate_right(Node* x) {
   x->left = z; 
   y->right = x; 
 
-  y->height = 1 + max(height(y->left), height(y->right));
   x->height = 1 + max(height(x->left), height(x->right)); 
+  y->height = 1 + max(height(y->left), height(y->right));
 
   return y; 
 }
@@ -259,7 +259,26 @@ Node* insert_helper(AVLTree* tree, Node* root, int32_t node_data) {
 
   int16_t bf = balance_factor(root);
 
-  // Check the balance of the tree 
+  Node* node_left = root->left; 
+  Node* node_right = root->right; 
+
+  if (bf > 1 && node_data < node_left->data) {
+    return rotate_right(root); 
+  }
+
+  if (bf < -1 && node_data > node_right->data) {
+    return rotate_left(root); 
+  }
+
+  if (bf > 1 && node_data > node_left->data) {
+    root->left = rotate_left(root->left); 
+    return rotate_right(root); 
+  }
+
+  if (bf < -1 && node_data < node_right->data) {
+    root->right = rotate_right(root->right);
+    return rotate_left(root); 
+  }
 
   return root; 
 }
