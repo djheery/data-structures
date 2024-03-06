@@ -196,7 +196,9 @@ Remember that a left-left rotation is actually just a singular `right_rotate(X)`
 
 ##### Right Left Rotation
 
-A right left rotation is two rotations stacked
+A right left rotation is two rotations stacked. In the case of a right - left rotation it occurs when the `bf(x) < -1 && insert_data < x->right->data`
+
+Take the tree below: 
 
 ```
   20
@@ -208,16 +210,68 @@ A right left rotation is two rotations stacked
     25
 ```
 
+Given the following:
+
+```
+x = 20
+y = 40
+z = 25
+```
+
+The above dictates that x is the current node
+y is the the right child of x 
+z is the new node inserted 
+
+Eventually as the recursive calls bubble up the chain of balance factors would look like this:
+
+```
+bf(30) = -1
+bf(40) = 1
+bf(20) = -2 
+```
+
+Remember the `bf(x)` is calculated as `height(x->left) - height(x->right)`. Where a given node (left or right of x) is NULL height will return 0
+
+Given that `z->data` is less than `y->data` we meet the criteria for a right left rotate. 
+
+With a right-left rotate first a `right_rotate` is performed on `x->right` which is `y` in this circumstance
+
+This rotation replaces `y` with `y->left` and moves the current `y` down into `y->right` position
+
+Then a final `left_rotate` is performed on node `x` 
+
+In this scenario first 30 will be pulled up into 40s place pushing 40 down after the right rotate 
+
+Then the left rotation would force 20 down into 10s place and pull 30 up to the root node position with all other nodes being replaced with it. 
+
+You can see this in the diagram below: 
+
+
 ```
   20                     20                     30
  /  \                   /  \                   /  \
 10  40 -----RR----->   10  30 ----LL----->    20  40
     / \                    / \               /  \   \
    30 50                  25  40            10  25  50
-    \                          \ 
-    25                         50
+   /                           \ 
+  25                           50
 ```
 
+##### Left Right Rotate 
+
+The Left Right Rotate is the inversion of a right left rotation so rather than retreading old ground I will simply provide a diagram.
+
+The main difference to note is that the critera is that `bf(x) > 1 && inserted_data > x->left->data`
+
+```
+    40                       40                         30
+   /  \                     /  \                       /  \
+  20  50  -----LL---->     30  50   ------RR---->     20  40
+ / \                       / \                       /    / \
+10  30                    20 35                     10   35 50
+     \                    /
+     35                  10
+```
 
 ### Search 
 
