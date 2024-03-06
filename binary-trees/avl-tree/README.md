@@ -58,11 +58,12 @@ There are four possible variants of the violation of the invariants of an AVL tr
 
 `X = current_node`
 `Z = child_node_of_X`
+`Y = child_node_of_Z`
 
-1. Right Right -> `Z` is a right child of `X` and `BF(X) >= 0`
-2. Left Left -> `Z` is a left child of `X` and `BF(Z) <= 0`
-3. Right Left -> `Z` is a right child of `X` and `BF(Z) < 0`
-4. Left Right -> `Z` is a left child of `X` and `BF(Z) > 0` 
+1. Right Right -> `Z` is a right child of `X` and `Y` is a right child of `Z`
+2. Left Left -> `Z` is a left child of `X` and `Y` is a left child of `Z`
+3. Right Left -> `Z` is a right child of `X` and `Y` is a left child of `Z`
+4. Left Right -> `Z` is a left child of `X` and `Y` is a right child of `Z`
 
 To Solve These violations we would do the following:
 
