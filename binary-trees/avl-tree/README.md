@@ -196,6 +196,29 @@ Remember that a left-left rotation is actually just a singular `right_rotate(X)`
 
 ##### Right Left Rotation
 
+A right left rotation is two rotations stacked
+
+```
+  20
+ /  \
+10  40
+    / \
+   30 50
+    \
+    25
+```
+
+```
+  20                     20                     30
+ /  \                   /  \                   /  \
+10  40 -----RR----->   10  30 ----LL----->    20  40
+    / \                    / \               /  \   \
+   30 50                  25  40            10  25  50
+    \                          \ 
+    25                         50
+```
+
+
 ### Search 
 
 Search is much the same in any balanced or unbalanced BST where a `search(x, data)` will check a given nodes data against the data that is being searched for. 
