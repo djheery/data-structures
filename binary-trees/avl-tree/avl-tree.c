@@ -64,9 +64,19 @@ int get_tree_balance(Node* root);
 int get_tree_height(Node* root);
 int get_max(uint a, uint b); 
 
+AVLTree clone(AVLTree* tree); 
+Node* invert(Node* root); 
+
 void print_preorder(Node* root);
 void print_postorder(Node* root);
 void print_inorder(Node* root); 
+
+// Test Methods 
+
+void test_insertion(AVLTree* test_tree); 
+void test_deletion(AVLTree* test_tree); 
+void test_search(AVLTree* test_tree); 
+void test_inversion(AVLTree* test_tree); 
 
 // Queue methods 
 
@@ -75,9 +85,6 @@ Node* dequeue(CircularQueue* circ_queue);
 void enqueue(CircularQueue* circ_queue, Node* node); 
 void free_queue(CircularQueue* circ_queue); 
 
-int main() {
-  return 0; 
-}
 
 /**
  * =====================
@@ -314,6 +321,15 @@ void delete(AVLTree* tree, int32_t node_data) {
 
 }
 
+/**
+ * A recursive delete method 
+ *
+ * @param: tree -> The tree to delete from; 
+ * @param: root -> The current node being checked; 
+ * @param: node_data -> The data of the node to delete; 
+ * @returns: The current node and eventually bubbles back up to the tree root; 
+ */
+
 Node* delete_helper(AVLTree* tree, Node* root, int32_t node_data) {
    if (root == NULL) return NULL;
 
@@ -356,6 +372,14 @@ Node* delete_helper(AVLTree* tree, Node* root, int32_t node_data) {
    return root; 
 }
 
+/**
+ * Get the min successor of node 
+ * Primarily used as a utility method for test_deletion
+ *
+ * @param: root -> The node to get the min_successor of
+ * @returns: The min-successor of the root->rights children 
+ */
+
 Node* min_successor(Node* root) {
   Node* parent = root;
   Node* successor = parent->right; 
@@ -372,6 +396,37 @@ Node* min_successor(Node* root) {
   }
 
   return successor;
+}
+
+AVLTree clone(AVLTree* tree) {
+  AVLTree tree_clone = initialize_tree();
+  CircularQueue circ_queue = initialize_queue(); 
+
+  enqueue(&circ_queue, tree->root);
+
+  while(circ_queue.length != 0) {
+    Node* current = dequeue(&circ_queue);
+
+    if (current->left != NULL) enqueue(&circ_queue, current->left);
+    if (current->right != NULL) enqueue(&circ_queue, current->right);
+
+    insert(&tree_clone, current->data);
+  }
+
+  free_queue(&circ_queue);
+
+  return tree_clone; 
+}
+
+
+Node* invert(Node* root) {
+  if (root == NULL) return NULL; 
+
+  Node* prevLeft = invert(root->left); 
+  root->left = invert(root->right); 
+  root->right = prevLeft; 
+
+  return root; 
 }
 
 /**
@@ -559,3 +614,11 @@ Node* dequeue(CircularQueue* circ_queue) {
 }
 
 
+
+/**
+ * Main method boi 
+ */
+
+int main() {
+  return 0; 
+}
