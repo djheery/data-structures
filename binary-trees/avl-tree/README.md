@@ -320,6 +320,26 @@ However, if the tempory balance factor falls outside the range of the tree invar
 
 To solve this lack of balance a rotation is needed. 
 
+If you scroll up to the Rebalancing section of these notes you will see the subsequent critera for rotations 
+
+Due to the recursive nature of the insertion function the steps of insertion generally look like this:
+
+1. Search for the First Null node using BST search 
+2. Insert the new node in the space of this new node and return it to the relevant node to be assigned as either left or right of that node 
+3. Bubble up the recursive stack, reassign the height of the new node (`1 + max(height(node->left), height(node->right))`)
+4. Check the `balance_factor(node)` satisfy the AVL tree invariants -> { -1, 0, 1 } 
+4a. If the `bf(node) is not in set(avl_tree_invariants)` take the following actions:
+    - `bf > 1 && inserted_data < node->left->data` : `Left Left Rotation` 
+    - `bf < -1 && inserted_data > node->right->data` : `Right Right Rotation` 
+    - `bf > 1 && inserted_data > node->left->data` : `Left Right Rotation`
+    - `bf < -1 && inserted_data < node->right->data` : `Right Left Rotation` 
+5. Return the root node (This may be changed depending on step 4/4a 
+
+*Note:* In this variation of the AVL Tree we are not allowing duplicates 
+
+With this structure we ensure that any violation of the AVL Tree invariants is retraced and fixed as we bubble up the recursive stack. 
+
 
 ### Deletion 
+
 
