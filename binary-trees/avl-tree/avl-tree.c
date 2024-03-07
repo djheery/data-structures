@@ -342,30 +342,42 @@ Node* delete_helper(AVLTree* tree, Node* root, int32_t node_data) {
      if (root->left == NULL) {
        Node* temp = root->right;  
        free(root); 
-       tree->size -= 1; 
        return temp;
-     } 
-
-     if (root->right == NULL) {
+     } else if (root->right == NULL) {
         Node* temp = root->left;  
         free(root); 
-        tree->size -= 1; 
         return temp; 
+     } else {
+       Node* y = min_successor(root);
+       root->data = y->data; 
+       free(y);
      }
 
-     Node* y = min_successor(root);
-     root->data = y->data; 
-     free(y);
      tree->size -= 1; 
-
-     return root; 
-
    }
 
    // Rebalance tree
    root->height = 1 + max(height(root->left), height(root->right)); 
 
    int16_t bf = balance_factor(root);
+
+   if (bf > 1 && balance_factor(root->left) >= 0) {
+      return rotate_right(root); 
+   }
+
+   if (bf < -1 && balance_factor(root->right) <= 0) {
+      return rotate_left(root); 
+   }
+
+   if (bf > 1 && balance_factor(root->left) < 0) {
+     root->left = rotate_left(root->left); 
+     return rotate_right(root); 
+   }
+
+   if (bf < -1 && balance_factor(root->right) > 0) {
+      root->right = rotate_right(root->right); 
+      return rotate_left(root); 
+   }
 
 
   

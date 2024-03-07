@@ -342,4 +342,17 @@ With this structure we ensure that any violation of the AVL Tree invariants is r
 
 ### Deletion 
 
+As with insertion deletion begins by mirroring BST deletion where we search for a given node within the tree and when/if found we remove it from the tree
 
+To recap BST Deletion when a given node is found it will fall into one of two catagories:
+
+1. One of the given nodes children is NULL
+2. Both children are present 
+
+When one of the nodes is NULL we simply check what one it is and assign the parents->left/right to the child node and free the node to delete. 
+
+When both children are present we get the inorder_successor of the node to delete and replace the `node->data` with the `inorder_successor->data` then free the min successor. 
+
+The AVL Tree specific implementation begins after this point. 
+
+At this point we check the `balance_factor(x)` of each node as we bubble up the recursive stack. The same checks are performed as when inserting of the node is  
