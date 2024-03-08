@@ -339,6 +339,60 @@ Due to the recursive nature of the insertion function the steps of insertion gen
 
 With this structure we ensure that any violation of the AVL Tree invariants is retraced and fixed as we bubble up the recursive stack. 
 
+#### Insertion Code 
+
+Below is an example of AVL Tree insert using a recursive pattern 
+
+```
+Node* insert(AVLTree* tree, Node* root, uint32_t node_data) {
+    
+    if (root == NULL) return initialize_node(node_data); 
+    if (root->data == node_data) return NULL;  // disallow duplicates
+
+    if (node_data < root->data) {
+        root->left = insert(tree, root->left, node_data);
+    } else {
+        root->right = insert(tree, root->right, node_data);
+    }
+
+    root->height = 1 + max(height(root->left), height(root->right));
+
+    int16_t bf = balance_factor(root);
+
+    if (bf > 1 && node_data < root->left->data) {
+        return rotate_right(root); 
+    }
+
+    if (bf < -1 && node_data > root->right->data) {
+        return rotate_left(root);
+    }
+
+    if (bf > 1 && node_data > root->left->data) {
+        root->left = rotate_left(root->left); 
+        return rotate_right(root);
+    }
+
+    if (bf < -1 && node_data < root->right->data) {
+        root->right = right_rotate(root->right); 
+        return rotate_left(root); 
+    }
+
+    return root;
+}
+
+int16_t balance_factor(Node* x) {
+    return x == NULL ? 0 : height(x->left) - height(x->right); 
+}
+
+uint16_t height(Node* x) {
+    return x == NULL ? 0 : x->height; 
+}
+
+int16_t max(int16_t a, int16_t b) {
+    return a > b ? a : b; 
+}
+
+```
 
 ### Deletion 
 
