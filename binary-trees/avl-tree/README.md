@@ -505,5 +505,27 @@ Node* inorder_successor(Node* root) {
 
 ```
 
-### AVL Tree vs Red Black Tree 
+## AVL Tree vs Red Black Tree 
+
+The comparison between Red Black Tree and AVL Trees often arises. From reading about both the main difference seems to be in usecase.
+
+Red Black Trees are more approximately balanced which can lead to the degredation of search performance - Although they will most often be better than BSTs. 
+
+Because of this in situations that are Optimized for search and less frequent insertions and deletions AVL Trees are prefered. 
+
+Whereas in situations that Insertions and Deletions are more frequent - Red Black Trees are preffered. 
+
+This is because rebalancing happens much more frequently in AVL trees after insertion and deletion, where whilst it is common in Red Black Trees it is less frequent and comprehensive than AVL Trees. 
+Thus more rotations will be performed when inserting & deleting from an AVL tree when compared to a Red-Black Tree
+
+## Applications of AVL Trees:
+
+1. Used for indexing huge records in a database and efficiently search them. 
+2. For all types of in-memory collections: Sets and Dictionaires 
+3. Database applications where insertions and deletions occur upfront and are less common after setup where searching is the primary operation that occurs
+4. Software that needs optimized search
+5. Game story lines 
+
+
+
 
