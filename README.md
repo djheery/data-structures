@@ -38,18 +38,17 @@ The list is comprised of items from the wikipedia data structures list
     - [x] Array List/ Vector 
     - [x] Linked List 
     - [x] Doubly Linked List 
-- [ ] Binary Trees 
+- [x] Binary Trees 
     - [x] Binary Tree 
     - [x] Binary Search Tree
     - [x] Red Black Tree
-    - [ ] AVL Tree
+    - [x] AVL Tree
+- [ ] Heaps 
+    - [ ] Min Heap 
+    - [ ] Min-max Heap 
+    - [ ] Max Heap
+    - [ ] Priority Queue
 - [ ] Hash Based Structures 
     - [ ] Hash List 
     - [ ] Hash Table 
     - [ ] Hash Tree 
-- [ ] Heaps 
-    - [ ] Heap 
-    - [ ] Priority Queues 
-    - [ ] Min-max Heap 
-    - [ ] Binary Heap 
-    - [ ] B-heap 

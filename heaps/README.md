@@ -73,6 +73,7 @@ Some examples of other types of heap data structures are:
 
 - Min Heap
 - Max Heap
+- Min-Max Heap
 - Priority Queue 
 - Binomial Heap
 - Fibonacci Heap 
