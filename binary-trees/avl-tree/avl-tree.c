@@ -340,13 +340,13 @@ Node* delete_helper(AVLTree* tree, Node* root, int32_t node_data) {
    } else {
 
      if (root->left == NULL) {
-       Node* temp = root->right;  
-       free(root); 
-       return temp;
+       Node* temp = root;  
+       root = root->right; 
+       free(temp); 
      } else if (root->right == NULL) {
-        Node* temp = root->left;  
-        free(root); 
-        return temp; 
+        Node* temp = root;  
+        root = root->left;
+        free(temp); 
      } else {
        Node* y = min_successor(root);
        root->data = y->data; 
@@ -355,6 +355,8 @@ Node* delete_helper(AVLTree* tree, Node* root, int32_t node_data) {
 
      tree->size -= 1; 
    }
+
+   if (root == NULL) return NULL; 
 
    // Rebalance tree
    root->height = 1 + max(height(root->left), height(root->right)); 

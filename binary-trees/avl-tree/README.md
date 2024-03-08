@@ -355,4 +355,17 @@ When both children are present we get the inorder_successor of the node to delet
 
 The AVL Tree specific implementation begins after this point. 
 
-At this point we check the `balance_factor(x)` of each node as we bubble up the recursive stack. The same checks are performed as when inserting of the node is  
+Rather than returning the given node up the stack straight away we first check the node that has replaced the deleted node. 
+
+For example, We reset the height of this node, then check the `balance_factor(x)` where, x is the node that has replaced the current node. 
+
+It is worth noting that if the new-node has been set to NULL then we simple return NULL up the recursive stack. 
+
+The checks in delete differ slightly from those in `4a` of the list in insertion you can find in the previous section of this document. 
+
+- `bf > 1 && bf(x->left) >= 0` : `Left-Left Rotation` 
+- `bf < -1 && bf(x->right) <= 0` : `Right-Right Rotation` 
+- `bf > 1 && bf(x->left) < 0` : `Left-Right rotation`
+- `bf < -1 && bf(x->right) > 0` : `Right-Left Rotation`
+
+
