@@ -274,6 +274,11 @@ Node* insert_helper(AVLTree* tree, Node* root, int32_t node_data) {
     tree->size += 1; 
     return leaf; 
   }
+
+  if (root->data == node_data) {
+    DEBUG_PRINT("Cannot add duplicate nodes with data: %d\n", node_data);
+    return root;
+  }
  
   if (node_data < root->data) {
     root->left = insert_helper(tree, root->left, node_data);
@@ -323,7 +328,10 @@ Node* insert_helper(AVLTree* tree, Node* root, int32_t node_data) {
 void delete(AVLTree* tree, int32_t node_data) {
   bool is_found = node_exists(tree->root, node_data); 
 
-  if (!is_found) return; 
+  if (!is_found) {
+    DEBUG_PRINT("Node not found with data: %d\n", node_data);
+    return; 
+  } 
 
   tree->root = delete_helper(tree, tree->root, node_data); 
 
@@ -592,13 +600,16 @@ void test_deletion_helper(AVLTree* tree, int32_t node_data) {
 
 void test_deletion(AVLTree* tree) {
 
-  int nums[] = { 10, 50, 33, 25, 42, 55, 12, 7 }; 
+  int nums[] = { 10, 50, 30, 25, 42, 55, 12, 7 }; 
 
   int i; 
 
   for (i = 0; i < (sizeof(nums) / sizeof(int)); i++) {
     test_deletion_helper(tree, nums[i]);  
   }
+
+  print_inorder(tree->root); 
+  printf("\nTree root = %d\n\n", tree->root->data); 
 }
 
 void test_invert_tree(AVLTree* tree) {
@@ -613,6 +624,10 @@ void run_tests() {
   AVLTree test_tree = initialize_tree();   
 
   test_insertion(&test_tree);
+
+  test_deletion(&test_tree);
+
+  test_insertion(&test_tree); 
 
   free_tree(&test_tree);
 }
