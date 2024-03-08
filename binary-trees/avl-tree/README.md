@@ -368,4 +368,9 @@ The checks in delete differ slightly from those in `4a` of the list in insertion
 - `bf > 1 && bf(x->left) < 0` : `Left-Right rotation`
 - `bf < -1 && bf(x->right) > 0` : `Right-Left Rotation`
 
+As you can see rather than checking the value of the `inserted_data` against `x->left/right->key` as we do insertion. 
+When deleting we instead check the `balance_factor(x->left/right)` and it's positioning to 0 
+
+Again the main trigger for these rotations to occur is the `balance_factor(x) > 1 || balance_factor(x) < -1`, where the former represents a left-heavy tree and the later a right-heavy tree  
+
 
