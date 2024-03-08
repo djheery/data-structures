@@ -276,7 +276,7 @@ Node* insert_helper(AVLTree* tree, Node* root, int32_t node_data) {
   }
 
   if (root->data == node_data) {
-    DEBUG_PRINT("Cannot add duplicate nodes with data: %d\n", node_data);
+    DEBUG_PRINT("Cannot add duplicate nodes with data: %d\n\n", node_data);
     return root;
   }
  
@@ -329,7 +329,7 @@ void delete(AVLTree* tree, int32_t node_data) {
   bool is_found = node_exists(tree->root, node_data); 
 
   if (!is_found) {
-    DEBUG_PRINT("Node not found with data: %d\n", node_data);
+    DEBUG_PRINT("Node not found with data: %d\n\n", node_data);
     return; 
   } 
 
@@ -499,7 +499,7 @@ bool node_exists(Node* root, int32_t node_data) {
   return is_found; 
 }
 
-bool check_invariants(Node* root) {
+bool check_invariants(Node* root, int32_t node_data) {
   if (root == NULL) return 0;  
   
 
@@ -508,10 +508,11 @@ bool check_invariants(Node* root) {
 
   if(bf < -1 || bf > 1) {
     meets_invariants = false; 
-    DEBUG_PRINT("Violation has occrured at node: %d, BF: %d\n", root->data, bf);
+    DEBUG_PRINT("After insertion or deletion of node %d a potential violation has occrured at node: %d, BF: %d\n\n", root->data, bf, node_data);
   }
 
-  check_invariants(root->left);
+  check_invariants(root->left, node_data);
+  check_invariants(root->right, node_data);
 
   return meets_invariants; 
 }
@@ -563,15 +564,23 @@ void print_postorder(Node* root) {
 
 void test_insertion_helper(AVLTree* tree, int32_t node_data) {
   insert(tree, node_data);  
-  bool meets_invariants = check_invariants(tree->root);
+  bool meets_invariants = check_invariants(tree->root, node_data);
 
   if (!meets_invariants) {
     printf("\nInsertion of node %d potentially destroys Invariants\n", node_data);
   }
+  
+  print_inorder(tree->root);
+  printf("\nRoot: %d\n", tree->root->data); 
+  
 
 }
 
 void test_insertion(AVLTree* tree) {
+  
+  DEBUG_PRINT("\n\n================", NULL);
+  DEBUG_PRINT("\n|| Insertion  ||", NULL);
+  DEBUG_PRINT("\n\n================", NULL);
 
   int nums[] = { 10, 20, 30, 40, 50, 25, 35, 63, 42, 22, 15, 7 }; 
 
@@ -580,24 +589,26 @@ void test_insertion(AVLTree* tree) {
     test_insertion_helper(tree, nums[i]); 
   }
 
-  print_inorder(tree->root);
-  printf("\nTree root = %d\n\n", tree->root->data);
-
-  
 }
 
 void test_deletion_helper(AVLTree* tree, int32_t node_data) {
   delete(tree, node_data);  
 
-  bool meets_invariants = check_invariants(tree->root);
+  bool meets_invariants = check_invariants(tree->root, node_data);
 
   if (!meets_invariants) {
     printf("\nDelete of node %d potentially destroys invariants\n", node_data);
   }
 
+  print_inorder(tree->root);
+  printf("\nRoot: %d\n", tree->root->data); 
 }
 
 void test_deletion(AVLTree* tree) {
+
+  DEBUG_PRINT("\n\n================", NULL);
+  DEBUG_PRINT("\n|| Deletion   ||", NULL);
+  DEBUG_PRINT("\n\n================", NULL);
 
   int nums[] = { 10, 50, 30, 25, 42, 55, 12, 7 }; 
 
@@ -607,8 +618,6 @@ void test_deletion(AVLTree* tree) {
     test_deletion_helper(tree, nums[i]);  
   }
 
-  print_inorder(tree->root); 
-  printf("\nTree root = %d\n\n", tree->root->data); 
 }
 
 void test_invert_tree(AVLTree* tree) {
