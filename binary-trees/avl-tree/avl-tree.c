@@ -508,7 +508,7 @@ bool check_invariants(Node* root, int32_t node_data) {
 
   if(bf < -1 || bf > 1) {
     meets_invariants = false; 
-    DEBUG_PRINT("After insertion or deletion of node %d a potential violation has occrured at node: %d, BF: %d\n\n", root->data, bf, node_data);
+    DEBUG_PRINT("After insertion or deletion of node %d a potential violation has occrured at node: %d, BF: %d\n\n", node_data, root->data, bf);
   }
 
   check_invariants(root->left, node_data);
@@ -565,6 +565,7 @@ void print_postorder(Node* root) {
 void test_insertion_helper(AVLTree* tree, int32_t node_data) {
   insert(tree, node_data);  
   bool meets_invariants = check_invariants(tree->root, node_data);
+  printf("Node to insert: %d\n", node_data); 
 
   if (!meets_invariants) {
     printf("\nInsertion of node %d potentially destroys Invariants\n", node_data);
@@ -580,21 +581,22 @@ void test_insertion(AVLTree* tree) {
   
   DEBUG_PRINT("\n\n================", NULL);
   DEBUG_PRINT("\n|| Insertion  ||", NULL);
-  DEBUG_PRINT("\n\n================", NULL);
+  DEBUG_PRINT("\n================\n", NULL);
 
   int nums[] = { 10, 20, 30, 40, 50, 25, 35, 63, 42, 22, 15, 7 }; 
 
   int i; 
   for (i = 0; i < (sizeof(nums) / sizeof(int)); i++) {
     test_insertion_helper(tree, nums[i]); 
+    printf("\n");
   }
 
 }
 
 void test_deletion_helper(AVLTree* tree, int32_t node_data) {
   delete(tree, node_data);  
-
   bool meets_invariants = check_invariants(tree->root, node_data);
+  printf("Node to delete: %d\n", node_data); 
 
   if (!meets_invariants) {
     printf("\nDelete of node %d potentially destroys invariants\n", node_data);
@@ -608,7 +610,7 @@ void test_deletion(AVLTree* tree) {
 
   DEBUG_PRINT("\n\n================", NULL);
   DEBUG_PRINT("\n|| Deletion   ||", NULL);
-  DEBUG_PRINT("\n\n================", NULL);
+  DEBUG_PRINT("\n================\n", NULL);
 
   int nums[] = { 10, 50, 30, 25, 42, 55, 12, 7 }; 
 
@@ -616,6 +618,7 @@ void test_deletion(AVLTree* tree) {
 
   for (i = 0; i < (sizeof(nums) / sizeof(int)); i++) {
     test_deletion_helper(tree, nums[i]);  
+    printf("\n");
   }
 
 }
