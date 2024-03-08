@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define RESIZE_LOAD_FACTOR .7 
+#define INITIAL_HEAP_CAPACITY 20 
 #define QUEUE_CAPACITY 50
 
 #define DEBUG true
@@ -13,18 +15,16 @@
 #define DEBUG_PRINT(fmt, ...)
 #endif
 
-typedef struct Node Node; 
-
-typedef struct Node {
-  Node* left; 
-  Node* right; 
+typedef struct {
   int32_t data; 
+  uint16_t idx; 
 } Node;
 
 typedef struct {
-  Node* root;
   uint16_t size; 
-  uint16_t height; 
+  Node* first; 
+  Node* last; 
+  Node** heap; 
 } MaxHeap; 
 
 typedef struct {
@@ -35,17 +35,110 @@ typedef struct {
   uint16_t capacity;
 } Queue;
 
-void max_heapify(MaxHeap* heap);
+MaxHeap initialize_heap();
+Node* initialize_node(int32_t node_data); 
+void max_heapify(MaxHeap* heap, uint16_t idx);
 void insert(MaxHeap* heap, int32_t node_data); 
 void delete(MaxHeap* heap, int32_t node_data);
-Node* search(MaxHeap* heap, int32_t node_data); 
-bool node_exists(MaxHeap* heap, int32_t node_data);
+Node* right_child(MaxHeap* heap, uint16_t idx); 
+Node* left_child(MaxHeap* heap, uint16_t idx); 
 
 // Queue Utility
 Queue initialize_queue(); 
 void free_queue(Queue* q);
 void enqueue(Queue* q, Node* x); 
 Node* dequeue(Queue* q);
+
+MaxHeap initialize_heap() {
+  MaxHeap heap; 
+  heap.heap = (Node**) malloc(sizeof(Node) * INITIAL_HEAP_CAPACITY);
+
+  if (heap.heap == NULL) {
+    DEBUG_PRINT("Error Allocating memory for the heap\n\n", NULL); 
+    exit(EXIT_FAILURE);
+  }
+
+  heap.first = NULL; 
+  heap.last = NULL; 
+  heap.size = 0;
+
+  return heap;
+}
+
+void free_heap(MaxHeap* heap) {
+  uint32_t heap_length = sizeof(heap->heap) / sizeof(Node);  
+  Node** h = heap->heap;
+
+  for (int i = 0; i < heap_length; i++) {
+    DEBUG_PRINT("Freeing node -> %d\n", h[i]->data); 
+    free(h[i]);
+  }
+
+  DEBUG_PRINT("All heap nodes found have been freed\n\n", NULL);
+
+  free(heap->heap);
+  heap = NULL; 
+}
+
+void swap(Node** arr, uint16_t i, uint16_t j) {
+  Node* temp = arr[i];
+  arr[i] = arr[j];
+  arr[j] = temp; 
+  
+}
+
+void max_heapify(MaxHeap* heap, uint16_t idx) {
+  Node* l = left_child(heap, idx);  
+  Node* r = right_child(heap, idx);
+  Node* i = heap->heap[idx];
+  Node* largest = i; 
+
+  if (l != NULL && l->data > largest->data) {
+    largest = l; 
+  }
+
+  if (r != NULL && r->data > largest->data) {
+    largest = r; 
+  }
+
+  if (largest != i) {
+    swap(heap->heap, i->idx, largest->idx); 
+    max_heapify(heap, largest->idx);
+  }
+    
+}
+
+
+
+Node* right_child(MaxHeap* heap, uint16_t idx) {
+  uint16_t r_idx = (idx * 2) + 2; 
+
+  if (r_idx > heap->size) return NULL;
+
+  return heap->heap[r_idx];
+}
+
+Node* left_child(MaxHeap* heap, uint16_t idx) {
+  uint16_t l_idx = (idx * 2) + 1;
+
+  if (l_idx > heap->size) return NULL; 
+
+  return heap->heap[l_idx];
+}
+
+Node* parent(MaxHeap* heap, uint16_t idx) {
+  uint16_t p_idx = (uint16_t) (idx / 2) + 1;  
+
+  return heap->heap[p_idx];
+}
+
+void insert(MaxHeap* heap, int32_t idx) {
+  Node* last = heap->heap[heap->size - 1]; 
+
+   
+}
+
+
 
 /**
  * ===================
