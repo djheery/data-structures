@@ -319,6 +319,8 @@ void delete(AVLTree* tree, int32_t node_data) {
 
   if (!is_found) return; 
 
+  tree->root = delete_helper(tree, tree->root, node_data); 
+
 }
 
 /**
@@ -483,6 +485,24 @@ bool node_exists(Node* root, int32_t node_data) {
   return is_found; 
 }
 
+bool check_invariants(Node* root) {
+  if (root == NULL) return 0;  
+  
+
+  int16_t bf = balance_factor(root);
+  bool meets_inavariants = true; 
+
+  if(bf < -1 || bf > 1) {
+    meets_inavariants = false; 
+    DEBUG_PRINT("Violation has occrured at node: %d, BF: %d\n", root->data, bf);
+  }
+
+  check_invariants(root->left);
+  check_invariants(root->right);
+
+  return meets_inavariants; 
+}
+
 /**
  * Print the tree using Pre order traversal
  */
@@ -521,6 +541,58 @@ void print_postorder(Node* root) {
   printf("%d ", root->data); 
   
 }
+
+/**
+ * ============= 
+ * || Testing ||
+ * ============= 
+ */
+
+void test_insertion_helper(AVLTree* tree, int32_t node_data) {
+  insert(tree, node_data);  
+  bool meets_inavariants = check_invariants(tree->root);
+
+  if (!meets_inavariants) {
+    printf("\nInsert destroys Invariants\n");
+  }
+
+}
+
+void test_insertion(AVLTree* tree) {
+
+  int nums[] = { 10, 20, 30, 40, 50, 25 }; 
+
+  int i; 
+  for (i = 0; i < (sizeof(nums) / sizeof(int)); i++) {
+    test_insertion_helper(tree, nums[i]); 
+  }
+
+  print_inorder(tree->root);
+  printf("\nTree root = %d\n\n", tree->root->data);
+
+  
+}
+
+void test_deletion(AVLTree* tree) {
+
+}
+
+void test_invert_tree(AVLTree* tree) {
+  
+}
+
+void test_search(AVLTree* tree) {
+  
+}
+
+void run_tests() {
+  AVLTree test_tree = initialize_tree();   
+
+  test_insertion(&test_tree);
+
+  free_tree(&test_tree);
+}
+
 
 /**
  * ====================
@@ -634,5 +706,6 @@ Node* dequeue(CircularQueue* circ_queue) {
  */
 
 int main() {
+  run_tests(); 
   return 0; 
 }
