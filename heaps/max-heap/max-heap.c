@@ -98,8 +98,8 @@ void enqueue(Queue* q, Node* x) {
     return;
   }
 
-  q->rear += 1; 
-  q->queue[q->front] = x; 
+  q->rear = ((q->rear + 1) % q->capacity); 
+  q->queue[q->rear] = x; 
   q->size += 1; 
   
 }
@@ -111,14 +111,19 @@ Node* dequeue(Queue* q) {
     return NULL;
   }
 
-  if (q->size == 0) {
+  if (q->size == 0 || q->rear == -1) {
     DEBUG_PRINT("Error: The queue is empty so cannot dequeue a node\n", NULL);
     return NULL;
   }
 
   Node* x = q->queue[q->front];
-  q->front += 1;
+  q->front = ((q->front + 1) % q->capacity);
   q->size -= 1; 
+
+  if (q->size == 0) {
+    q->front = 0;  
+    q->rear = -1; 
+  }
  
   return x;
 
