@@ -624,11 +624,43 @@ void test_deletion(AVLTree* tree) {
 }
 
 void test_invert_tree(AVLTree* tree) {
+
+  DEBUG_PRINT("\n\n================", NULL);
+  DEBUG_PRINT("\n|| Inversion  ||", NULL);
+  DEBUG_PRINT("\n================\n", NULL); 
+
+  DEBUG_PRINT("Before: ", NULL);
+  print_inorder(tree->root);
+  printf("\n", NULL);
+
+  AVLTree tree_clone = clone(tree); 
+  invert(tree_clone.root);
+
+  DEBUG_PRINT("After: ", NULL);
+  print_inorder(tree_clone.root);
+  printf("\n\n", NULL);
   
+
+  free_tree(&tree_clone); 
 }
 
 void test_search(AVLTree* tree) {
-  
+
+  DEBUG_PRINT("\n\n================", NULL);
+  DEBUG_PRINT("\n|| Search     ||", NULL);
+  DEBUG_PRINT("\n================\n", NULL);
+
+  int nums[] = { 10, 14, 83, 4, 50, 30, 25, 42, 55, 12, 7 }; 
+
+
+  for (int i = 0; i < (sizeof(nums) / sizeof(int)); i++) {
+    bool exists = node_exists(tree->root, nums[i]); 
+
+    DEBUG_PRINT("Node %d is found: %s\n", nums[i], exists ? "TRUE" : "FALSE");
+  }
+
+  DEBUG_PRINT("\n", NULL);
+
 }
 
 void run_tests() {
@@ -640,7 +672,16 @@ void run_tests() {
 
   test_insertion(&test_tree); 
 
+  test_search(&test_tree); 
+
+  test_invert_tree(&test_tree); 
+
+  DEBUG_PRINT("\n===============\n", NULL);
+  DEBUG_PRINT("|| Free Tree ||\n", NULL);
+  DEBUG_PRINT("===============\n\n", NULL);
+
   free_tree(&test_tree);
+
 }
 
 
