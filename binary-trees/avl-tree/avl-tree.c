@@ -5,7 +5,7 @@
 #include <sys/types.h>
 
 #define QUEUE_CAPACITY 50
-#define DEBUG
+#define DEBUG true
 
 #ifdef DEBUG
 #define DEBUG_PRINT(fmt, ...) fprintf(stderr, fmt, __VA_ARGS__)
@@ -150,11 +150,17 @@ void free_tree(AVLTree* tree) {
   CircularQueue circ_queue = initialize_queue(); 
   enqueue(&circ_queue, tree->root); 
 
+
   while (circ_queue.length > 0) {
     Node* current = dequeue(&circ_queue);
 
     if (current->left != NULL) enqueue(&circ_queue, current->left); 
     if (current->right != NULL) enqueue(&circ_queue, current->right); 
+
+    if (current == NULL) {
+      DEBUG_PRINT("SOMETHING WENT WRONG\n\n", NULL); 
+      exit(EXIT_FAILURE);
+    }
 
     DEBUG_PRINT("Freeing node with data: %d\n", current->data); 
     free(current); 
@@ -560,7 +566,7 @@ void test_insertion_helper(AVLTree* tree, int32_t node_data) {
 
 void test_insertion(AVLTree* tree) {
 
-  int nums[] = { 10, 20, 30, 40, 50, 25 }; 
+  int nums[] = { 10, 20, 30, 40, 50, 25, 35, 63, 42, 22, 15, 7 }; 
 
   int i; 
   for (i = 0; i < (sizeof(nums) / sizeof(int)); i++) {
@@ -573,8 +579,26 @@ void test_insertion(AVLTree* tree) {
   
 }
 
+void test_deletion_helper(AVLTree* tree, int32_t node_data) {
+  delete(tree, node_data);  
+
+  bool meets_inavariants = check_invariants(tree->root);
+
+  if (!meets_inavariants) {
+    printf("\nInsert destroys Invariants\n");
+  }
+
+}
+
 void test_deletion(AVLTree* tree) {
 
+  int nums[] = { 10, 50, 33, 25, 42, 55, 12, 7 }; 
+
+  int i; 
+
+  for (i = 0; i < (sizeof(nums) / sizeof(int)); i++) {
+    test_deletion_helper(tree, nums[i]);  
+  }
 }
 
 void test_invert_tree(AVLTree* tree) {
@@ -620,6 +644,7 @@ CircularQueue initialize_queue() {
   circ_queue.front = 0; 
   circ_queue.rear = -1; 
   circ_queue.length = 0; 
+  circ_queue.queue = queue; 
 
   return circ_queue; 
 }
@@ -692,8 +717,13 @@ Node* dequeue(CircularQueue* circ_queue) {
   }
 
   Node* dequeued_node = circ_queue->queue[circ_queue->front]; 
-  circ_queue->front -= 1; 
+  circ_queue->front += 1; 
   circ_queue->length -= 1; 
+
+  if(circ_queue->length == 0) {
+    circ_queue->front = 0;
+    circ_queue->rear = -1; 
+  }
 
   return dequeued_node; 
 
