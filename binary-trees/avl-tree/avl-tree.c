@@ -504,17 +504,16 @@ bool check_invariants(Node* root) {
   
 
   int16_t bf = balance_factor(root);
-  bool meets_inavariants = true; 
+  bool meets_invariants = true; 
 
   if(bf < -1 || bf > 1) {
-    meets_inavariants = false; 
+    meets_invariants = false; 
     DEBUG_PRINT("Violation has occrured at node: %d, BF: %d\n", root->data, bf);
   }
 
   check_invariants(root->left);
-  check_invariants(root->right);
 
-  return meets_inavariants; 
+  return meets_invariants; 
 }
 
 /**
@@ -564,10 +563,10 @@ void print_postorder(Node* root) {
 
 void test_insertion_helper(AVLTree* tree, int32_t node_data) {
   insert(tree, node_data);  
-  bool meets_inavariants = check_invariants(tree->root);
+  bool meets_invariants = check_invariants(tree->root);
 
-  if (!meets_inavariants) {
-    printf("\nInsert destroys Invariants\n");
+  if (!meets_invariants) {
+    printf("\nInsertion of node %d potentially destroys Invariants\n", node_data);
   }
 
 }
@@ -590,10 +589,10 @@ void test_insertion(AVLTree* tree) {
 void test_deletion_helper(AVLTree* tree, int32_t node_data) {
   delete(tree, node_data);  
 
-  bool meets_inavariants = check_invariants(tree->root);
+  bool meets_invariants = check_invariants(tree->root);
 
-  if (!meets_inavariants) {
-    printf("\nInsert destroys Invariants\n");
+  if (!meets_invariants) {
+    printf("\nDelete of node %d potentially destroys invariants\n", node_data);
   }
 
 }
