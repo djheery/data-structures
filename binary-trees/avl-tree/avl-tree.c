@@ -827,7 +827,7 @@ void enqueue(CircularQueue* circ_queue, Node* node) {
     exit(EXIT_FAILURE); 
   }
 
-  circ_queue->rear += 1;
+  circ_queue->rear = ((circ_queue->rear + 1) % circ_queue->capacity);
   circ_queue->queue[circ_queue->rear] = node; 
   circ_queue->length += 1;
 
@@ -853,7 +853,7 @@ Node* dequeue(CircularQueue* circ_queue) {
   }
 
   Node* dequeued_node = circ_queue->queue[circ_queue->front]; 
-  circ_queue->front += 1; 
+  circ_queue->front = ((circ_queue->front + 1) % circ_queue->capacity); 
   circ_queue->length -= 1; 
 
   if(circ_queue->length == 0) {
