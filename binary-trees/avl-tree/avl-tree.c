@@ -428,6 +428,14 @@ Node* min_successor(Node* root) {
   return successor;
 }
 
+/**
+ * Make a deep clone of a given tree
+ *
+ *  NOTE: This is only used for tree inversion as otherwise the tree inserted would not meet the critera of a BST 
+ *
+ * @param: tree -> The tree to clone 
+ */
+
 AVLTree clone(AVLTree* tree) {
   AVLTree tree_clone = initialize_tree();
   CircularQueue circ_queue = initialize_queue(); 
@@ -447,6 +455,13 @@ AVLTree clone(AVLTree* tree) {
 
   return tree_clone; 
 }
+
+/**
+ * Standard BST tree inversion 
+ *
+ * @param: root -> The current node whos children are to be inverted 
+ * @returns: The current node all the way up to the root 
+ */
 
 
 Node* invert(Node* root) {
@@ -498,6 +513,17 @@ bool node_exists(Node* root, int32_t node_data) {
   
   return is_found; 
 }
+
+/**
+ *  NOTE: This does through a couple errors with the default testing setup - This seems to be because unreached nodes in the recursive stack do not have their heights reset 
+ *
+ * Check the tree meets the invariants of an AVL tree
+ *
+ * bf(root) in set { -1, 0, 1 }
+ *
+ * @param: root -> The node currently being checked
+ * @param: node_data -> The data of the node inserted or deleted for debugging purposes 
+ */
 
 bool check_invariants(Node* root, int32_t node_data) {
   if (root == NULL) return 0;  
@@ -562,6 +588,14 @@ void print_postorder(Node* root) {
  * ============= 
  */
 
+/**
+ * A helper to insert a node with the given data into the tree 
+ * Also checks that the tree still meets the invariants of an AVL tree
+ *
+ * @param: tree -> The tree to insert into 
+ * @param: node_data -> The data of the node to insert 
+ */
+
 void test_insertion_helper(AVLTree* tree, int32_t node_data) {
   insert(tree, node_data);  
   bool meets_invariants = check_invariants(tree->root, node_data);
@@ -576,6 +610,12 @@ void test_insertion_helper(AVLTree* tree, int32_t node_data) {
   
 
 }
+
+/**
+ * Test insertion to a given tree 
+ *
+ * @param: tree -> The tree to insert into 
+ */
 
 void test_insertion(AVLTree* tree) {
   
@@ -593,6 +633,13 @@ void test_insertion(AVLTree* tree) {
 
 }
 
+/** 
+ * A helper method to delete individual nodes and check that the invariants of an AVL tree are still met 
+ *
+ * @param: tree -> The tree to delete from 
+ * @param: node_data -> the data of the node to delete
+ */
+
 void test_deletion_helper(AVLTree* tree, int32_t node_data) {
   delete(tree, node_data);  
   bool meets_invariants = check_invariants(tree->root, node_data);
@@ -605,6 +652,12 @@ void test_deletion_helper(AVLTree* tree, int32_t node_data) {
   print_inorder(tree->root);
   printf("\nRoot: %d\n", tree->root->data); 
 }
+
+/**
+ * Test deletion of nodes from the tree 
+ *
+ * @param: tree -> The tree to delete from 
+ */
 
 void test_deletion(AVLTree* tree) {
 
@@ -622,6 +675,12 @@ void test_deletion(AVLTree* tree) {
   }
 
 }
+
+/**
+ * Test inversion of the tree on a clone 
+ *
+ * @param: tree -> The tree to clone so that it can be inverted 
+ */
 
 void test_invert_tree(AVLTree* tree) {
 
@@ -644,6 +703,12 @@ void test_invert_tree(AVLTree* tree) {
   free_tree(&tree_clone); 
 }
 
+/**
+ * Test the search functionality
+ *
+ * @param: tree -> The tree to search within
+ */
+
 void test_search(AVLTree* tree) {
 
   DEBUG_PRINT("\n\n================", NULL);
@@ -662,6 +727,10 @@ void test_search(AVLTree* tree) {
   DEBUG_PRINT("\n", NULL);
 
 }
+
+/**
+ * Run Tests on the Tree to validate it meets the criteria of an AVL tree
+ */
 
 void run_tests() {
   AVLTree test_tree = initialize_tree();   
