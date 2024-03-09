@@ -27,7 +27,9 @@ The list is comprised of items from the wikipedia data structures list
 - Heaps
 
 
-## TODOs 
+## Initial Project TODOs 
+
+I will add to these over time but as a base I want this project to include: 
 
 - [x] Arrays 
     - [x] Stacks 
@@ -42,11 +44,9 @@ The list is comprised of items from the wikipedia data structures list
     - [x] Binary Search Tree
     - [x] Red Black Tree
     - [x] AVL Tree
-- [ ] Heaps 
+- [x] Heaps 
     - [x] Max Heap
-    - [ ] Min Heap 
-    - [ ] Min-max Heap 
-    - [ ] Priority Queue
+    - [x] Min Heap 
 - [ ] Hash Based Structures 
     - [ ] Hash List 
     - [ ] Hash Table 

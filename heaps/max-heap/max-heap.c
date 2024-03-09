@@ -106,6 +106,7 @@ void free_heap(MaxHeap* heap) {
   DEBUG_PRINT("All heap nodes found have been freed\n\n", NULL);
 
   free(heap->heap);
+  heap->heap = NULL; 
   heap = NULL; 
 }
 
