@@ -7,6 +7,7 @@
 #define INITIAL_HEAP_CAPACITY 20 
 #define QUEUE_CAPACITY 50
 
+#define LENGTH(arr, dt) (sizeof(arr) / sizeof(dt))
 #define DEBUG true
 
 #ifdef DEBUG
@@ -489,6 +490,102 @@ int dequeue(Queue* q) {
   }
  
   return x;
+
+}
+
+void print_heap(MaxHeap* heap) {
+  Node** h = heap->heap;  
+
+  printf("[");
+
+  for (int i = 0; i < LENGTH(h, Node); i++) {
+    printf("%d, ", h[i]->data);  
+  }
+
+  printf("]\n"); 
+}
+
+/**
+ * ===========
+ * || Tests ||
+ * ===========
+ */
+
+void test_insertion(MaxHeap* heap) {
+  printf("==================\n");
+  printf("|| Insertion    ||\n"); 
+  printf("==================\n\n");
+
+  int nums[] = { 38, 384, 27, 46, 463, 47, 20, 40, 64, 64 };
+
+  for (int i = 0; i < LENGTH(nums, int); i++) {
+    insert(heap, nums[i]); 
+    print_heap(heap); 
+  }
+
+  printf("\n");
+}
+
+void test_deletion(MaxHeap* heap) {
+  printf("==================\n");
+  printf("|| Deletion     ||\n"); 
+  printf("==================\n\n");
+
+
+  int nums[] = { 38, 40, 64, 16 };
+
+  for (int i = 0; i < LENGTH(nums, int); i++) {
+    delete_node(heap, nums[i]); 
+    print_heap(heap); 
+  }
+
+  printf("\n");
+  
+}
+
+void test_extract_max(MaxHeap* heap) {
+  printf("==================\n");
+  printf("|| Extract Max  ||\n"); 
+  printf("==================\n\n");
+
+  for (int i = 0; i < 2; i++) {
+    int16_t data = extract_max(heap); 
+    printf("Extracted: %d\n", data); 
+    print_heap(heap);
+  }
+
+  printf("\n");
+}
+
+void test_peek(MaxHeap* heap) {
+  printf("==================\n");
+  printf("|| Peek         ||\n"); 
+  printf("==================\n\n");
+
+  Node* node = peek(heap);  
+
+  if (node != NULL) {
+    printf("Max: %d\n\n", node->data);
+    return;
+  }
+}
+
+void test_build_heap() {
+  
+}
+
+void run_tests() {
+  MaxHeap heap = initialize_heap();
+
+  test_insertion(&heap);
+
+  test_extract_max(&heap);
+
+  test_peek(&heap);
+
+  test_deletion(&heap);
+
+  free_heap(&heap);
 
 }
 
