@@ -46,9 +46,9 @@ Node* initialize_node(int32_t node_data);
 void max_heapify(MaxHeap* heap, uint16_t idx);
 void insert(MaxHeap* heap, uint32_t node_data); 
 void delete(MaxHeap* heap, uint32_t node_data);
-int16_t right_child_idx(MaxHeap* heap, uint16_t idx); 
-int16_t left_child_idx(MaxHeap* heap, uint16_t idx); 
-int16_t parent_idx(MaxHeap* heap, uint16_t idx); 
+int16_t right_child_idx(uint16_t idx); 
+int16_t left_child_idx(uint16_t idx); 
+int16_t parent_idx(uint16_t idx); 
 void swap(Node** heap, uint16_t i, uint16_t j); 
 
 
@@ -128,8 +128,8 @@ void swap(Node** heap, uint16_t i, uint16_t j) {
  */
 
 void max_heapify(MaxHeap* heap, uint16_t idx) {
-  int16_t l_idx = left_child_idx(heap, idx);  
-  int16_t r_idx = right_child_idx(heap, idx);
+  int16_t l_idx = left_child_idx(idx);  
+  int16_t r_idx = right_child_idx(idx);
   uint16_t largest_idx = idx; 
   
   Node* largest = heap->heap[largest_idx];
@@ -153,9 +153,12 @@ void max_heapify(MaxHeap* heap, uint16_t idx) {
 
 /**
  * Get the right child of a given node 
+ *
+ * @param: idx -> The current nodes index in the heap 
+ * @returns: an int representing the idx of the parent or -1 if the division produces out of bounds errors
  */
 
-int16_t right_child_idx(MaxHeap* heap, uint16_t idx) {
+int16_t right_child_idx(uint16_t idx) {
   uint16_t r_idx = (idx * 2) + 2; 
 
   if (r_idx > heap->size) return -1;
@@ -165,9 +168,12 @@ int16_t right_child_idx(MaxHeap* heap, uint16_t idx) {
 
 /**
  * Get the left child of a given node
+ *
+ * @param: idx -> The current nodes index in the heap 
+ * @returns: an int representing the idx of the parent or -1 if the division produces out of bounds errors
  */
 
-int16_t left_child_idx(MaxHeap* heap, uint16_t idx) {
+int16_t left_child_idx(uint16_t idx) {
   uint16_t l_idx = (idx * 2) + 1;
 
   if (l_idx > heap->size) return -1; 
@@ -177,9 +183,12 @@ int16_t left_child_idx(MaxHeap* heap, uint16_t idx) {
 
 /**
  * Get the parent of a given node 
+ *
+ * @param: idx -> The current nodes index in the heap 
+ * @returns: an int representing the idx of the parent or -1 if the division produces out of bounds errors
  */
 
-int16_t parent_idx(MaxHeap* heap, uint16_t idx) {
+int16_t parent_idx(uint16_t idx) {
   
   int16_t p_idx = (idx) / 2;  
 
