@@ -51,6 +51,7 @@ int16_t right_child_idx(MaxHeap* heap, uint16_t idx);
 int16_t left_child_idx(MaxHeap* heap, uint16_t idx); 
 int16_t parent_idx(uint16_t idx); 
 void swap(Node** heap, uint16_t i, uint16_t j); 
+int16_t peek(MaxHeap* heap);
 
 
 // Queue Utility
@@ -123,6 +124,15 @@ MaxHeap build_heap(Node** arr) {
 
 
   return h; 
+}
+
+int16_t peek(MaxHeap* heap) {
+  if (heap == NULL || heap->size == 0) {
+    DEBUG_PRINT("Heap is Null or the size is zero so cannot peek at the heap\n\n", NULL);
+    return -1; 
+  }
+
+  return heap->heap[0]->data; 
 }
 
 /** 
