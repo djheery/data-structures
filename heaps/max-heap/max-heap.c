@@ -15,9 +15,11 @@
 #define DEBUG_PRINT(fmt, ...)
 #endif
 
+//  NOTE: There could be more in the Node struct 
+//  NOTE: This is just here to treat each item in a heap as a Node rather than just having an array of integers 
+
 typedef struct {
   int32_t data; 
-  uint16_t idx; 
 } Node;
 
 typedef struct {
@@ -45,8 +47,11 @@ Node* initialize_node(int32_t node_data);
 void max_heapify(MaxHeap* heap, uint16_t idx);
 void insert(MaxHeap* heap, int32_t node_data); 
 void delete(MaxHeap* heap, int32_t node_data);
-Node* right_child(MaxHeap* heap, uint16_t idx); 
-Node* left_child(MaxHeap* heap, uint16_t idx); 
+int16_t right_child_idx(MaxHeap* heap, uint16_t idx); 
+int16_t left_child_idx(MaxHeap* heap, uint16_t idx); 
+int16_t parent_idx(MaxHeap* heap, uint16_t idx); 
+void swap(Node** heap, uint16_t i, uint16_t j); 
+
 
 // Queue Utility
 Queue initialize_queue(); 
@@ -104,11 +109,17 @@ void free_heap(MaxHeap* heap) {
   heap = NULL; 
 }
 
-void swap(Node** arr, uint16_t i, uint16_t j) {
-  Node* temp = arr[i];
-  arr[i] = arr[j];
-  arr[j] = temp; 
-  
+/** 
+ * Standard swap util method to swap to indexes in an Array/Vector 
+ *
+ * @param: heap -> The heap to swap the indexes within 
+ * @param: { i, j } -> Indexes in the array to swap
+ */
+
+void swap(Node** heap, uint16_t i, uint16_t j) {
+  Node* temp = heap[i];
+  heap[i] = heap[j];
+  heap[j] = temp; 
 }
 
 /** 
@@ -119,22 +130,25 @@ void swap(Node** arr, uint16_t i, uint16_t j) {
  */
 
 void max_heapify(MaxHeap* heap, uint16_t idx) {
-  Node* l = left_child(heap, idx);  
-  Node* r = right_child(heap, idx);
-  Node* i = heap->heap[idx];
-  Node* largest = i; 
+  int16_t l_idx = left_child_idx(heap, idx);  
+  int16_t r_idx = right_child_idx(heap, idx);
+  uint16_t largest_idx = idx; 
+  
+  Node* largest = heap->heap[largest_idx];
+  Node* right_child = r_idx == -1 ? NULL : heap->heap[r_idx];
+  Node* left_child = l_idx == -1 ? NULL : heap->heap[l_idx];
 
-  if (l != NULL && l->data > largest->data) {
-    largest = l; 
+  if (left_child != NULL && left_child->data > largest->data) {
+    largest_idx = l_idx; 
   }
 
-  if (r != NULL && r->data > largest->data) {
-    largest = r; 
+  if (right_child != NULL && right_child->data > largest->data) {
+    largest_idx = r_idx; 
   }
 
-  if (largest != i) {
-    swap(heap->heap, i->idx, largest->idx); 
-    max_heapify(heap, largest->idx);
+  if (largest_idx != idx) {
+    swap(heap->heap, idx, largest_idx); 
+    max_heapify(heap, largest_idx);
   }
     
 }
@@ -143,34 +157,36 @@ void max_heapify(MaxHeap* heap, uint16_t idx) {
  * Get the right child of a given node 
  */
 
-Node* right_child(MaxHeap* heap, uint16_t idx) {
+int16_t right_child_idx(MaxHeap* heap, uint16_t idx) {
   uint16_t r_idx = (idx * 2) + 2; 
 
-  if (r_idx > heap->size) return NULL;
+  if (r_idx > heap->size) return -1;
 
-  return heap->heap[r_idx];
+  return r_idx;
 }
 
 /**
  * Get the left child of a given node
  */
 
-Node* left_child(MaxHeap* heap, uint16_t idx) {
+int16_t left_child_idx(MaxHeap* heap, uint16_t idx) {
   uint16_t l_idx = (idx * 2) + 1;
 
-  if (l_idx > heap->size) return NULL; 
+  if (l_idx > heap->size) return -1; 
 
-  return heap->heap[l_idx];
+  return l_idx;
 }
 
 /**
  * Get the parent of a given node 
  */
 
-Node* parent(MaxHeap* heap, uint16_t idx) {
-  uint16_t p_idx = (uint16_t) (idx / 2) + 1;  
+int16_t parent_idx(MaxHeap* heap, uint16_t idx) {
+  int16_t p_idx = (idx + 1) / 2;  
 
-  return heap->heap[p_idx];
+  if (p_idx < 0) return -1; 
+
+  return p_idx;
 }
 
 /**
@@ -179,8 +195,30 @@ Node* parent(MaxHeap* heap, uint16_t idx) {
 
 void insert(MaxHeap* heap, int32_t idx) {
   Node* last = heap->heap[heap->size - 1]; 
-
    
+}
+
+/** 
+ * Extract the max element -> This is/ should be the root of the heap 
+ *
+ * @param: heap -> The heap to extract from
+ * @returns: The max element (root of the heap) or NULL if the heap is empty 
+ */
+
+Node* extract_max(MaxHeap* heap) {
+  
+  if (heap->size <= 0) {
+    DEBUG_PRINT("Trying to extract from the heap when there are no nodes\n", NULL);
+    return NULL;
+  }
+
+  Node* max = heap->heap[0];
+  heap->size -= 1; 
+  heap->heap[0] = heap->heap[heap->size - 1];
+
+  max_heapify(heap, 0);
+  
+  return max; 
 }
 
 
