@@ -51,7 +51,7 @@ int16_t right_child_idx(MaxHeap* heap, uint16_t idx);
 int16_t left_child_idx(MaxHeap* heap, uint16_t idx); 
 int16_t parent_idx(uint16_t idx); 
 void swap(Node** heap, uint16_t i, uint16_t j); 
-int16_t peek(MaxHeap* heap);
+Node* peek(MaxHeap* heap);
 
 
 // Queue Utility
@@ -109,6 +109,13 @@ void free_heap(MaxHeap* heap) {
   heap = NULL; 
 }
 
+/** 
+ * Build a max heap from a pre-existing Node array
+ * 
+ * @param: arr[] -> An array of nodes to build the heap from 
+ * @returns: A new max heap - This can return a heap with nothing in it if the size of the node arr is greater than the size of the initial heap capacity 
+ */
+
 MaxHeap build_heap(Node** arr) {
 
   MaxHeap h = initialize_heap(); 
@@ -126,13 +133,20 @@ MaxHeap build_heap(Node** arr) {
   return h; 
 }
 
-int16_t peek(MaxHeap* heap) {
+/**
+ * Peek at the top of the heap (The max element) 
+ *
+ * @param: heap -> The heap to perform the peek operation on 
+ * @returns: The top element of the heap or NULL if the size is 0 or the heap is NULL
+ */
+
+Node* peek(MaxHeap* heap) {
   if (heap == NULL || heap->size == 0) {
     DEBUG_PRINT("Heap is Null or the size is zero so cannot peek at the heap\n\n", NULL);
-    return -1; 
+    return NULL; 
   }
 
-  return heap->heap[0]->data; 
+  return heap->heap[0]; 
 }
 
 /** 
