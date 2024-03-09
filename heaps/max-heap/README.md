@@ -1,14 +1,20 @@
 # Max Heap 
 
+A Max Heap is a variation of a binary heap where the root note is the maximum node in the tree. 
+
 ## Operations 
 
-### Heapify 
+### Max Heapify 
 
 ### Insertion 
 
+### Extract Max
+
 ### Deletion 
 
-### Search 
+### Peek 
+
+### Build Heap 
 
 ## Use Cases 
 

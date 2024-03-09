@@ -23,7 +23,6 @@ The list is comprised of items from the wikipedia data structures list
 - Binary Trees 
     - I need to research some projects to do with this type of Data Structure.
 - Lists 
-- Graphs 
 - Hash Based Structures 
 - Heaps
 
@@ -44,9 +43,9 @@ The list is comprised of items from the wikipedia data structures list
     - [x] Red Black Tree
     - [x] AVL Tree
 - [ ] Heaps 
+    - [x] Max Heap
     - [ ] Min Heap 
     - [ ] Min-max Heap 
-    - [ ] Max Heap
     - [ ] Priority Queue
 - [ ] Hash Based Structures 
     - [ ] Hash List 
