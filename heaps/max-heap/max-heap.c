@@ -35,8 +35,13 @@ typedef struct {
   uint16_t capacity;
 } Queue;
 
+// Setup/ Teardown Methods 
+
 MaxHeap initialize_heap();
 Node* initialize_node(int32_t node_data); 
+
+// Heap Operations 
+
 void max_heapify(MaxHeap* heap, uint16_t idx);
 void insert(MaxHeap* heap, int32_t node_data); 
 void delete(MaxHeap* heap, int32_t node_data);
@@ -48,6 +53,18 @@ Queue initialize_queue();
 void free_queue(Queue* q);
 void enqueue(Queue* q, Node* x); 
 Node* dequeue(Queue* q);
+
+/**
+ * =====================
+ * || Program methods ||
+ * =====================
+ */
+
+/**
+ * Initialize a heap heap and return it 
+ *
+ * @returns: A new heap struct 
+ */
 
 MaxHeap initialize_heap() {
   MaxHeap heap; 
@@ -64,6 +81,13 @@ MaxHeap initialize_heap() {
 
   return heap;
 }
+
+/**
+ * Free all nodes in the heap and the heap itself 
+ * This will set the heap struct to NULL after destroying the heap and it's nodes 
+ *
+ * @param: heap -> The heap to free 
+ */
 
 void free_heap(MaxHeap* heap) {
   uint32_t heap_length = sizeof(heap->heap) / sizeof(Node);  
@@ -87,6 +111,13 @@ void swap(Node** arr, uint16_t i, uint16_t j) {
   
 }
 
+/** 
+ * Max Heapify the heap given an idx 
+ *
+ * @param: heap -> The heap struct to heapify (The acctual heap is contained in heap->heap) 
+ * @param: idx -> The idx to start the heapify method at
+ */
+
 void max_heapify(MaxHeap* heap, uint16_t idx) {
   Node* l = left_child(heap, idx);  
   Node* r = right_child(heap, idx);
@@ -108,7 +139,9 @@ void max_heapify(MaxHeap* heap, uint16_t idx) {
     
 }
 
-
+/**
+ * Get the right child of a given node 
+ */
 
 Node* right_child(MaxHeap* heap, uint16_t idx) {
   uint16_t r_idx = (idx * 2) + 2; 
@@ -118,6 +151,10 @@ Node* right_child(MaxHeap* heap, uint16_t idx) {
   return heap->heap[r_idx];
 }
 
+/**
+ * Get the left child of a given node
+ */
+
 Node* left_child(MaxHeap* heap, uint16_t idx) {
   uint16_t l_idx = (idx * 2) + 1;
 
@@ -126,11 +163,19 @@ Node* left_child(MaxHeap* heap, uint16_t idx) {
   return heap->heap[l_idx];
 }
 
+/**
+ * Get the parent of a given node 
+ */
+
 Node* parent(MaxHeap* heap, uint16_t idx) {
   uint16_t p_idx = (uint16_t) (idx / 2) + 1;  
 
   return heap->heap[p_idx];
 }
+
+/**
+ * Insert into the heap 
+ */
 
 void insert(MaxHeap* heap, int32_t idx) {
   Node* last = heap->heap[heap->size - 1]; 
@@ -144,6 +189,12 @@ void insert(MaxHeap* heap, int32_t idx) {
  * ===================
  * || Queue Methods ||
  * ===================
+ */
+
+/**
+ * Initialize the queue (This is a circular queue) 
+ *
+ * @returns: A new Circular Queue
  */
 
 Queue initialize_queue() {
@@ -164,6 +215,12 @@ Queue initialize_queue() {
   return q; 
 }
 
+/**
+ * Free the queue
+ *
+ * @param: The queue to free 
+ */
+
 void free_queue(Queue* q) {
   if (q == NULL) {
     DEBUG_PRINT("Attempt to free a NULL queue\n\n", NULL);
@@ -173,6 +230,13 @@ void free_queue(Queue* q) {
   free(q->queue); 
   q = NULL;
 }
+
+/**
+ * Enqueue a node in the queue 
+ *
+ * @param: q -> The queue to enqueue within 
+ * @param: x -> The node to enqueue 
+ */
 
 void enqueue(Queue* q, Node* x) {
 
@@ -196,6 +260,13 @@ void enqueue(Queue* q, Node* x) {
   q->size += 1; 
   
 }
+
+/**
+ * Dequeue a node from the queue 
+ *
+ * @param: q -> The queue to dequeue from 
+ * @returns: A node from the front of the queue (if it exists) or NULL if there are no Nodes in the queue  
+ */
 
 Node* dequeue(Queue* q) {
 
