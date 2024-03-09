@@ -24,8 +24,7 @@ typedef struct {
 
 typedef struct {
   uint16_t size; 
-  Node* first; 
-  Node* last; 
+  uint16_t capacity; 
   Node** heap; 
 } MaxHeap; 
 
@@ -45,8 +44,8 @@ Node* initialize_node(int32_t node_data);
 // Heap Operations 
 
 void max_heapify(MaxHeap* heap, uint16_t idx);
-void insert(MaxHeap* heap, int32_t node_data); 
-void delete(MaxHeap* heap, int32_t node_data);
+void insert(MaxHeap* heap, uint32_t node_data); 
+void delete(MaxHeap* heap, uint32_t node_data);
 int16_t right_child_idx(MaxHeap* heap, uint16_t idx); 
 int16_t left_child_idx(MaxHeap* heap, uint16_t idx); 
 int16_t parent_idx(MaxHeap* heap, uint16_t idx); 
@@ -80,9 +79,8 @@ MaxHeap initialize_heap() {
     exit(EXIT_FAILURE);
   }
 
-  heap.first = NULL; 
-  heap.last = NULL; 
   heap.size = 0;
+  heap.capacity = INITIAL_HEAP_CAPACITY; 
 
   return heap;
 }
@@ -182,7 +180,8 @@ int16_t left_child_idx(MaxHeap* heap, uint16_t idx) {
  */
 
 int16_t parent_idx(MaxHeap* heap, uint16_t idx) {
-  int16_t p_idx = (idx + 1) / 2;  
+  
+  int16_t p_idx = (idx) / 2;  
 
   if (p_idx < 0) return -1; 
 
@@ -191,11 +190,50 @@ int16_t parent_idx(MaxHeap* heap, uint16_t idx) {
 
 /**
  * Insert into the heap 
+ *
+ * @param: heap -> The heap struct to insert into (The actual heap exits in heap->heap)
+ * @param: node_data -> The ndoe data to insert 
  */
 
-void insert(MaxHeap* heap, int32_t idx) {
-  Node* last = heap->heap[heap->size - 1]; 
-   
+void insert(MaxHeap* heap, uint32_t node_data) {
+  
+  if (heap == NULL) {
+    DEBUG_PRINT("Error - The heap is not provided or has not yet been instantiated\n\n", NULL);
+    return; 
+  }
+
+  if (heap->size == heap->capacity) {
+    DEBUG_PRINT("TODO - Add resize function\n", NULL); 
+    DEBUG_PRINT("Error: Cannot add another element as the heap is full\n\n", NULL); 
+    return;
+  }
+
+  Node** h = heap->heap; 
+
+  h[heap->size] = initialize_node(node_data); 
+
+  uint16_t c_idx = heap->size;
+  int16_t p_idx = parent_idx(heap, c_idx);
+
+  if (p_idx == -1) return; 
+
+  Node* current = h[c_idx];
+  Node* parent = h[p_idx]; 
+
+  while(current->data > parent->data) {
+    swap(h, c_idx, p_idx); 
+
+    c_idx = p_idx; 
+    p_idx = parent_idx(heap, p_idx);
+
+    if (p_idx == -1) break;
+
+    current = h[c_idx];
+    parent = h[p_idx];
+  }
+
+  heap->size += 1; 
+
 }
 
 /** 
