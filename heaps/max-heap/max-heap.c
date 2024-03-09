@@ -53,7 +53,7 @@ int16_t left_child_idx(MaxHeap* heap, uint16_t idx);
 int16_t parent_idx(uint16_t idx); 
 void swap(Node** heap, uint16_t i, uint16_t j); 
 Node* peek(MaxHeap* heap);
-
+void print_heap(MaxHeap* heap); 
 
 // Queue Utility
 Queue initialize_queue(); 
@@ -75,7 +75,7 @@ int dequeue(Queue* q);
 
 MaxHeap initialize_heap() {
   MaxHeap heap; 
-  heap.heap = (Node**) malloc(sizeof(Node) * INITIAL_HEAP_CAPACITY);
+  heap.heap = (Node**) malloc(sizeof(Node*) * INITIAL_HEAP_CAPACITY);
 
   if (heap.heap == NULL) {
     DEBUG_PRINT("Error Allocating memory for the heap\n\n", NULL); 
@@ -96,10 +96,9 @@ MaxHeap initialize_heap() {
  */
 
 void free_heap(MaxHeap* heap) {
-  uint32_t heap_length = sizeof(heap->heap) / sizeof(Node);  
   Node** h = heap->heap;
 
-  for (int i = 0; i < heap_length; i++) {
+  for (int i = 0; i < heap->size; i++) {
     DEBUG_PRINT("Freeing node -> %d\n", h[i]->data); 
     free(h[i]);
   }
@@ -194,10 +193,12 @@ void max_heapify(MaxHeap* heap, uint16_t idx) {
 
   if (left_child != NULL && left_child->data > largest->data) {
     largest_idx = l_idx; 
+    largest = heap->heap[largest_idx];
   }
 
   if (right_child != NULL && right_child->data > largest->data) {
     largest_idx = r_idx; 
+    largest = heap->heap[largest_idx];
   }
 
   if (largest_idx != idx) {
@@ -277,6 +278,7 @@ void insert(MaxHeap* heap, uint16_t node_data) {
 
   Node** h = heap->heap; 
 
+
   h[heap->size] = initialize_node(node_data); 
 
   uint16_t c_idx = heap->size;
@@ -322,7 +324,7 @@ int16_t extract_max(MaxHeap* heap) {
   Node* max = heap->heap[0];
   uint16_t node_data = max->data; 
   swap(heap->heap, 0, heap->size - 1); 
-  free(max);
+  free(heap->heap[heap->size - 1]);
   heap->heap[heap->size - 1] = NULL; 
   heap->size -= 1; 
 
@@ -365,7 +367,7 @@ void delete_node(MaxHeap* heap, uint16_t node_data) {
     }
 
     if (current_idx >= heap->size) {
-      DEBUG_PRINT("Error: Delete node queue returned an index out of bounds\n\n", NULL); 
+      DEBUG_PRINT("Error: Delete node queue returned an index out of bounds\n", NULL); 
       break; 
     }
 
@@ -388,7 +390,7 @@ void delete_node(MaxHeap* heap, uint16_t node_data) {
   free_queue(&q);
 
   if (target_node == NULL || target_node_idx == -1) {
-    DEBUG_PRINT("Node not found, thus no node has been deleted\n\n", NULL);
+    DEBUG_PRINT("Node not found, thus no node has been deleted\n", NULL);
     return;
   }
 
@@ -510,12 +512,16 @@ void print_heap(MaxHeap* heap) {
   Node** h = heap->heap;  
 
   printf("[");
-
-  for (int i = 0; i < LENGTH(h, Node); i++) {
-    printf("%d, ", h[i]->data);  
+  for (int i = 0; i < heap->size; i++) {
+    if (h[i] == NULL) {
+      printf("%d is null in heap\n", i); 
+      continue; 
+    }
+    printf("%u, ", h[i]->data);  
   }
 
-  printf("]\n"); 
+  printf("]\n");
+
 }
 
 /**
@@ -529,13 +535,15 @@ void test_insertion(MaxHeap* heap) {
   printf("|| Insertion    ||\n"); 
   printf("==================\n\n");
 
-  int nums[] = { 38, 384, 27, 46, 463, 47, 20, 40, 64, 64 };
-
-  for (int i = 0; i < LENGTH(nums, int); i++) {
+  int nums[] = { 38, 384, 27, 46, 463, 47, 200, 40, 64 };
+  
+  for (int i = 0; i < (sizeof(nums) / sizeof(int)); i++) {
+    printf("Adding node: %d\n", nums[i]); 
     insert(heap, nums[i]); 
     print_heap(heap); 
   }
 
+  print_heap(heap); 
   printf("\n");
 }
 
@@ -549,6 +557,7 @@ void test_deletion(MaxHeap* heap) {
 
   for (int i = 0; i < LENGTH(nums, int); i++) {
     delete_node(heap, nums[i]); 
+    printf("\n");
     print_heap(heap); 
   }
 
@@ -562,9 +571,13 @@ void test_extract_max(MaxHeap* heap) {
   printf("==================\n\n");
 
   for (int i = 0; i < 2; i++) {
-    int16_t data = extract_max(heap); 
-    printf("Extracted: %d\n", data); 
+    printf("Before: "); 
     print_heap(heap);
+    int16_t data = extract_max(heap); 
+    printf("Extracted: %d", data); 
+    printf("\nAfter: ");
+    print_heap(heap);
+    printf("\n");
   }
 
   printf("\n");
@@ -609,5 +622,6 @@ void run_tests() {
  */
 
 int main() {
+  run_tests(); 
   return 0;
 }
