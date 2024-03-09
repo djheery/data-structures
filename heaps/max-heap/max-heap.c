@@ -29,7 +29,7 @@ typedef struct {
 } MaxHeap; 
 
 typedef struct {
-  Node** queue;
+  int* queue;
   uint16_t front;
   int16_t rear; 
   uint16_t size; 
@@ -55,8 +55,8 @@ void swap(Node** heap, uint16_t i, uint16_t j);
 // Queue Utility
 Queue initialize_queue(); 
 void free_queue(Queue* q);
-void enqueue(Queue* q, Node* x); 
-Node* dequeue(Queue* q);
+void enqueue(Queue* q, int x); 
+int dequeue(Queue* q);
 
 /**
  * =====================
@@ -224,7 +224,7 @@ void insert(MaxHeap* heap, uint32_t node_data) {
   h[heap->size] = initialize_node(node_data); 
 
   uint16_t c_idx = heap->size;
-  int16_t p_idx = parent_idx(heap, c_idx);
+  int16_t p_idx = parent_idx(c_idx);
 
   if (p_idx == -1) return; 
 
@@ -235,7 +235,7 @@ void insert(MaxHeap* heap, uint32_t node_data) {
     swap(h, c_idx, p_idx); 
 
     c_idx = p_idx; 
-    p_idx = parent_idx(heap, p_idx);
+    p_idx = parent_idx(p_idx);
 
     if (p_idx == -1) break;
 
@@ -248,26 +248,101 @@ void insert(MaxHeap* heap, uint32_t node_data) {
 }
 
 /** 
+ *  NOTE: When dealing with non-trivial Nodes (i.e nodes that contain more than an integer) you must free the node outside of this method 
+ *
  * Extract the max element -> This is/ should be the root of the heap 
  *
  * @param: heap -> The heap to extract from
  * @returns: The max element (root of the heap) or NULL if the heap is empty 
  */
 
-Node* extract_max(MaxHeap* heap) {
+int16_t extract_max(MaxHeap* heap) {
   
   if (heap->size <= 0) {
     DEBUG_PRINT("Trying to extract from the heap when there are no nodes\n", NULL);
-    return NULL;
+    return -1;
   }
 
   Node* max = heap->heap[0];
+  uint16_t node_data = max->data; 
+  swap(heap->heap, 0, heap->size - 1); 
+  free(max);
+  heap->heap[heap->size - 1] = NULL; 
   heap->size -= 1; 
-  heap->heap[0] = heap->heap[heap->size - 1];
 
   max_heapify(heap, 0);
+
   
-  return max; 
+  return node_data; 
+}
+
+/**
+ * Delete an arbitrary node from the heap O(n)
+ *
+ * @param: heap -> The heap to delete from 
+ * @param: node_data -> The data of the node to delete 
+ */
+
+void delete_node(MaxHeap* heap, uint16_t node_data) {
+
+  if (heap == NULL) {
+    DEBUG_PRINT("Error: Cannot delete from a null heap\n", NULL);
+    return;
+  }
+
+  if (heap->size == 0) {
+    DEBUG_PRINT("Error: Cannot delete from an empty heap\n", NULL);  
+    return; 
+  }
+
+  Queue q = initialize_queue(); 
+  enqueue(&q, 0);
+  Node* target_node = NULL;
+  int target_node_idx = -1;
+
+  while (q.size != 0 && target_node == NULL) {
+    int current_idx = dequeue(&q); 
+
+    if (current_idx == -1) {
+      DEBUG_PRINT("Error: Queue returned -1\n", NULL);
+      break;
+    }
+
+    if (current_idx >= heap->size) {
+      DEBUG_PRINT("Error: Delete node queue returned an index out of bounds\n\n", NULL); 
+      break; 
+    }
+
+    Node* current = heap->heap[current_idx];
+
+    if (current->data == node_data) {
+      target_node = current; 
+      target_node_idx = current_idx;
+      break;
+    }
+
+    int left_idx = left_child_idx(heap, current_idx);
+    int right_idx = right_child_idx(heap, current_idx);
+
+    if (left_idx != -1) enqueue(&q, left_idx);
+    if (right_idx != -1) enqueue(&q, right_idx);
+
+  }
+
+  free_queue(&q);
+
+  if (target_node == NULL || target_node_idx == -1) {
+    DEBUG_PRINT("Node not found, thus no node has been deleted\n\n", NULL);
+    return;
+  }
+
+  swap(heap->heap, target_node_idx, heap->size - 1);
+  free(target_node); 
+  heap->heap[heap->size - 1] = NULL; 
+  heap->size -= 1; 
+
+  max_heapify(heap, target_node_idx);
+ 
 }
 
 
@@ -286,7 +361,7 @@ Node* extract_max(MaxHeap* heap) {
 
 Queue initialize_queue() {
   Queue q; 
-  Node** queue = (Node**) malloc(sizeof(Node) * QUEUE_CAPACITY); 
+  int* queue = (int*) malloc(sizeof(int) * QUEUE_CAPACITY); 
   
   if (queue == NULL) {
     DEBUG_PRINT("Error Allocating Memory for the queue data structure\n", NULL);    
@@ -325,15 +400,10 @@ void free_queue(Queue* q) {
  * @param: x -> The node to enqueue 
  */
 
-void enqueue(Queue* q, Node* x) {
+void enqueue(Queue* q, int x) {
 
   if (q == NULL) {
     DEBUG_PRINT("Error: Attempting to enqueue into a NULL queue\n", NULL); 
-    return;
-  }
-
-  if (x == NULL) {
-    DEBUG_PRINT("Error: Attempting to enqueue a NULL node\n", NULL); 
     return;
   }
 
@@ -355,19 +425,19 @@ void enqueue(Queue* q, Node* x) {
  * @returns: A node from the front of the queue (if it exists) or NULL if there are no Nodes in the queue  
  */
 
-Node* dequeue(Queue* q) {
+int dequeue(Queue* q) {
 
   if (q == NULL) {
     DEBUG_PRINT("Error: Attempting to dequeue from a NULL queue\n", NULL); 
-    return NULL;
+    return -1;
   }
 
   if (q->size == 0 || q->rear == -1) {
     DEBUG_PRINT("Error: The queue is empty so cannot dequeue a node\n", NULL);
-    return NULL;
+    return -1;
   }
 
-  Node* x = q->queue[q->front];
+  int x = q->queue[q->front];
   q->front = ((q->front + 1) % q->capacity);
   q->size -= 1; 
 
