@@ -43,6 +43,7 @@ Node* initialize_node(int32_t node_data);
 
 // Heap Operations 
 
+MaxHeap build_heap(Node** arr);
 void max_heapify(MaxHeap* heap, uint16_t idx);
 void insert(MaxHeap* heap, uint32_t node_data); 
 void delete(MaxHeap* heap, uint32_t node_data);
@@ -105,6 +106,23 @@ void free_heap(MaxHeap* heap) {
 
   free(heap->heap);
   heap = NULL; 
+}
+
+MaxHeap build_heap(Node** arr) {
+
+  MaxHeap h = initialize_heap(); 
+
+  if ((sizeof(arr) / sizeof(Node)) > INITIAL_HEAP_CAPACITY) {
+    DEBUG_PRINT("Heap capcity is too large for this circumstance. Either adjust heap capcity or implement dynamic heap size\n", NULL); 
+    return h; 
+  }
+
+  for (int i = 0; i < (sizeof(arr) / sizeof(Node)); i++) {
+    insert(&h, arr[i]->data);
+  }
+
+
+  return h; 
 }
 
 /** 
