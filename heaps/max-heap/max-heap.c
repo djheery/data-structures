@@ -20,7 +20,7 @@
 //  NOTE: This is just here to treat each item in a heap as a Node rather than just having an array of integers 
 
 typedef struct {
-  int32_t data; 
+  uint16_t data; 
 } Node;
 
 typedef struct {
@@ -40,14 +40,14 @@ typedef struct {
 // Setup/ Teardown Methods 
 
 MaxHeap initialize_heap();
-Node* initialize_node(int32_t node_data); 
+Node* initialize_node(uint16_t node_data); 
 
 // Heap Operations 
 
 MaxHeap build_heap(Node** arr);
 void max_heapify(MaxHeap* heap, uint16_t idx);
-void insert(MaxHeap* heap, uint32_t node_data); 
-void delete(MaxHeap* heap, uint32_t node_data);
+void insert(MaxHeap* heap, uint16_t node_data); 
+void delete(MaxHeap* heap, uint16_t node_data);
 int16_t right_child_idx(MaxHeap* heap, uint16_t idx); 
 int16_t left_child_idx(MaxHeap* heap, uint16_t idx); 
 int16_t parent_idx(uint16_t idx); 
@@ -108,6 +108,19 @@ void free_heap(MaxHeap* heap) {
 
   free(heap->heap);
   heap = NULL; 
+}
+
+Node* initialize_node(uint16_t node_data) {
+  Node* n = (Node*) malloc(sizeof(Node)); 
+
+  if (n == NULL) {
+    DEBUG_PRINT("Error allocating memory for node -> %d\n", node_data);
+    exit(EXIT_FAILURE);
+  }
+
+  n->data = node_data; 
+
+  return n; 
 }
 
 /** 
@@ -249,7 +262,7 @@ int16_t parent_idx(uint16_t idx) {
  * @param: node_data -> The ndoe data to insert 
  */
 
-void insert(MaxHeap* heap, uint32_t node_data) {
+void insert(MaxHeap* heap, uint16_t node_data) {
   
   if (heap == NULL) {
     DEBUG_PRINT("Error - The heap is not provided or has not yet been instantiated\n\n", NULL);
