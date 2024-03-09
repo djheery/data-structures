@@ -89,5 +89,6 @@ If it is not obvious, this swap is done in place and it does not need to return 
 ## Sources
 
 - https://www.codecademy.com/article/max-heaps-conceptual
-- Introduction to Algorithms (Cormen, T. *et al*) 
 - https://www.geeksforgeeks.org/insertion-and-deletion-in-heaps/?ref=ml_lbp
+- Introduction to Algorithms (Cormen, T. *et al*) 
+- A common-sense guide to Data Structures and Algorithms (Wengrow, J)
