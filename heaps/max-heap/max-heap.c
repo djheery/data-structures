@@ -284,7 +284,10 @@ void insert(MaxHeap* heap, uint16_t node_data) {
   uint16_t c_idx = heap->size;
   int16_t p_idx = parent_idx(c_idx);
 
-  if (p_idx == -1) return; 
+  if (p_idx == -1) {
+    heap->size += 1; 
+    return;
+  } 
 
   Node* current = h[c_idx];
   Node* parent = h[p_idx]; 
