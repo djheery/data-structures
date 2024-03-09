@@ -16,6 +16,8 @@ To represent this using psuedo-code:
 
 Heaps are often used to implement prority queues, where the smallest (or larges) element is always at the root of the tree
 
+However, Under the hood, heaps are normally implemented as vectors where the `node->left`, `node->right` and `node->parent` are computed mathmatically based on the index of `node`. 
+
 ## Properties of a Heap
 
 Below are some of the properties of a heap:
