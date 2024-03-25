@@ -11,7 +11,7 @@ Then I will learn more about C by implementing the known data structures within 
 
 Each code file will be created from scratch rather than copy and pasting the boiler plate so that I can ingrain these Data Structures and C into my brain. 
 
-Upon creating this code base i've become aware how difficult it is to implement some of the more complex data structures without the code looking like its been verbatum copied from somewhere. Thus I am spending extra time making some ReadMe documents for the more complex documents to ensure that I understand how the code is actually working and refactoring any code that I pull from as a reference when building each of the structures to make it more legible (Especially with RBT and BST) 
+Upon creating this code base i've become aware how difficult it is to implement some of the more complex data structures without the code looking like its been verbatum copied from somewhere. Thus I am spending extra time making some ReadMe documents for the more complex documents to ensure that I understand how the code is actually working and refactoring any code that I pull from as a reference when building each of the structures to make it more legible
 
 ## Included Data Structure Types 
 
