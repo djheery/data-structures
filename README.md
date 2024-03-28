@@ -1,4 +1,4 @@
-# What this Repositry Is 
+# What is this Repository? 
 
 This repositry is purely my attempt to get to grips with data structures and how they work in a more granular detail
 
