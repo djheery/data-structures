@@ -204,6 +204,8 @@ void insert(MinHeap* heap, uint16_t node_data) {
 
 }
 
+//
+
 int16_t extract_min(MinHeap* heap) {
 
   if (heap == NULL || heap->size == 0) return -1;
