@@ -7,6 +7,12 @@
 #define RESIZE_LOADFACTOR .7
 #define INITIAL_CAPACITY 10
 
+#ifdef DEBUG
+#define DEBUG_PRINT(fmt, ...) fprintf(stderr, fmt, __VA_ARGS__)
+#else
+#define DEBUG_PRINT(fmt, ...)
+#endif
+
 typedef struct {
   char* key; 
   char* value; 
@@ -85,7 +91,7 @@ BucketNode* get(HashTable* table, char key[]) {
   int k = 0;
 
   if (table->table[k] == NULL) {
-    
+    return NULL;
   }
 
   return NULL;
@@ -148,6 +154,28 @@ void put(HashTable* table, char key[], char value[]) {
     b->size += 1;
   }
  
+}
+
+void test_get(HashTable* t) {
+  char** keys = (char**) malloc((sizeof(char) * 20) * 5); 
+
+  keys[0] = "Hello";
+  keys[1] = "World"; 
+  keys[2] = "Yes layd";
+  keys[3] = "Heritical";
+  keys[4] = "Space Marine";
+
+  for (int i = 0; i < 3; i++) {
+    BucketNode* v = get(t, keys[i]); 
+
+    if (v == NULL) {
+      DEBUG_PRINT("The key %s is NULL thus not found\n", keys[i]);
+      continue;
+    }
+
+    DEBUG_PRINT("Key found: %s || Value: %s\n", keys[i], v->value); 
+  }
+
 }
 
 int main() {
