@@ -123,6 +123,32 @@ BucketNode* search(HashTable* table, char key[]) {
   return current; 
 }
 
+bool delete(HashTable* t, char key[]) {
+  int k = 0;  
+
+  if (k > t->capacity || k < 0) {
+    printf("Error: Key has been calculated as out of bounds. Check Hash Function\n\n");
+    exit(1);
+  }
+
+  Bucket* bn = t->table[k]; 
+
+  if (bn == NULL) {
+    DEBUG_PRINT("Key <%s> does not exist in table\n\n", key);
+    return false; 
+  }
+
+  if (bn->size == 1) {
+    // Free bucket and set to Null  
+    return true; 
+  }
+
+  // Loop to search for key
+  // Make sure key exists - If it does not return false; 
+  
+  return true; 
+}
+
 void bucket_insert(Bucket* b, char key[], char value[]) {
   BucketNode* current = b->head;  
 
