@@ -70,6 +70,8 @@ void programLoop() {
   free(stack.stack); 
 }
 
+// TODO: This needs to be fixed 
+
 int initializeStack() {
   printf("The stack will be limited to integers only\n\n"); 
   printf("> Please initialize your stack with a size: "); 
