@@ -26,6 +26,8 @@ The list is comprised of items from the wikipedia data structures list
 - Hash Based Structures 
 - Heaps
 
+I need to finish this
+
 
 ## Initial Project TODOs 
 
