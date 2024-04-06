@@ -85,6 +85,11 @@ void free_table(HashTable* table) {
 void resize(HashTable* table) {
   if (table->loadfactor < RESIZE_LOADFACTOR) return;
 
+  Bucket** new_table = (Bucket**) malloc(sizeof(Bucket) * (table->capacity + (table->capacity * 0.2))); 
+
+  // Copy the memory acrross 
+  // do some other shit
+
 }
 
 BucketNode* get(HashTable* table, char key[]) {
