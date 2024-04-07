@@ -51,5 +51,5 @@ I will add to these over time but as a base I want this project to include:
     - [x] Min Heap 
 - [ ] Hash Based Structures 
     - [ ] Hash List 
-    - [ ] Hash Table 
+    - [x] Hash Table 
     - [ ] Hash Tree 
