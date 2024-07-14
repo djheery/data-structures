@@ -1,5 +1,6 @@
 # What is this Repository?? 
-
+ 
+who knows 
 This repositry is purely my attempt to get to grips with data structures and how they work in a more granular detail
 
 To start with this project will consist of purely my attempts to create data structures in the C programming language. 
