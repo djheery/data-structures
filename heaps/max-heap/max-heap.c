@@ -110,6 +110,10 @@ void free_heap(MaxHeap* heap) {
   heap = NULL; 
 }
 
+/**
+ * Initialize a node for the heep 
+ */
+
 Node* initialize_node(uint16_t node_data) {
   Node* n = (Node*) malloc(sizeof(Node)); 
 
